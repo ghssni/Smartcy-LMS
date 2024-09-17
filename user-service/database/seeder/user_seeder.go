@@ -17,17 +17,20 @@ func SeedUsers(db *mongo.Database) {
 
 	var users []interface{}
 
-	for i := 1; i <= 1000; i++ {
+	for i := 1; i <= 15; i++ {
 		gofakeit.Seed(0)
 		password, _ := pkg.HashPassword("test12345")
 
 		user := models.User{
-			Username: gofakeit.Name(),
-			Email:    gofakeit.Email(),
-			Address:  gofakeit.Address().Address,
-			Age:      gofakeit.Number(18, 60),
-			Phone:    gofakeit.Phone(),
-			Password: password,
+			Name:      gofakeit.Name(),
+			Email:     gofakeit.Email(),
+			Address:   gofakeit.Address().Address,
+			Age:       gofakeit.Number(18, 60),
+			Phone:     gofakeit.Phone(),
+			Role:      gofakeit.RandomString([]string{"student", "instructor"}),
+			Password:  password,
+			CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+			UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		}
 		users = append(users, user)
 	}

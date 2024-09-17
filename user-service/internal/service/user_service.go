@@ -38,7 +38,7 @@ func (u *userService) RegisterUser(ctx context.Context, req models.RegisterInput
 		Age:       req.Age,
 		Phone:     req.Phone,
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		UpdatedAt: primitive.NewDateTimeFromTime(req.UpdatedAt),
+		UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	_, err = u.userRepo.SaveUser(ctx, &user)
