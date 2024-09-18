@@ -1,5 +1,5 @@
 # Smartcy 🏅
-## BAckground Problem
+## Background Problem
 ## Folder
 ## ERD
 ## User Flow
