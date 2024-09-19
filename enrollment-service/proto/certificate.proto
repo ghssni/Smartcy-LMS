@@ -1,0 +1,12 @@
+syntax = "proto3";
+package certificate;
+
+
+message Certificate {
+  string id = 1;
+  string enrollmentId = 2;
+  string certificateUrl = 3;
+  string issuedAt = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}

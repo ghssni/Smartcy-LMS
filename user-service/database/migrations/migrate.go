@@ -12,6 +12,7 @@ import (
 func Migrate(db *mongo.Database) error {
 	migrations := []*Migration{
 		createUsersCollectionMigration(db, "email"),
+		createUserActivityLogCollectionMigration(db, "user_id"),
 	}
 	autoMigrate := os.Getenv("AUTO_MIGRATE")
 	autoDrop := os.Getenv("AUTO_DROP")

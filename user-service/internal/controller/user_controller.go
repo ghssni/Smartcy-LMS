@@ -2,14 +2,13 @@ package controller
 
 import (
 	"errors"
+	"github.com/ghssni/Smartcy-LMS/pkg"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"net/http"
 	"time"
 	"user-service/internal/models"
 	"user-service/internal/service"
-	"user-service/pkg"
-
-	"net/http"
 )
 
 type UserController struct {
@@ -89,5 +88,6 @@ func (c *UserController) LoginUser(ctx echo.Context) error {
 
 	response.UserToken.Token = user.Token
 
+	//return pkg.ResponseJson(ctx, http.StatusOK, response, "user login successfully")
 	return pkg.ResponseJson(ctx, http.StatusOK, response, "user login successfully")
 }

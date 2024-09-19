@@ -64,3 +64,12 @@ type UserResponse struct {
 		Token string `json:"token"`
 	}
 }
+
+// UserActivityLog struct is used for user activity
+type UserActivityLog struct {
+	ID                primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	UserID            string             `json:"user_id" bson:"user_id"`
+	CourseID          string             `json:"course_id" bson:"course_id,omitempty"`
+	ActivityType      string             `json:"activity_type" bson:"activity_type"`
+	ActivityTimestamp string             `json:"activity_timestamp" bson:"activity_timestamp"`
+}

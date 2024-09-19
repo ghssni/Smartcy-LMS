@@ -1,0 +1,12 @@
+syntax = "proto3";
+package assessments;
+
+message Assessments {
+  string id = 1;
+  string enrollmentId = 2;
+  string score = 3;
+  string assessmentType = 4;
+  string takenAt = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}

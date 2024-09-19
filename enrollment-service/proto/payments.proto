@@ -1,0 +1,17 @@
+syntax = "proto3";
+package payments;
+
+message Payments {
+  string id = 1;
+  string enrollmentId = 2;
+  string amount = 3;
+  string transactionStatus = 4;
+  string transactionDate = 5;
+  string invoiceId = 6;
+  string paymentMethod = 7;
+  string paymentProvider = 8;
+  string description = 9;
+  string createdAt = 10;
+  string updatedAt = 11;
+  string deletedAt = 12;
+}
