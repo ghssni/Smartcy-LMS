@@ -18,3 +18,16 @@ type Payments struct {
 	UpdatedAt         time.Time  `json:"updated_at"`
 	DeletedAt         *time.Time `gorm:"index" json:"deleted_at,omitempty"`
 }
+
+type PaymentsInput struct {
+	EnrollmentID      uint      `json:"enrollment_id" validate:"required"`
+	Amount            float64   `json:"amount" validate:"required"`
+	TransactionStatus string    `json:"transaction_status" validate:"required"`
+	TransactionDate   time.Time `json:"transaction_date" validate:"required"`
+	InvoiceID         string    `json:"invoice_id" validate:"required"`
+	PaymentMethod     string    `json:"payment_method" validate:"required"`
+	PaymentProvider   string    `json:"payment_provider" validate:"required"`
+	Description       string    `json:"description" validate:"required"`
+	CreatedAt         time.Time `json:"created_at" validate:"required"`
+	UpdatedAt         time.Time `json:"updated_at" validate:"required"`
+}

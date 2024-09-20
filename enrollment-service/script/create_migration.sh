@@ -42,7 +42,7 @@ touch "${migration_dir}/${filename}"
 
 # Tambahkan template dasar ke file migrasi baru
 cat <<EOL > "${migration_dir}/${filename}"
-package migration
+package migrations
 
 import (
 	"gorm.io/gorm"

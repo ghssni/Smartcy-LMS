@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/controller"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/repository"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/service"
 	"github.com/labstack/echo/v4"
-	"user-service/internal/controller"
-	"user-service/internal/repository"
-	"user-service/internal/service"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )

@@ -1,0 +1,55 @@
+syntax = "proto3";
+package certificate;
+
+import "google/protobuf/timestamp.proto";
+import "meta/meta.proto";
+import "google/api/annotations.proto";
+option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/certificate;certificate";
+
+
+message Certificate {
+  uint32 id = 1;
+  uint32 enrollmentId = 2;
+  string certificateUrl = 3;
+  google.protobuf.Timestamp issuedAt = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message CreateCertificateRequest {
+  uint32 enrollmentId = 1;
+  string certificateUrl = 2;
+  google.protobuf.Timestamp  issuedAt = 3;
+  google.protobuf.Timestamp  createdAt = 4;
+  google.protobuf.Timestamp  updatedAt = 5;
+}
+
+message CreateCertificateResponse {
+  meta.Meta meta = 1;
+  Certificate certificate = 2;
+}
+
+message GetCertificateByEnrollmentIdRequest {
+  uint32 enrollmentId = 1;
+}
+
+message GetCertificateByEnrollmentIdResponse {
+  meta.Meta meta = 1;
+  Certificate certificate = 2;
+}
+
+//endpoints
+service CertificateService {
+  rpc CreateCertificate(CreateCertificateRequest) returns (CreateCertificateResponse) {
+    option (google.api.http) = {
+      post: "/v1/certificates"
+      body: "*"
+    };
+  }
+
+  rpc GetCertificateByEnrollmentId(GetCertificateByEnrollmentIdRequest) returns (GetCertificateByEnrollmentIdResponse) {
+    option (google.api.http) ={
+      get: "/v1/certificates/{enrollmentId}"
+    };
+  }
+}

@@ -2,13 +2,13 @@ package database
 
 import (
 	"context"
+	"github.com/ghssni/Smartcy-LMS/user-service/database/migrations"
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
 	"sync"
 	"time"
-	"user-service/database/migrations"
 )
 
 var (

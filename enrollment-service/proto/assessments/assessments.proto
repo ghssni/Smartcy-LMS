@@ -1,0 +1,59 @@
+syntax = "proto3";
+package assessments;
+
+
+import "google/protobuf/timestamp.proto";
+import "meta/meta.proto";
+import "google/api/annotations.proto";
+option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/assessments;assessments";
+
+message Assessments {
+  uint32 id = 1;
+  uint32 enrollmentId = 2;
+  int32 score = 3;
+  string assessmentType = 4;
+  google.protobuf.Timestamp takenAt = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  google.protobuf.Timestamp updatedAt = 7;
+}
+
+
+message CreateAssessmentRequest {
+  uint32 enrollmentId = 1;
+  int32 score = 2;
+  string assessmentType = 3;
+  google.protobuf.Timestamp takenAt = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message CreateAssessmentResponse {
+  meta.Meta meta = 1;
+  Assessments assessments = 2;
+}
+
+message GetAssessmentByStudentIdRequest {
+  uint32 id = 1;
+  uint32 enrollmentId = 2;
+}
+
+message GetAssessmentByStudentIdResponse {
+  meta.Meta meta = 1;
+  Assessments assessments = 2;
+}
+
+//endpoints
+service AssessmentsService {
+  rpc CreateAssessment(CreateAssessmentRequest) returns (CreateAssessmentResponse) {
+    option (google.api.http) = {
+      post: "/v1/assessments"
+      body: "*"
+    };
+  }
+
+  rpc GetAssessmentByStudentId(GetAssessmentByStudentIdRequest) returns (GetAssessmentByStudentIdResponse) {
+    option (google.api.http) ={
+      get: "/v1/assessments/{id}"
+    };
+  }
+}

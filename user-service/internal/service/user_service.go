@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"github.com/ghssni/Smartcy-LMS/pkg"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/repository"
 	"github.com/labstack/gommon/log"
 	"time"
-	"user-service/internal/models"
-	"user-service/internal/repository"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

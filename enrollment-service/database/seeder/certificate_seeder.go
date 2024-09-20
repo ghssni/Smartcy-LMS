@@ -1,13 +1,14 @@
 package seeder
 
 import (
-	"enrollment-service/internal/models"
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 // CertificateSeeder is a function to seed certificate data
-func CertificateSeeder() {
+func CertificateSeeder(db *gorm.DB) {
 	var certificates []models.Certificate
 	gofakeit.Seed(0)
 
@@ -22,5 +23,10 @@ func CertificateSeeder() {
 		})
 	}
 
-	logrus.Println("Seed all success")
+	if err := db.Create(&certificates).Error; err != nil {
+		logrus.Fatalf("Failed to seed certificates: %v", err)
+	} else {
+		logrus.Println("Certificate seeder success")
+	}
+
 }

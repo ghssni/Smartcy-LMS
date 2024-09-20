@@ -1,12 +1,14 @@
 package seeder
 
 import (
-	"enrollment-service/internal/models"
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 // PaymentsSeeder is a function to seed payments data
-func PaymentsSeeder() {
+func PaymentsSeeder(db *gorm.DB) {
 	var payments []models.Payments
 	gofakeit.Seed(0)
 
@@ -25,5 +27,11 @@ func PaymentsSeeder() {
 			UpdatedAt:         gofakeit.Date(),
 			DeletedAt:         nil,
 		})
+	}
+
+	if err := db.Create(&payments).Error; err != nil {
+		logrus.Fatalf("Failed to seed payments: %v", err)
+	} else {
+		logrus.Println("Payments seeder success")
 	}
 }

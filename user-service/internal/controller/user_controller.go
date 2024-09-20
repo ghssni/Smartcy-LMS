@@ -3,12 +3,12 @@ package controller
 import (
 	"errors"
 	"github.com/ghssni/Smartcy-LMS/pkg"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"
-	"user-service/internal/models"
-	"user-service/internal/service"
 )
 
 type UserController struct {

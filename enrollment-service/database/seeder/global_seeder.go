@@ -7,9 +7,10 @@ import (
 
 func SeedAll(db *gorm.DB) {
 	// Seed all data
-	EnrollmentsSeeder()
-	CertificateSeeder()
-	AssessmentsSeeder()
-	PaymentsSeeder()
+	EnrollmentsSeeder(db)
+	CertificateSeeder(db)
+	AssessmentsSeeder(db)
+	PaymentsSeeder(db)
+	LearningProgressSeeder(db)
 	logrus.Println("Seed all success")
 }

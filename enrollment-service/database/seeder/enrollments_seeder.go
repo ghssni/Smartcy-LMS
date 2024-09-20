@@ -1,12 +1,13 @@
 package seeder
 
 import (
-	"enrollment-service/internal/models"
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
-func EnrollmentsSeeder() {
+func EnrollmentsSeeder(db *gorm.DB) {
 	var enrollments []models.Enrollments
 	go gofakeit.Seed(0)
 	for i := 1; i < 15; i++ {
@@ -20,5 +21,9 @@ func EnrollmentsSeeder() {
 			UpdatedAt:     gofakeit.Date(),
 		})
 	}
-	logrus.Println("Enrollments seeder success")
+	if err := db.Create(&enrollments).Error; err != nil {
+		logrus.Fatalf("Failed to seed enrollments: %v", err)
+	} else {
+		logrus.Println("Enrollments seeder success")
+	}
 }

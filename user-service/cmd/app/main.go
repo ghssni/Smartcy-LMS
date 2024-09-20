@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
+	"github.com/ghssni/Smartcy-LMS/pkg"
+	"github.com/ghssni/Smartcy-LMS/user-service/database"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
-	"user-service/database"
-	"user-service/pkg"
 
 	"os"
 	"os/signal"

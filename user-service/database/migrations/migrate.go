@@ -2,10 +2,10 @@ package migrations
 
 import (
 	"fmt"
+	"github.com/ghssni/Smartcy-LMS/user-service/database/seeder"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"
-	"user-service/database/seeder"
 )
 
 // Migrate is a function to migrate all tables

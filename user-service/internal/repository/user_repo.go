@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
-	"user-service/internal/models"
 )
 
 type UserRepo interface {

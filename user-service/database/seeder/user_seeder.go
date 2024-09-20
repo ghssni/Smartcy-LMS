@@ -3,9 +3,9 @@ package seeder
 import (
 	"context"
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/ghssni/Smartcy-LMS/pkg"
+	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
 	"github.com/sirupsen/logrus"
-	"user-service/internal/models"
-	"user-service/pkg"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
