@@ -1,0 +1,152 @@
+syntax = "proto3";
+package course;
+option go_package = "course-service/pb";
+
+
+// Define the Course service for CRUD operations
+service CourseService {
+  // Create a new course
+  rpc CreateCourse(CreateCourseRequest) returns (CreateCourseResponse);
+
+  // Get a course by ID
+  rpc GetCourseById(GetCourseByIdRequest) returns (GetCourseByIdResponse);
+
+  // Get courses by instructor ID
+  rpc GetCoursesByInstructorID(GetCoursesByInstructorIDRequest) returns (GetCoursesByInstructorIDResponse);
+
+  // Get courses by category
+  rpc GetCoursesByCategory(GetCoursesByCategoryRequest) returns (GetCoursesByCategoryResponse);
+
+  // List all active courses (exclude soft-deleted courses)
+  rpc GetAllCourses(GetAllCoursesRequest) returns (GetAllCoursesResponse);
+
+  // Check if a course exists by course ID
+  rpc CheckCourseByID(CheckCourseByIDRequest) returns (CheckCourseByIDResponse);
+
+  // Update a course by course ID
+  rpc UpdateCourse(UpdateCourseRequest) returns (UpdateCourseResponse);
+
+  // Delete (soft delete) a course by ID
+  rpc DeleteCourse(DeleteCourseRequest) returns (DeleteCourseResponse);
+
+
+
+}
+
+// Message representing a course
+message Course {
+  uint32 id = 1;
+  string title = 2;
+  string description = 3;
+  double price = 4;
+  string thumbnail_url = 5;
+  string instructor_id = 6;  // MongoDB ObjectId
+  string category = 7;  // Enum: frontend, backend, etc.
+  string created_at = 8;  // ISO format timestamp
+  string updated_at = 9;
+  string deleted_at = 10;  // Nullable for soft deletes
+}
+
+// Create course request message
+message CreateCourseRequest {
+  string title = 1;
+  string description = 2;
+  double price = 3;
+  string thumbnail_url = 4;
+  string instructor_id = 5;  // MongoDB ObjectId
+  string category = 6;
+}
+
+// Create course response message
+message CreateCourseResponse {
+  bool success = 1;
+  uint32 id = 2;            // Returned course ID if successful
+  string message = 3;      // Additional information (e.g., error message)
+}
+
+// Get course request message
+message GetCourseByIdRequest {
+  uint32 id = 1;  // Course ID
+}
+
+// Get course response message
+message GetCourseByIdResponse {
+  bool success = 1;
+  Course course = 2;
+  string message = 3;  // Additional information (e.g., error message)
+}
+
+
+// List courses request message
+message GetAllCoursesRequest {}
+
+// List courses response message
+message GetAllCoursesResponse {
+  bool success = 1;
+  repeated Course courses = 2;
+  string message = 3;  // Additional information (e.g., error message)
+}
+
+// Check if a course exists by ID request
+message CheckCourseByIDRequest {
+  uint32 course_id = 1;
+}
+
+// Check if a course exists by ID response
+message CheckCourseByIDResponse {
+  bool success = 1;  // True if the course exists
+  string message = 2;  // Additional information (e.g., error message)
+}
+
+// Get courses by category request
+message GetCoursesByCategoryRequest {
+  string category = 1;
+}
+
+// Get courses by category response
+message GetCoursesByCategoryResponse {
+  bool success = 1;
+  repeated Course courses = 2;
+  string message = 3;  // Additional information (e.g., error message)
+}
+
+// Get courses by instructor ID request
+message GetCoursesByInstructorIDRequest {
+  string instructor_id = 1;  // MongoDB ObjectId
+}
+
+// Get courses by instructor ID response
+message GetCoursesByInstructorIDResponse {
+  bool success = 1;
+  repeated Course courses = 2;
+  string message = 3;  // Additional information (e.g., error message)
+}
+
+
+// Update course request message
+message UpdateCourseRequest {
+  uint32 id = 1;  // Course ID
+  string title = 2;
+  string description = 3;
+  double price = 4;
+  string thumbnail_url = 5;
+  string instructor_id = 6;  // MongoDB ObjectId
+  string category = 7;
+}
+
+// Update course response message
+message UpdateCourseResponse {
+  bool success = 1;
+  string message = 2;  // Additional information (e.g., error message)
+}
+
+// Delete course request message (soft delete)
+message DeleteCourseRequest {
+  uint32 id = 1;  // Course ID
+}
+
+// Delete course response message
+message DeleteCourseResponse {
+  bool success = 1;
+  string message = 2;  // Additional information (e.g., error message)
+}
