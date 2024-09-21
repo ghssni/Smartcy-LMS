@@ -8,6 +8,7 @@ package pb
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,9 +23,9 @@ const (
 	CourseService_CreateCourse_FullMethodName             = "/course.CourseService/CreateCourse"
 	CourseService_GetCourseById_FullMethodName            = "/course.CourseService/GetCourseById"
 	CourseService_GetCoursesByInstructorID_FullMethodName = "/course.CourseService/GetCoursesByInstructorID"
+	CourseService_GetCoursesByCategory_FullMethodName     = "/course.CourseService/GetCoursesByCategory"
 	CourseService_GetAllCourses_FullMethodName            = "/course.CourseService/GetAllCourses"
 	CourseService_CheckCourseByID_FullMethodName          = "/course.CourseService/CheckCourseByID"
-	CourseService_GetCoursesByCategory_FullMethodName     = "/course.CourseService/GetCoursesByCategory"
 	CourseService_UpdateCourse_FullMethodName             = "/course.CourseService/UpdateCourse"
 	CourseService_DeleteCourse_FullMethodName             = "/course.CourseService/DeleteCourse"
 )
@@ -38,19 +39,19 @@ type CourseServiceClient interface {
 	// Create a new course
 	CreateCourse(ctx context.Context, in *CreateCourseRequest, opts ...grpc.CallOption) (*CreateCourseResponse, error)
 	// Get a course by ID
-	GetCourseById(ctx context.Context, in *GetCourseByIdRequest, opts ...grpc.CallOption) (*GetCourseByIdResponse, error)
+	GetCourseById(ctx context.Context, in *GetCourseByIdRequest, opts ...grpc.CallOption) (*Course, error)
 	// Get courses by instructor ID
 	GetCoursesByInstructorID(ctx context.Context, in *GetCoursesByInstructorIDRequest, opts ...grpc.CallOption) (*GetCoursesByInstructorIDResponse, error)
+	// Get courses by category
+	GetCoursesByCategory(ctx context.Context, in *GetCoursesByCategoryRequest, opts ...grpc.CallOption) (*GetCoursesByCategoryResponse, error)
 	// List all active courses (exclude soft-deleted courses)
 	GetAllCourses(ctx context.Context, in *GetAllCoursesRequest, opts ...grpc.CallOption) (*GetAllCoursesResponse, error)
 	// Check if a course exists by course ID
 	CheckCourseByID(ctx context.Context, in *CheckCourseByIDRequest, opts ...grpc.CallOption) (*CheckCourseByIDResponse, error)
-	// Get courses by category
-	GetCoursesByCategory(ctx context.Context, in *GetCoursesByCategoryRequest, opts ...grpc.CallOption) (*GetCoursesByCategoryResponse, error)
 	// Update a course by course ID
-	UpdateCourse(ctx context.Context, in *UpdateCourseRequest, opts ...grpc.CallOption) (*UpdateCourseResponse, error)
+	UpdateCourse(ctx context.Context, in *UpdateCourseRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// Delete (soft delete) a course by ID
-	DeleteCourse(ctx context.Context, in *DeleteCourseRequest, opts ...grpc.CallOption) (*DeleteCourseResponse, error)
+	DeleteCourse(ctx context.Context, in *DeleteCourseRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type courseServiceClient struct {
@@ -71,9 +72,9 @@ func (c *courseServiceClient) CreateCourse(ctx context.Context, in *CreateCourse
 	return out, nil
 }
 
-func (c *courseServiceClient) GetCourseById(ctx context.Context, in *GetCourseByIdRequest, opts ...grpc.CallOption) (*GetCourseByIdResponse, error) {
+func (c *courseServiceClient) GetCourseById(ctx context.Context, in *GetCourseByIdRequest, opts ...grpc.CallOption) (*Course, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCourseByIdResponse)
+	out := new(Course)
 	err := c.cc.Invoke(ctx, CourseService_GetCourseById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -85,6 +86,16 @@ func (c *courseServiceClient) GetCoursesByInstructorID(ctx context.Context, in *
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCoursesByInstructorIDResponse)
 	err := c.cc.Invoke(ctx, CourseService_GetCoursesByInstructorID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *courseServiceClient) GetCoursesByCategory(ctx context.Context, in *GetCoursesByCategoryRequest, opts ...grpc.CallOption) (*GetCoursesByCategoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCoursesByCategoryResponse)
+	err := c.cc.Invoke(ctx, CourseService_GetCoursesByCategory_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,19 +122,9 @@ func (c *courseServiceClient) CheckCourseByID(ctx context.Context, in *CheckCour
 	return out, nil
 }
 
-func (c *courseServiceClient) GetCoursesByCategory(ctx context.Context, in *GetCoursesByCategoryRequest, opts ...grpc.CallOption) (*GetCoursesByCategoryResponse, error) {
+func (c *courseServiceClient) UpdateCourse(ctx context.Context, in *UpdateCourseRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCoursesByCategoryResponse)
-	err := c.cc.Invoke(ctx, CourseService_GetCoursesByCategory_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *courseServiceClient) UpdateCourse(ctx context.Context, in *UpdateCourseRequest, opts ...grpc.CallOption) (*UpdateCourseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateCourseResponse)
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, CourseService_UpdateCourse_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -131,9 +132,9 @@ func (c *courseServiceClient) UpdateCourse(ctx context.Context, in *UpdateCourse
 	return out, nil
 }
 
-func (c *courseServiceClient) DeleteCourse(ctx context.Context, in *DeleteCourseRequest, opts ...grpc.CallOption) (*DeleteCourseResponse, error) {
+func (c *courseServiceClient) DeleteCourse(ctx context.Context, in *DeleteCourseRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteCourseResponse)
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, CourseService_DeleteCourse_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -150,19 +151,19 @@ type CourseServiceServer interface {
 	// Create a new course
 	CreateCourse(context.Context, *CreateCourseRequest) (*CreateCourseResponse, error)
 	// Get a course by ID
-	GetCourseById(context.Context, *GetCourseByIdRequest) (*GetCourseByIdResponse, error)
+	GetCourseById(context.Context, *GetCourseByIdRequest) (*Course, error)
 	// Get courses by instructor ID
 	GetCoursesByInstructorID(context.Context, *GetCoursesByInstructorIDRequest) (*GetCoursesByInstructorIDResponse, error)
+	// Get courses by category
+	GetCoursesByCategory(context.Context, *GetCoursesByCategoryRequest) (*GetCoursesByCategoryResponse, error)
 	// List all active courses (exclude soft-deleted courses)
 	GetAllCourses(context.Context, *GetAllCoursesRequest) (*GetAllCoursesResponse, error)
 	// Check if a course exists by course ID
 	CheckCourseByID(context.Context, *CheckCourseByIDRequest) (*CheckCourseByIDResponse, error)
-	// Get courses by category
-	GetCoursesByCategory(context.Context, *GetCoursesByCategoryRequest) (*GetCoursesByCategoryResponse, error)
 	// Update a course by course ID
-	UpdateCourse(context.Context, *UpdateCourseRequest) (*UpdateCourseResponse, error)
+	UpdateCourse(context.Context, *UpdateCourseRequest) (*empty.Empty, error)
 	// Delete (soft delete) a course by ID
-	DeleteCourse(context.Context, *DeleteCourseRequest) (*DeleteCourseResponse, error)
+	DeleteCourse(context.Context, *DeleteCourseRequest) (*empty.Empty, error)
 }
 
 // UnimplementedCourseServiceServer should be embedded to have
@@ -175,11 +176,14 @@ type UnimplementedCourseServiceServer struct{}
 func (UnimplementedCourseServiceServer) CreateCourse(context.Context, *CreateCourseRequest) (*CreateCourseResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCourse not implemented")
 }
-func (UnimplementedCourseServiceServer) GetCourseById(context.Context, *GetCourseByIdRequest) (*GetCourseByIdResponse, error) {
+func (UnimplementedCourseServiceServer) GetCourseById(context.Context, *GetCourseByIdRequest) (*Course, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCourseById not implemented")
 }
 func (UnimplementedCourseServiceServer) GetCoursesByInstructorID(context.Context, *GetCoursesByInstructorIDRequest) (*GetCoursesByInstructorIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCoursesByInstructorID not implemented")
+}
+func (UnimplementedCourseServiceServer) GetCoursesByCategory(context.Context, *GetCoursesByCategoryRequest) (*GetCoursesByCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCoursesByCategory not implemented")
 }
 func (UnimplementedCourseServiceServer) GetAllCourses(context.Context, *GetAllCoursesRequest) (*GetAllCoursesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllCourses not implemented")
@@ -187,13 +191,10 @@ func (UnimplementedCourseServiceServer) GetAllCourses(context.Context, *GetAllCo
 func (UnimplementedCourseServiceServer) CheckCourseByID(context.Context, *CheckCourseByIDRequest) (*CheckCourseByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckCourseByID not implemented")
 }
-func (UnimplementedCourseServiceServer) GetCoursesByCategory(context.Context, *GetCoursesByCategoryRequest) (*GetCoursesByCategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCoursesByCategory not implemented")
-}
-func (UnimplementedCourseServiceServer) UpdateCourse(context.Context, *UpdateCourseRequest) (*UpdateCourseResponse, error) {
+func (UnimplementedCourseServiceServer) UpdateCourse(context.Context, *UpdateCourseRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCourse not implemented")
 }
-func (UnimplementedCourseServiceServer) DeleteCourse(context.Context, *DeleteCourseRequest) (*DeleteCourseResponse, error) {
+func (UnimplementedCourseServiceServer) DeleteCourse(context.Context, *DeleteCourseRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCourse not implemented")
 }
 func (UnimplementedCourseServiceServer) testEmbeddedByValue() {}
@@ -270,6 +271,24 @@ func _CourseService_GetCoursesByInstructorID_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CourseService_GetCoursesByCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCoursesByCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CourseServiceServer).GetCoursesByCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CourseService_GetCoursesByCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CourseServiceServer).GetCoursesByCategory(ctx, req.(*GetCoursesByCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CourseService_GetAllCourses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAllCoursesRequest)
 	if err := dec(in); err != nil {
@@ -302,24 +321,6 @@ func _CourseService_CheckCourseByID_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CourseServiceServer).CheckCourseByID(ctx, req.(*CheckCourseByIDRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CourseService_GetCoursesByCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCoursesByCategoryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CourseServiceServer).GetCoursesByCategory(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: CourseService_GetCoursesByCategory_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CourseServiceServer).GetCoursesByCategory(ctx, req.(*GetCoursesByCategoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -380,16 +381,16 @@ var CourseService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CourseService_GetCoursesByInstructorID_Handler,
 		},
 		{
+			MethodName: "GetCoursesByCategory",
+			Handler:    _CourseService_GetCoursesByCategory_Handler,
+		},
+		{
 			MethodName: "GetAllCourses",
 			Handler:    _CourseService_GetAllCourses_Handler,
 		},
 		{
 			MethodName: "CheckCourseByID",
 			Handler:    _CourseService_CheckCourseByID_Handler,
-		},
-		{
-			MethodName: "GetCoursesByCategory",
-			Handler:    _CourseService_GetCoursesByCategory_Handler,
 		},
 		{
 			MethodName: "UpdateCourse",
