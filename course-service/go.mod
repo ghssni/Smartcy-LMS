@@ -3,10 +3,12 @@ module course-service
 go 1.23.0
 
 require (
+	github.com/golang/protobuf v1.5.3
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/spf13/viper v1.19.0
+	golang.org/x/net v0.29.0
 	google.golang.org/grpc v1.66.2
 	google.golang.org/protobuf v1.34.2
 )
@@ -34,7 +36,6 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
-	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
