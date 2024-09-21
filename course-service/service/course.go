@@ -37,7 +37,7 @@ func (s *CourseService) CreateCourse(ctx context.Context, in *pb.CreateCourseReq
 	// createdAt and updatedAt
 	createdAt, updatedAt := time.Now(), time.Now()
 
-	courseID, err := repo.Course.CreateCourse(course, createdAt, updatedAt)
+	courseID, err := repo.Course.CreateCourse(ctx, course, createdAt, updatedAt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to create course: %v", err))
 	}
@@ -55,7 +55,7 @@ func (s *CourseService) GetCourseById(ctx context.Context, in *pb.GetCourseByIdR
 	courseID := in.GetId()
 
 	// Find course by id
-	course, err := repo.Course.GetCourseByID(courseID)
+	course, err := repo.Course.GetCourseByID(ctx, courseID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Course with ID %d not found", courseID))
 	}
@@ -77,7 +77,7 @@ func (s *CourseService) GetCourseById(ctx context.Context, in *pb.GetCourseByIdR
 func (s *CourseService) GetCoursesByInstructorID(ctx context.Context, in *pb.GetCoursesByInstructorIDRequest) (*pb.GetCoursesByInstructorIDResponse, error) {
 	instructorID := in.GetInstructorId()
 
-	courses, err := repo.Course.GetCourseByInstructorID(instructorID)
+	courses, err := repo.Course.GetCourseByInstructorID(ctx, instructorID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Failed to get courses by instructor ID: %v", err))
 	}
@@ -102,7 +102,7 @@ func (s *CourseService) GetCoursesByInstructorID(ctx context.Context, in *pb.Get
 }
 
 func (s *CourseService) GetCoursesByCategory(ctx context.Context, in *pb.GetCoursesByCategoryRequest) (*pb.GetCoursesByCategoryResponse, error) {
-	courses, err := repo.Course.GetCourseByCategory(in.GetCategory())
+	courses, err := repo.Course.GetCourseByCategory(ctx, in.GetCategory())
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Failed to get courses by category: %v", err))
 	}
@@ -127,7 +127,7 @@ func (s *CourseService) GetCoursesByCategory(ctx context.Context, in *pb.GetCour
 }
 
 func (s *CourseService) GetAllCourses(ctx context.Context, in *pb.GetAllCoursesRequest) (*pb.GetAllCoursesResponse, error) {
-	courses, err := repo.Course.GetAllCourses()
+	courses, err := repo.Course.GetAllCourses(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Failed to get all courses: %v", err))
 	}
@@ -152,7 +152,7 @@ func (s *CourseService) GetAllCourses(ctx context.Context, in *pb.GetAllCoursesR
 }
 
 func (s *CourseService) CheckCourseByID(ctx context.Context, in *pb.CheckCourseByIDRequest) (*pb.CheckCourseByIDResponse, error) {
-	exists, err := repo.Course.CheckCourseByID(in.GetCourseId())
+	exists, err := repo.Course.CheckCourseByID(ctx, in.GetCourseId())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to check course by ID: %v", err))
 	}
@@ -172,6 +172,7 @@ func (s *CourseService) UpdateCourse(ctx context.Context, in *pb.UpdateCourseReq
 
 	// Update course
 	course := &data.Course{
+		ID:           courseID,
 		Title:        courseTitle,
 		Description:  courseDesc,
 		Price:        coursePrice,
@@ -180,7 +181,10 @@ func (s *CourseService) UpdateCourse(ctx context.Context, in *pb.UpdateCourseReq
 		Category:     category,
 	}
 
-	err := repo.Course.UpdateCourse(courseID, course)
+	// updatedAt
+	updatedAt := time.Now()
+
+	err := repo.Course.UpdateCourse(ctx, course, updatedAt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to update course: %v", err))
 	}
@@ -193,8 +197,11 @@ func (s *CourseService) DeleteCourse(ctx context.Context, in *pb.DeleteCourseReq
 	// Get data from request
 	courseID := in.GetId()
 
+	// DeletedAt
+	deletedAt := time.Now()
+
 	// Delete course
-	err := repo.Course.DeleteCourse(courseID)
+	err := repo.Course.DeleteCourse(ctx, courseID, deletedAt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to delete course: %v", err))
 	}
