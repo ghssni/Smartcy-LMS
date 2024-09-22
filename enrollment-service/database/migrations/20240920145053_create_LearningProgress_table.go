@@ -14,7 +14,7 @@ func createLearningprogressTableMigration() *gormigrate.Migration {
 			return tx.AutoMigrate(models.LearningProgress{})
 		},
 		Rollback: func(tx *gorm.DB) error {
-			return tx.Migrator().DropTable("learning_progress")
+			return tx.Migrator().DropTable("learning_progresses")
 		},
 	}
 }

@@ -3,8 +3,7 @@ package certificate;
 
 import "google/protobuf/timestamp.proto";
 import "meta/meta.proto";
-import "google/api/annotations.proto";
-option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/certificate;certificate";
+option go_package = "certificate/certificate;certificate";
 
 
 message Certificate {
@@ -40,16 +39,7 @@ message GetCertificateByEnrollmentIdResponse {
 
 //endpoints
 service CertificateService {
-  rpc CreateCertificate(CreateCertificateRequest) returns (CreateCertificateResponse) {
-    option (google.api.http) = {
-      post: "/v1/certificates"
-      body: "*"
-    };
-  }
+  rpc CreateCertificate(CreateCertificateRequest) returns (CreateCertificateResponse);
 
-  rpc GetCertificateByEnrollmentId(GetCertificateByEnrollmentIdRequest) returns (GetCertificateByEnrollmentIdResponse) {
-    option (google.api.http) ={
-      get: "/v1/certificates/{enrollmentId}"
-    };
-  }
+  rpc GetCertificateByEnrollmentId(GetCertificateByEnrollmentIdRequest) returns (GetCertificateByEnrollmentIdResponse);
 }

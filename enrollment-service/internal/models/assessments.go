@@ -6,9 +6,9 @@ import (
 )
 
 type Assessments struct {
-	ID             uint      `gorm:"primaryKey;autoIncrement" json:"id"`
-	EnrollmentID   uint      `json:"enrollment_id"`
-	Score          int       `json:"score"`
+	ID             uint32    `gorm:"primaryKey;autoIncrement" json:"id"`
+	EnrollmentID   uint32    `json:"enrollment_id"`
+	Score          uint32    `json:"score"`
 	AssessmentType string    `json:"assessment_type"`
 	TakenAt        time.Time `json:"taken_at"`
 	CreatedAt      time.Time `json:"created_at"`
@@ -17,7 +17,7 @@ type Assessments struct {
 
 type AssessmentsInput struct {
 	EnrollmentID   uint      `json:"enrollment_id" validate:"required"`
-	Score          int       `json:"score" validate:"required"`
+	Score          uint32    `json:"score" validate:"required"`
 	AssessmentType string    `json:"assessment_type" validate:"required"`
 	TakenAt        time.Time `json:"taken_at" validate:"required"`
 	CreatedAt      time.Time `json:"created_at" validate:"required"`

@@ -14,9 +14,8 @@ func LearningProgressSeeder(db *gorm.DB) {
 
 	for i := 1; i < 15; i++ {
 		learningProgress = append(learningProgress, models.LearningProgress{
-			ID:           uint(i),
-			EnrollmentID: uint(i),
-			LessonID:     uint(i),
+			EnrollmentID: uint32(uint(gofakeit.Number(1, 1000))),
+			LessonID:     uint32(uint(gofakeit.Number(1, 1000))),
 			Status:       gofakeit.RandomString([]string{"Not Started", "In Progress", "Completed"}),
 			CompletedAt:  gofakeit.Date(),
 			CreatedAt:    gofakeit.Date(),

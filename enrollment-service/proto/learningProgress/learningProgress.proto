@@ -4,8 +4,7 @@ package learningProgress;
 
 import "google/protobuf/timestamp.proto";
 import "meta/meta.proto";
-import "google/api/annotations.proto";
-option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/learningProgress;learningProgress";
+option go_package = "learningProgress/learningProgress;learningProgress";
 
 message LearningProgress {
     uint32 id = 1;
@@ -35,10 +34,6 @@ message CreateLearningProgressResponse {
 
 // endpoints
 service LearningProgressService {
-    rpc CreateLearningProgress(CreateLearningProgressRequest) returns (CreateLearningProgressResponse) {
-        option (google.api.http) = {
-            post: "/v1/learning-progress"
-            body: "*"
-        };
-    }
+    rpc CreateLearningProgress(CreateLearningProgressRequest) returns (CreateLearningProgressResponse);
+
 }

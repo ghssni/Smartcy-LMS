@@ -12,9 +12,9 @@ func EnrollmentsSeeder(db *gorm.DB) {
 	go gofakeit.Seed(0)
 	for i := 1; i < 15; i++ {
 		enrollments = append(enrollments, models.Enrollments{
-			ID:            uint(i),
+			ID:            uint32(uint(i)),
 			StudentID:     gofakeit.UUID(),
-			CourseID:      uint(i),
+			CourseID:      uint32(uint(i)),
 			PaymentStatus: gofakeit.RandomString([]string{"Pending", "Success", "Failed"}),
 			EnrolledAt:    gofakeit.Date(),
 			CreatedAt:     gofakeit.Date(),

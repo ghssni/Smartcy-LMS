@@ -3,8 +3,7 @@ package enrollment;
 
 import "google/protobuf/timestamp.proto";
 import "meta/meta.proto";
-import "google/api/annotations.proto";
-option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment;enrollment";
+option go_package = "enrollment/enrollment;enrollment";
 
 
 message Enrollment {
@@ -17,27 +16,7 @@ message Enrollment {
     google.protobuf.Timestamp updated_at = 7;
 }
 
-// get all enrollments
-message GetAllEnrollmentsRequest {
-    string student_id = 1;
-    uint32 page = 2;
-    uint32 limit = 3;
-}
 
-message GetAllEnrollmentsResponse {
-    meta.Meta meta = 1;
-    repeated Enrollment enrollments = 2;
-}
-
-// get enrollment by id
-message GetEnrollmentByIdRequest {
-    uint32 id = 1;
-}
-
-message GetEnrollmentByIdResponse {
-    meta.Meta meta = 1;
-    Enrollment enrollment = 2;
-}
 
 // create enrollment
 message CreateEnrollmentRequest {
@@ -51,19 +30,18 @@ message CreateEnrollmentRequest {
 
 message CreateEnrollmentResponse {
     meta.Meta meta = 1;
-    Enrollment enrollment = 2;
+    Enrollment data = 2;
 }
-
-
 
 // delete enrollment
-message DeleteEnrollmentRequest {
-    string id = 1;
+message DeleteEnrollmentByIdRequest {
+    uint32 id = 1;
 }
 
-message DeleteEnrollmentResponse {
+message DeleteEnrollmentByIdResponse {
     meta.Meta meta = 1;
 }
+
 
 // get enrollments by student id
 message GetEnrollmentsByStudentIdRequest {
@@ -72,40 +50,19 @@ message GetEnrollmentsByStudentIdRequest {
 
 message GetEnrollmentsByStudentIdResponse {
     meta.Meta meta = 1;
-    repeated Enrollment enrollments = 2;
+    repeated Enrollment data = 2;
 }
 
 
 //endpoints
 service EnrollmentService {
-    // Get all enrollments with optional pagination
-    rpc GetAllEnrollments(GetAllEnrollmentsRequest) returns (GetAllEnrollmentsResponse) {
-        option (google.api.http) = {
-            get: "/v1/enrollments"
-        };
-    }
-
-
-    // Create a new enrollment
-    rpc CreateEnrollment(CreateEnrollmentRequest) returns (CreateEnrollmentResponse) {
-        option (google.api.http) = {
-            post: "/v1/enrollments"
-            body: "*"
-        };
-    }
+    // Create an enrollment
+    rpc CreateEnrollment(CreateEnrollmentRequest) returns (CreateEnrollmentResponse);
 
     // Delete an enrollment by ID
-    rpc DeleteEnrollment(DeleteEnrollmentRequest) returns (DeleteEnrollmentResponse) {
-        option (google.api.http) = {
-            delete: "/v1/enrollments/{id}"
-        };
-    }
+    rpc DeleteEnrollmentById(DeleteEnrollmentByIdRequest) returns (DeleteEnrollmentByIdResponse);
 
     // Get all enrollments by student ID
-    rpc GetEnrollmentsByStudentId(GetEnrollmentsByStudentIdRequest) returns (GetEnrollmentsByStudentIdResponse) {
-        option (google.api.http) = {
-            get: "/v1/enrollments/student/{student_id}"
-        };
-    }
+    rpc GetEnrollmentsByStudentId(GetEnrollmentsByStudentIdRequest) returns (GetEnrollmentsByStudentIdResponse) ;
 
 }

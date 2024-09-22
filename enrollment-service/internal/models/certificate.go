@@ -6,8 +6,8 @@ import (
 )
 
 type Certificate struct {
-	ID             uint      `gorm:"primaryKey;autoIncrement" json:"id"`
-	EnrollmentID   uint      `json:"enrollment_id"`
+	ID             uint32    `gorm:"primaryKey;autoIncrement" json:"id"`
+	EnrollmentID   uint32    `json:"enrollment_id"`
 	IssuedAt       time.Time `json:"issued_at"`
 	CertificateURL string    `json:"certificate_url"`
 	CreatedAt      time.Time `json:"created_at"`
@@ -15,7 +15,7 @@ type Certificate struct {
 }
 
 type CertificateInput struct {
-	EnrollmentID   uint      `json:"enrollment_id" validate:"required"`
+	EnrollmentID   uint32    `json:"enrollment_id" validate:"required"`
 	IssuedAt       time.Time `json:"issued_at" validate:"required"`
 	CertificateURL string    `json:"certificate_url" validate:"required"`
 	CreatedAt      time.Time `json:"created_at" validate:"required"`

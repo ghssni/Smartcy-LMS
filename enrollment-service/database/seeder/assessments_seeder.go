@@ -13,9 +13,9 @@ func AssessmentsSeeder(db *gorm.DB) {
 	gofakeit.Seed(0)
 	for i := 1; i < 15; i++ {
 		assessments = append(assessments, models.Assessments{
-			ID:             uint(i),
-			EnrollmentID:   uint(i),
-			Score:          gofakeit.Number(0, 100),
+			ID:             uint32(uint(i)),
+			EnrollmentID:   uint32(uint(i)),
+			Score:          uint32(gofakeit.Number(0, 100)),
 			AssessmentType: gofakeit.RandomString([]string{"Quiz", "Mid Exam", "Final Exam"}),
 			TakenAt:        gofakeit.Date(),
 			CreatedAt:      gofakeit.Date(),

@@ -14,8 +14,8 @@ func CertificateSeeder(db *gorm.DB) {
 
 	for i := 1; i < 15; i++ {
 		certificates = append(certificates, models.Certificate{
-			ID:             uint(i),
-			EnrollmentID:   uint(i),
+			ID:             uint32(uint(i)),
+			EnrollmentID:   uint32(uint(i)),
 			CertificateURL: gofakeit.URL(),
 			IssuedAt:       gofakeit.Date(),
 			CreatedAt:      gofakeit.Date(),

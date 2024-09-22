@@ -5,6 +5,7 @@ go 1.23.0
 replace github.com/ghssni/Smartcy-LMS => ../
 
 require (
+	github.com/brianvoe/gofakeit/v7 v7.0.4
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/labstack/echo/v4 v4.12.0

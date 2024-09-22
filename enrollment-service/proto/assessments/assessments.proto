@@ -4,8 +4,7 @@ package assessments;
 
 import "google/protobuf/timestamp.proto";
 import "meta/meta.proto";
-import "google/api/annotations.proto";
-option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/assessments;assessments";
+option go_package = "assessments/assessments;assessments";
 
 message Assessments {
   uint32 id = 1;
@@ -44,16 +43,7 @@ message GetAssessmentByStudentIdResponse {
 
 //endpoints
 service AssessmentsService {
-  rpc CreateAssessment(CreateAssessmentRequest) returns (CreateAssessmentResponse) {
-    option (google.api.http) = {
-      post: "/v1/assessments"
-      body: "*"
-    };
-  }
+  rpc CreateAssessment(CreateAssessmentRequest) returns (CreateAssessmentResponse);
 
-  rpc GetAssessmentByStudentId(GetAssessmentByStudentIdRequest) returns (GetAssessmentByStudentIdResponse) {
-    option (google.api.http) ={
-      get: "/v1/assessments/{id}"
-    };
-  }
+  rpc GetAssessmentByStudentId(GetAssessmentByStudentIdRequest) returns (GetAssessmentByStudentIdResponse);
 }

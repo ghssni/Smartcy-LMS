@@ -2,7 +2,9 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
@@ -11,6 +13,7 @@ type UserRepo interface {
 	SaveUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error)
 	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
 	FindUserByID(ctx context.Context, id string) (*models.User, error)
+	UpdateUser(ctx context.Context, user *models.User) error
 	LogUserActivity(ctx context.Context, activity *models.UserActivityLog) (*mongo.InsertOneResult, error)
 	FindUserActivityByUserID(ctx context.Context, userID string) ([]models.UserActivityLog, error)
 }
@@ -55,6 +58,26 @@ func (r *userRepo) FindUserByID(ctx context.Context, id string) (*models.User, e
 	}
 
 	return &user, nil
+}
+
+func (r *userRepo) UpdateUser(ctx context.Context, user *models.User) error {
+	filter := bson.M{"_id": user.ID}
+	update := bson.M{"$set": bson.M{"token": user.Token}}
+
+	res, err := r.db.Collection("users").UpdateOne(ctx, filter, update)
+	if err != nil {
+		return fmt.Errorf("failed update user: %v", err)
+	}
+
+	if res.MatchedCount == 0 {
+		return fmt.Errorf("user not found for ID: %v", user.ID)
+	}
+
+	if res.ModifiedCount == 0 {
+		return fmt.Errorf("token not updated!: %v", user.ID)
+	}
+
+	return nil
 }
 
 func (r *userRepo) LogUserActivity(ctx context.Context, activity *models.UserActivityLog) (*mongo.InsertOneResult, error) {

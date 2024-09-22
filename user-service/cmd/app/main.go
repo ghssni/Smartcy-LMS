@@ -18,12 +18,12 @@ type Config struct {
 }
 
 func main() {
-	// Setup logger
-	pkg.SetupLogger()
 	//.env
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatal("Error loading .env file")
 	}
+	// Setup logger
+	pkg.SetupLogger()
 
 	// Config
 	db, err := database.InitMongoDB()

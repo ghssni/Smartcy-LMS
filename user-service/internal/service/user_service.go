@@ -15,6 +15,7 @@ import (
 type UserService interface {
 	RegisterUser(ctx context.Context, req models.RegisterInput) (*models.User, error)
 	LoginUser(ctx context.Context, req *models.LoginInput) (*models.User, error)
+	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
 	RegisterActivity(ctx context.Context, userId string, activityType string) error
 }
 
@@ -61,17 +62,34 @@ func (u *userService) LoginUser(ctx context.Context, req *models.LoginInput) (*m
 		return nil, errors.New("invalid email or password")
 	}
 
-	token, err := pkg.GenerateToken(user.ID.Hex(), u.jwtSecret)
+	//email, err := u.FindUserByEmail(ctx, req.Email)
+	//if err != nil {
+	//	return nil, err
+	//}
+	token, err := pkg.GenerateToken(user.ID.Hex(), user.Email, u.jwtSecret)
 	if err != nil {
 		return nil, err
 	}
-
 	user.Token = token
 
+	// Update user token
+	//err = u.userRepo.UpdateUser(ctx, user)
+	//if err != nil {
+	//	return nil, err
+	//}
 	// Register user activity
 	err = u.RegisterActivity(ctx, user.ID.Hex(), "login")
 	if err != nil {
 		log.Printf("Error inserting user activity: %v", err)
+	}
+
+	return user, nil
+}
+
+func (u *userService) FindUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	user, err := u.userRepo.FindUserByEmail(ctx, email)
+	if err != nil {
+		return nil, err
 	}
 
 	return user, nil
