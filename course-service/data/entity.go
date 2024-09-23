@@ -10,10 +10,12 @@ func New(dbPool *sqlx.DB) *Models {
 	return &Models{
 		Course: &Course{},
 		Lesson: &Lesson{},
+		Review: &Review{},
 	}
 }
 
 type Models struct {
 	Course CourseInterfaces
 	Lesson LessonInterfaces
+	Review ReviewInterfaces
 }

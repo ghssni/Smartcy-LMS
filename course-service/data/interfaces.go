@@ -28,3 +28,14 @@ type LessonInterfaces interface {
 	GetTotalLessonsByCourseID(ctx context.Context, courseID uint32) (uint32, error)
 	GetTotalLessonsByCourseIDAndType(ctx context.Context, courseID uint32, lessonType string) (uint32, error)
 }
+
+type ReviewInterfaces interface {
+	CreateReview(ctx context.Context, review *Review, createdAt, updatedAt time.Time) (uint32, error)
+	GetReview(ctx context.Context, reviewID uint32) (*Review, error)
+	GetReviewsByStudent(ctx context.Context, courseID uint32, studentID string) ([]Review, error)
+	GetTotalReviewsByCourse(ctx context.Context, courseID uint32) (uint32, error)
+	GetAverageRatingByCourse(ctx context.Context, courseID uint32) (float32, error)
+	ListReviews(ctx context.Context, courseID uint32) ([]Review, error)
+	UpdateReview(ctx context.Context, review *Review, updatedAt time.Time) error
+	DeleteReview(ctx context.Context, reviewID uint32, deletedAt time.Time) error
+}
