@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+
+// Message for User
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  string address = 5;
+  string role = 6;
+  string phone = 7;
+  uint32 age = 8;
+  string token = 9;
+  string created_at = 10;
+  string updated_at = 11;
+}
+
+// Message for Register Input
+message RegisterInput {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  string address = 4;
+  string role = 5;
+  string phone = 6;
+  uint32 age = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+// Message for Login Input
+message LoginInput {
+  string email = 1;
+  string password = 2;
+}
+
+// Register Request & Response
+message RegisterRequest {
+  RegisterInput register_input = 1;
+}
+
+message RegisterResponse {
+  string message = 1;
+  User user = 2;
+}
+
+// Login Request & Response
+message LoginRequest {
+  LoginInput login_input = 1;
+}
+
+message LoginResponse {
+  string token = 1;
+  User user = 2;
+}
+
+
+// Forgot Password Request & Response
+message ForgotPasswordRequest {
+  string email = 1;
+}
+
+message ForgotPasswordResponse {
+  string message = 1;
+}
+
+
+// User Service Definition
+service UserService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+}
