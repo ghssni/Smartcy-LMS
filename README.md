@@ -29,6 +29,6 @@ Smartcy solves these challenges by using microservices architecture and gRPC, en
 ## Application Flow
 ## ERD
 ## Team
-- Driver ([Ahmad Mufied Nugroho](https://www.linkedin.com/in/ahmad-mufied-nugroho/): Writing menu display feature code for course services
-- Driver ([Oksa Satya](https://www.linkedin.com/in/oksastya/): Writing menu display feature code for finance and user services
-- Observer ([Ghassani Tyas](https://www.linkedin.com/in/ghtyas/): Taking notes and documenting features
+- Driver ([Ahmad Mufied Nugroho](https://www.linkedin.com/in/ahmad-mufied-nugroho/)): Writing menu display feature code for course services
+- Driver ([Oksa Satya](https://www.linkedin.com/in/oksastya/)): Writing menu display feature code for finance and user services
+- Observer ([Ghassani Tyas](https://www.linkedin.com/in/ghtyas/)): Taking notes and documenting features
