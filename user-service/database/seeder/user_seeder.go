@@ -3,10 +3,10 @@ package seeder
 import (
 	"context"
 	"github.com/brianvoe/gofakeit/v7"
+	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
 	"github.com/sirupsen/logrus"
-	"user-service/internal/models"
-	"user-service/pkg"
-
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
@@ -25,12 +25,12 @@ func SeedUsers(db *mongo.Database) {
 			Name:      gofakeit.Name(),
 			Email:     gofakeit.Email(),
 			Address:   gofakeit.Address().Address,
-			Age:       gofakeit.Number(18, 60),
+			Age:       uint32(gofakeit.Number(18, 60)),
 			Phone:     gofakeit.Phone(),
 			Role:      gofakeit.RandomString([]string{"student", "instructor"}),
 			Password:  password,
-			CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-			UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
+			CreatedAt: primitive.NewDateTimeFromTime(time.Now()),
+			UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
 		}
 		users = append(users, user)
 	}

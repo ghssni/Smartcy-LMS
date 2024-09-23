@@ -5,7 +5,9 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"reflect"
 	"strings"
 	"time"
@@ -118,4 +120,14 @@ func GenerateToken(userId string, jwtSecret string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(jwtSecret))
+}
+
+// ConvertToProtoTimestamp converts a MongoDB DateTime to a protobuf Timestamp
+func ConvertToProtoTimestamp(datetime primitive.DateTime) *timestamppb.Timestamp {
+	return timestamppb.New(datetime.Time())
+}
+
+// ConvertToMongoDateTime converts a protobuf Timestamp to a MongoDB DateTime
+func ConvertToMongoDateTime(timestamp *timestamppb.Timestamp) primitive.DateTime {
+	return primitive.NewDateTimeFromTime(timestamp.AsTime())
 }

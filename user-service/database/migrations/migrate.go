@@ -2,16 +2,17 @@ package migrations
 
 import (
 	"fmt"
+	"github.com/ghssni/Smartcy-LMS/User-Service/database/seeder"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"
-	"user-service/database/seeder"
 )
 
 // Migrate is a function to migrate all tables
 func Migrate(db *mongo.Database) error {
 	migrations := []*Migration{
 		createUsersCollectionMigration(db, "email"),
+		createUserActivityLogCollectionMigration(db, "user_id"),
 	}
 	autoMigrate := os.Getenv("AUTO_MIGRATE")
 	autoDrop := os.Getenv("AUTO_DROP")
