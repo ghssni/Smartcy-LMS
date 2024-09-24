@@ -1,0 +1,395 @@
+time="2024-09-23 00:15:20" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-23 00:15:20" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-23 00:15:20" level=info msg="Starting gRPC server on port 50051" Environment=Production
+time="2024-09-23 00:17:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:17:17" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:17:17" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:17:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:17:27" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:17:27" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:18:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:18:18" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:18:18" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:19:09" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:19:09" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:19:09" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:19:28" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:19:28" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:19:28" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:19:31" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:19:31" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:19:31" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:22:06" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:22:06" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:22:06" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:27:53" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:27:53" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:27:53" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:28:38" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:28:38" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:28:38" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:30:04" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:30:04" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:30:04" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:30:48" level=error msg="Error processing webhook: rpc error: code = Internal desc = Failed to update payment status: record not found, WebhookRequest: payment_method:\"BANK_TRANSFER\" external_id:\"66eeb3dd41720384f8a94b7c\" status:\"PAID\" paid_at:\"2024-09-22T08:30:35.000Z\" amount:100000 description:\"Payment for example course\" payment_channel:\"BCA\" payment_destination:\"3816531309998\" bank_code:\"BCA\" merchant_name:\"Hacktiv8\" currency:\"IDR\"" Environment=Development
+time="2024-09-23 00:31:04" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:31:04" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:32:04" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:32:04" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:33:06" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:33:06" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:33:06" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:34:06" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:34:06" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = invalid or expired token" Environment=Development
+time="2024-09-23 00:35:06" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:35:06" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = invalid or expired token" Environment=Development
+time="2024-09-23 00:36:06" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:36:06" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = invalid or expired token" Environment=Development
+time="2024-09-23 00:37:06" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:37:06" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = invalid or expired token" Environment=Development
+time="2024-09-23 00:38:07" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:38:07" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:38:07" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:39:07" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:39:07" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = invalid or expired token" Environment=Development
+time="2024-09-23 00:40:07" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:40:07" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = invalid or expired token" Environment=Development
+time="2024-09-23 00:40:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:40:26" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:40:26" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:40:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:40:44" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:40:44" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:41:44" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:41:44" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:41:49" level=error msg="Error processing webhook: rpc error: code = Internal desc = Failed to update payment status: record not found, WebhookRequest: payment_method:\"BANK_TRANSFER\"  external_id:\"66eeb3dd41720384f8a94b7c\"  status:\"PAID\"  paid_at:\"2024-09-22T08:40:57.000Z\"  amount:100000  description:\"Payment for example course\"  payment_channel:\"BCA\"  payment_destination:\"3816562957630\"  bank_code:\"BCA\"  merchant_name:\"Hacktiv8\"  currency:\"IDR\"" Environment=Development
+time="2024-09-23 00:42:44" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:42:44" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:43:44" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:43:44" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:44:34" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:44:34" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:44:34" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:45:34" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:45:34" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:45:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:45:45" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:45:45" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:46:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:46:27" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:46:27" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:46:48" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:46:48" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:46:48" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:47:36" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:47:36" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:48:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:48:58" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:50:59" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:50:59" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:50:59" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:51:08" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:51:08" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:51:08" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:52:08" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:52:08" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:53:08" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:53:08" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:54:08" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:54:08" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:55:08" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:55:08" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:55:14" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:55:14" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:55:14" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 00:56:14" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:56:14" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:57:14" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:57:14" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:58:14" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 00:58:14" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 00:59:23" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 00:59:23" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 00:59:23" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:00:23" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:00:23" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:01:23" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:01:23" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:01:41" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:01:41" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:01:41" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:01:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:01:45" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:01:45" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:02:04" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:02:04" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:02:04" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:03:04" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:03:04" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:04:04" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:04:04" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:04:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:04:49" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:04:49" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:05:49" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:05:49" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:06:13" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:06:13" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:06:13" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:07:13" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:07:13" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:08:13" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:08:13" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:09:13" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:09:13" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:09:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:09:49" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:09:49" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:10:49" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:10:49" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:11:25" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:11:25" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:11:25" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:12:25" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:12:25" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:13:25" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:13:25" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:13:46" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:13:46" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:13:46" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:14:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:14:26" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:14:26" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:15:25" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:15:25" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:15:25" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:15:30" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:15:30" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:15:30" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:16:30" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:16:30" level=info msg="FullMethod: /payments.PaymentsService/UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:16:30" level=error msg="Failed to update expired payments: rpc error: code = Unknown desc = authorization token is not provided" Environment=Development
+time="2024-09-23 01:17:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:17:27" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:17:27" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:18:27" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:18:27" level=info msg="FullMethod: /payments.PaymentsService/UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:18:27" level=info msg="Bypassing token validation for UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:18:27" level=error msg="Failed to update expired payments: rpc error: code = Internal desc = Failed to update expired payment: ERROR: column \"created_at\" does not exist (SQLSTATE 42703)" Environment=Development
+time="2024-09-23 01:18:59" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:18:59" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:18:59" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:19:59" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:19:59" level=info msg="FullMethod: /payments.PaymentsService/UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:19:59" level=info msg="Bypassing token validation for UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:19:59" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:20:59" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:20:59" level=info msg="FullMethod: /payments.PaymentsService/UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:20:59" level=info msg="Bypassing token validation for UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:20:59" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:21:59" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:21:59" level=info msg="FullMethod: /payments.PaymentsService/UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:21:59" level=info msg="Bypassing token validation for UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:21:59" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:22:59" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:22:59" level=info msg="FullMethod: /payments.PaymentsService/UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:22:59" level=info msg="Bypassing token validation for UpdateExpiredPaymentStatus" Environment=Development
+time="2024-09-23 01:22:59" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:23:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:23:27" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:23:27" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:23:42" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:23:42" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:23:42" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:24:16" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:24:16" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:24:16" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:25:16" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:25:16" level=error msg="Failed to update expired payments: rpc error: code = Internal desc = Failed to update expired payment: ERROR: column \"user_id\" does not exist (SQLSTATE 42703)" Environment=Development
+time="2024-09-23 01:26:12" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:26:12" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:26:12" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:27:12" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:27:12" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:28:12" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:28:12" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:29:12" level=info msg="Running cron job every 1 minute" Environment=Development
+time="2024-09-23 01:29:12" level=info msg="Successfully updated expired payments" Environment=Development
+time="2024-09-23 01:29:35" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:29:35" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:29:35" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:31:30" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:31:30" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:31:30" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:34:46" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:34:46" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:34:46" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:36:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:36:17" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:36:17" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:37:10" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:37:10" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:37:10" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:37:48" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:37:48" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:37:48" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:39:04" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:39:04" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:39:04" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:39:16" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:39:16" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:39:16" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:39:46" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:39:46" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:39:46" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:40:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:40:26" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:40:26" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:40:33" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:40:33" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:40:33" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:40:47" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:40:47" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:40:47" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:41:16" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:41:16" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:41:16" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:42:22" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:42:22" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:42:22" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:43:38" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Development
+time="2024-09-23 01:43:46" level=info msg="Running Seeders..." Environment=Development
+time="2024-09-23 01:43:46" level=info msg="Certificate seeder success" Environment=Development
+time="2024-09-23 01:43:47" level=info msg="Assessments seeder success" Environment=Development
+time="2024-09-23 01:43:47" level=info msg="Learning Progress seeder success" Environment=Development
+time="2024-09-23 01:43:47" level=info msg="Seed all success" Environment=Development
+time="2024-09-23 01:43:47" level=info msg="AutoMigrate and Seeders completed." Environment=Development
+time="2024-09-23 01:43:47" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:43:47" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:43:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:43:58" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:43:58" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:47:13" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:47:13" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:47:13" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:48:03" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:48:03" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:48:03" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:51:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:51:27" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:51:27" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:51:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:51:49" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:51:49" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:52:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:52:18" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:52:18" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:52:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:52:58" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:52:58" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:54:40" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:54:40" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:54:40" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:54:50" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:54:50" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:54:50" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:56:20" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:56:20" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:56:20" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:57:30" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:57:30" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:57:30" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:58:10" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:58:10" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:58:10" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:59:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:59:27" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:59:27" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 01:59:47" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 01:59:47" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 01:59:47" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:00:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:00:45" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:00:45" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:01:00" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:01:00" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:01:00" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:01:08" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:01:08" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:01:08" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:01:11" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:01:11" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:01:11" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:01:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:01:26" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:01:26" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:04:24" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:04:24" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:04:24" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:05:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:05:05" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:05:05" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:06:00" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:06:00" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:06:00" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:07:19" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:07:19" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:07:19" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:07:32" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:07:32" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:07:32" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:08:50" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:08:50" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:08:50" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:10:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:10:17" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:10:17" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:13:22" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Development
+time="2024-09-23 02:13:30" level=info msg="Running Seeders..." Environment=Development
+time="2024-09-23 02:13:30" level=info msg="Enrollments seeder success" Environment=Development
+time="2024-09-23 02:13:31" level=info msg="Certificate seeder success" Environment=Development
+time="2024-09-23 02:13:31" level=info msg="Assessments seeder success" Environment=Development
+time="2024-09-23 02:13:32" level=info msg="Payments seeder success" Environment=Development
+time="2024-09-23 02:13:32" level=info msg="Learning Progress seeder success" Environment=Development
+time="2024-09-23 02:13:32" level=info msg="Seed all success" Environment=Development
+time="2024-09-23 02:13:32" level=info msg="AutoMigrate and Seeders completed." Environment=Development
+time="2024-09-23 02:13:32" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:13:32" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:14:36" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Development
+time="2024-09-23 02:14:43" level=info msg="Running Seeders..." Environment=Development
+time="2024-09-23 02:14:44" level=info msg="Enrollments seeder success" Environment=Development
+time="2024-09-23 02:14:44" level=info msg="Certificate seeder success" Environment=Development
+time="2024-09-23 02:14:45" level=info msg="Assessments seeder success" Environment=Development
+time="2024-09-23 02:14:45" level=info msg="Payments seeder success" Environment=Development
+time="2024-09-23 02:14:46" level=info msg="Learning Progress seeder success" Environment=Development
+time="2024-09-23 02:14:46" level=info msg="Seed all success" Environment=Development
+time="2024-09-23 02:14:46" level=info msg="AutoMigrate and Seeders completed." Environment=Development
+time="2024-09-23 02:14:46" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:14:46" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:15:31" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:15:31" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:15:31" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:26:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:26:44" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:26:44" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:29:23" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:29:23" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:29:23" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:37:09" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:37:09" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:37:09" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:37:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:37:45" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:37:45" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:38:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:38:05" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:38:05" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:38:25" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:38:25" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:38:25" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:39:28" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:39:28" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:39:28" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-23 02:40:09" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-23 02:40:09" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-23 02:40:09" level=info msg="Starting gRPC server on port 50051" Environment=Development

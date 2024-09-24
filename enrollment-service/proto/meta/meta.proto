@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package meta;
+
+option go_package = "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/meta";
+
+message Meta {
+  string message = 1;
+  int32 code = 2;
+  string status = 3;
+}

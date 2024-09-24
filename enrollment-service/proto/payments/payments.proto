@@ -1,0 +1,89 @@
+syntax = "proto3";
+package payments;
+
+
+import "google/protobuf/timestamp.proto";
+import "meta/meta.proto";
+import "google/api/annotations.proto";
+option go_package = "payments/payments;payments";
+
+message Payments {
+  uint32 id = 1;
+  uint32 enrollment_id = 2;
+  string external_id = 3;
+  string user_id = 4;
+  string payment_method = 5;
+  string status = 6;
+  string merchant_name = 7;
+  float amount = 8;
+  float paid_amount = 9;
+  string bank_code = 10;
+  string paid_at = 11;
+  string payer_email = 12;
+  string description = 13;
+  float adjusted_received_amount = 14;
+  float fees_paid_amount = 15;
+  google.protobuf.Timestamp updated = 16;
+  google.protobuf.Timestamp created = 17;
+  string currency = 18;
+  string payment_channel = 19;
+  string payment_destination = 20;
+  string invoice_url = 21;
+}
+
+// Get payment by enrollment id
+message GetPaymentByEnrollmentIdRequest {
+  uint32 enrollmentId = 1;
+}
+
+message GetPaymentByEnrollmentIdResponse {
+  meta.Meta meta = 1;
+  Payments payments = 2;
+}
+
+//handle webhook
+message HandleWebhookRequest {
+  string payment_provider = 1;
+  string payment_method = 2;
+  string external_id = 3;
+  string status = 4;
+  string paid_at = 5;
+  float amount = 6;
+  string description = 7;
+  string email = 8;
+  string invoice_url = 9;
+  string enrollment_id = 10;
+  string payment_channel = 11;
+  string payment_destination = 12;
+  string bank_code = 13;
+  string merchant_name = 14;
+  string currency = 15;
+}
+
+message HandleWebhookResponse {
+  meta.Meta meta = 1;
+  Payments payments = 2;
+}
+
+
+// Update payment status
+message UpdateExpiredPaymentStatusRequest {
+  string external_id = 1;
+}
+
+message UpdateExpiredPaymentStatusResponse {
+  meta.Meta meta = 1;
+}
+
+//endpoints
+service PaymentsService {
+  rpc GetPaymentByEnrollmentId(GetPaymentByEnrollmentIdRequest) returns (GetPaymentByEnrollmentIdResponse);
+  rpc UpdateExpiredPaymentStatus(UpdateExpiredPaymentStatusRequest) returns (UpdateExpiredPaymentStatusResponse);
+
+  rpc HandleWebhook(HandleWebhookRequest) returns (HandleWebhookResponse){
+    option (google.api.http) = {
+      post: "/v1/payments/webhook"
+      body: "*"
+    };
+  };
+}
