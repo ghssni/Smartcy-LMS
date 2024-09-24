@@ -11,7 +11,6 @@ PROTOC_GEN_GO := protoc \
 PROTOS := proto/assessments/assessments.proto \
           proto/certificate/certificate.proto \
           proto/enrollment/enrollment.proto \
-          proto/learningProgress/learningProgress.proto \
           proto/meta/meta.proto \
           proto/payments/payments.proto
 

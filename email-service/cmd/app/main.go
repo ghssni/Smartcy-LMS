@@ -53,20 +53,16 @@ func runGrpcServer() {
 
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Fatalf("Failed to listen on %s: %v", address, err)
+		log.Fatalf("Failed to listen on %s:%s - %v", grpcHost, grpcPort, err)
 	}
 
-	grpcServer = grpc.NewServer(
-		grpc.UnaryInterceptor(helper.LogrusLoggerUnaryInterceptor),
-	)
+	grpcServer = grpc.NewServer()
 
 	//register service
 	emailRepo := repository.NewEmailsRepository(db)
 	emailLogRepo := repository.NewEmailsLogRepository(db)
-	emailService := service.NewEmailService(emailRepo, emailLogRepo)
-
 	// Register gRPC services
-	pb.RegisterEmailServiceServer(grpcServer, emailService)
+	pb.RegisterEmailServiceServer(grpcServer, service.NewEmailService(emailRepo, emailLogRepo))
 
 	// Graceful shutdown for gRPC server
 	quit := make(chan os.Signal, 1)

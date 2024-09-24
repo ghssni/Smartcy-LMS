@@ -7,7 +7,7 @@
 package payments
 
 import (
-	meta "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/meta"
+	meta "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/meta"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

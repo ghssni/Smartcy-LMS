@@ -6,14 +6,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/middleware"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/repository"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
-	pb "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/proto/meta"
-	"github.com/ghssni/Smartcy-LMS/pkg"
-	"github.com/go-playground/validator/v10"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/middleware"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
+
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
+	pb "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/meta"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -51,15 +50,15 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 	}
 
 	// validate enrollment input
-	if err := enrollmentInput.Validate(); err != nil {
-		var validationError validator.ValidationErrors
-		if errors.As(err, &validationError) {
-			formatterError := pkg.FormatValidationError(enrollmentInput, validationError)
-			if formatterError != "" {
-				return nil, status.Errorf(codes.InvalidArgument, formatterError)
-			}
-		}
-	}
+	//if err := enrollmentInput.Validate(); err != nil {
+	//	var validationError validator.ValidationErrors
+	//	if errors.As(err, &validationError) {
+	//		formatterError := pkg.FormatValidationError(enrollmentInput, validationError)
+	//		if formatterError != "" {
+	//			return nil, status.Errorf(codes.InvalidArgument, formatterError)
+	//		}
+	//	}
+	//}
 	tx := s.er.BeginTransaction()
 
 	// check if student is already enrolled example courseID = 1

@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
 	"github.com/go-gormigrate/gormigrate/v2"
 	"gorm.io/gorm"
 )

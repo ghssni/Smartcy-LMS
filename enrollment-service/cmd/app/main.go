@@ -2,19 +2,19 @@ package main
 
 import (
 	"context"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/config"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/database"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/middleware"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/repository"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/service"
-	pbAssessments "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/assessments"
-	pbCertificate "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/certificate"
-	pbEnrollment "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
-	pbLearningProgress "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/learningProgress"
-	pbPayments "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/payments"
-	"github.com/ghssni/Smartcy-LMS/pkg"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/config"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/database"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/middleware"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/service"
+	helper "github.com/ghssni/Smartcy-LMS/Enrollment-Service/pkg"
 	"github.com/joho/godotenv"
+
+	pbAssessments "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/assessments"
+	pbCertificate "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/certificate"
+	pbEnrollment "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
+	pbPayments "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/payments"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/labstack/echo/v4"
 	middlewareEcho "github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -29,9 +29,9 @@ var db *gorm.DB
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		panic(err)
+		logrus.Fatalf("Failed to load env file: %v", err)
 	}
-	pkg.SetupLogger()
+	helper.SetupLogger()
 	var err error
 	db, err = database.InitDB()
 	if err != nil {
@@ -46,7 +46,7 @@ func main() {
 
 	// run scheduler
 	go func() {
-		conn, err := grpc.Dial(":50051", grpc.WithInsecure())
+		conn, err := grpc.Dial(":50053", grpc.WithInsecure())
 		if err != nil {
 			logrus.Fatalf("Failed to dial gRPC server: %v", err)
 		}
@@ -64,9 +64,9 @@ func main() {
 
 func runGrpcServer() {
 	// Run gRPC server
-	lis, err := net.Listen("tcp", ":50051")
+	lis, err := net.Listen("tcp", ":"+os.Getenv("GRPC_PORT"))
 	if err != nil {
-		logrus.Fatalf("Failed to listen on port 50051: %v", err)
+		logrus.Fatalf("Failed to listen on port 50053: %v", err)
 	}
 
 	accessKey := os.Getenv("CRON_ACCESS_KEY")
@@ -88,8 +88,6 @@ func runGrpcServer() {
 	pbAssessments.RegisterAssessmentsServiceServer(grpcServer, pbAssessments.UnimplementedAssessmentsServiceServer{})
 
 	pbCertificate.RegisterCertificateServiceServer(grpcServer, pbCertificate.UnimplementedCertificateServiceServer{})
-
-	pbLearningProgress.RegisterLearningProgressServiceServer(grpcServer, pbLearningProgress.UnimplementedLearningProgressServiceServer{})
 
 	pbPayments.RegisterPaymentsServiceServer(grpcServer, service.NewPaymentService(paymentRepo))
 

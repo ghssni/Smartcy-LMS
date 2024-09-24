@@ -2,7 +2,7 @@ package repository
 
 import (
 	"errors"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
 	"gorm.io/gorm"
 )
 

@@ -2,7 +2,7 @@ package seeder
 
 import (
 	"github.com/brianvoe/gofakeit/v7"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

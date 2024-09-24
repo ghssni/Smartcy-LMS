@@ -34,7 +34,7 @@ func (hook *FileHook) Levels() []logrus.Level {
 
 func (hook *FileHook) Fire(entry *logrus.Entry) error {
 	if os.Getenv("PORT") == "8080" || os.Getenv("port") == "8081" || os.Getenv("grpc_port") == "50051" {
-		if os.Getenv("GRPC_PORT") == "50052" {
+		if os.Getenv("GRPC_PORT") == "50053" {
 			entry.Data["Environment"] = "Development"
 		} else {
 			entry.Data["Environment"] = "Production"
