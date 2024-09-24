@@ -49,7 +49,7 @@ func (r *Review) CreateReview(ctx context.Context, review *Review, createdAt, up
 	}
 
 	completedLessonQuery := `
-		SELECT COUNT(*) FROM learning_progress lp
+		SELECT COUNT(*) FROM learning_progress.proto lp
 		INNER JOIN enrollments e ON lp.enrollment_id = e.id
 		WHERE e.course_id = $1 AND e.student_id = $2 AND lp.status = true`
 	err = tx.QueryRowContext(ctx, completedLessonQuery, review.CourseID, review.StudentID).Scan(&completedLessons)
