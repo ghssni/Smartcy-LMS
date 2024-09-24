@@ -13,7 +13,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+<<<<<<< HEAD
     <data-source source="LOCAL" name="enrollment-service@localhost" uuid="5792d004-0a60-4128-838f-30d8c84dc99b">
+=======
+    <data-source source="LOCAL" name="postgres@Email-service" uuid="8a703b21-2cf4-4428-958c-b782aa942921">
+>>>>>>> email-service
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
@@ -25,6 +29,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+<<<<<<< HEAD
     <data-source source="LOCAL" name="postgres@ep-dawn-sky-a1x7sl3n.ap-southeast-1.aws.neon.tech" uuid="18440020-4ec6-4249-a175-22c303242169">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
@@ -37,5 +42,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+=======
+>>>>>>> email-service
   </component>
 </project>

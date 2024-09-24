@@ -1,16 +1,16 @@
-package pkg
+package helper
 
 import (
+	"context"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/proto"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"os"
 	"path/filepath"
-	"reflect"
-	"runtime"
 	"time"
-
-	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 // FileHook is a custom hook for logging to a file with a different formatter
@@ -33,7 +33,11 @@ func (hook *FileHook) Levels() []logrus.Level {
 }
 
 func (hook *FileHook) Fire(entry *logrus.Entry) error {
+<<<<<<<< HEAD:pkg/logs.go
 	if os.Getenv("PORT") == "8080" || os.Getenv("port") == "8081" || os.Getenv("grpc_port") == "50051" {
+========
+	if os.Getenv("GRPC_PORT") == "50052" {
+>>>>>>>> email-service:email-service/helper/logs.go
 		entry.Data["Environment"] = "Development"
 	} else {
 		entry.Data["Environment"] = "Production"
@@ -97,40 +101,52 @@ func SetupLogger() {
 	}))
 }
 
-// LogrusLogger is a custom middleware for logging HTTP requests using logrus
-func LogrusLogger(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		// save start time
-		start := time.Now()
-		err := next(c)
-		latency := time.Since(start)
-		req := c.Request()
-		res := c.Response()
-		logrus.SetFormatter(&logrus.TextFormatter{
-			DisableQuote:    true,
-			FullTimestamp:   true,
-			TimestampFormat: "2006-01-02 15:04:05",
-			ForceColors:     true,
-			DisableColors:   false,
-			PadLevelText:    false,
-		})
-		logrus.WithFields(logrus.Fields{
-			"method":         req.Method,
-			"uri":            req.RequestURI,
-			"status":         res.Status,
-			"latency":        latency,
-			"ip":             c.RealIP(),
-			"user_agent":     req.UserAgent(),
-			"host":           req.Host,
-			"referer":        req.Referer(),
-			"protocol":       req.Proto,
-			"content_length": req.ContentLength,
-			"query_params":   c.QueryParams().Encode(),
-			"response_size":  res.Size,
-			"cookies":        req.Cookies(),
-			"request_id":     c.Response().Header().Get(echo.HeaderXRequestID),
-			"handler_name":   runtime.FuncForPC(reflect.ValueOf(next).Pointer()).Name(),
-		}).Info("HTTP request")
-		return err
+// LogrusLoggerUnaryInterceptor is a gRPC unary interceptor that logs the request and response
+func LogrusLoggerUnaryInterceptor(
+	ctx context.Context,
+	req interface{},
+	info *grpc.UnaryServerInfo,
+	handler grpc.UnaryHandler,
+) (interface{}, error) {
+	// Save start time
+	start := time.Now()
+
+	// Call the handler to complete the normal execution of RPC
+	resp, err := handler(ctx, req)
+
+	// Measure latency
+	latency := time.Since(start)
+
+	// Fetch gRPC metadata (acts as a substitute for headers, query params, etc.)
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		md = metadata.New(nil)
 	}
+
+	// Serialize the request message to calculate its length
+	reqBytes, err := proto.Marshal(req.(proto.Message)) // Casting to proto.Message and Marshalling
+	if err != nil {
+		logrus.WithError(err).Warn("Failed to marshal request message")
+	}
+
+	// Prepare log entry with relevant gRPC data
+	logrus.WithFields(logrus.Fields{
+		"method":         info.FullMethod, // gRPC method name
+		"latency":        latency,
+		"user_agent":     getMetadataValue(md, "user-agent"),
+		"request_id":     getMetadataValue(md, "x-request-id"),
+		"grpc_status":    grpc.Code(err).String(),
+		"content_length": len(reqBytes),
+		"error":          err,
+	}).Info("gRPC request")
+
+	return resp, err
+}
+
+// Helper function to get metadata value
+func getMetadataValue(md metadata.MD, key string) string {
+	if val, ok := md[key]; ok && len(val) > 0 {
+		return val[0]
+	}
+	return ""
 }
