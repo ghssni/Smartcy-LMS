@@ -37,7 +37,14 @@ func (s *EmailService) SendPaymentDueEmailRequest(ctx context.Context, req *pb.S
 
 	_, err := s.emailRepo.InsertEmail(email)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to insert email: %v", err)
+		return &pb.SendPaymentDueEmailResponse{
+			Meta: &pb.Meta{
+				Code:    int32(codes.Internal),
+				Message: "Failed to insert email",
+				Status:  http.StatusText(http.StatusInternalServerError),
+			},
+			Success: false,
+		}, status.Errorf(codes.Internal, "failed to insert email: %v", err)
 	}
 
 	// send email
@@ -48,6 +55,14 @@ func (s *EmailService) SendPaymentDueEmailRequest(ctx context.Context, req *pb.S
 		logrus.Println("Error sending email:", err)
 		statusStr = "failed"
 		errorMsg = err.Error()
+		return &pb.SendPaymentDueEmailResponse{
+			Meta: &pb.Meta{
+				Code:    int32(codes.Internal),
+				Message: "Failed to send email",
+				Status:  http.StatusText(http.StatusInternalServerError),
+			},
+			Success: false,
+		}, status.Errorf(codes.Internal, "Error sending email: %v", err)
 	}
 
 	// log email
@@ -60,6 +75,11 @@ func (s *EmailService) SendPaymentDueEmailRequest(ctx context.Context, req *pb.S
 	}
 
 	_, err = s.emailLogRepo.InsertEmailLog(emailLog)
+	if err != nil {
+		logrus.Println("Error inserting email log:", err)
+	} else {
+		logrus.Println("Email log inserted successfully for:", req.Email)
+	}
 
 	response := &pb.SendPaymentDueEmailResponse{
 		Meta: &pb.Meta{
@@ -69,6 +89,7 @@ func (s *EmailService) SendPaymentDueEmailRequest(ctx context.Context, req *pb.S
 		},
 		Success: statusStr == "sent",
 	}
+	logrus.Println("Response Success:", response.Success)
 	return response, nil
 }
 
@@ -184,7 +205,7 @@ func SendEmailPayment(email, courseName, paymentURL string) error {
 			</body>
 		</html>`, courseName, paymentURL)
 	recipient := email
-
+	logrus.Println("Attempting to send email to:", email)
 	message := mg.NewMessage(sender, subject, "", recipient)
 
 	message.SetHtml(htmlBody)
@@ -197,6 +218,7 @@ func SendEmailPayment(email, courseName, paymentURL string) error {
 		logrus.Println("Error sending email:", err)
 		return err
 	}
+
 	return nil
 }
 

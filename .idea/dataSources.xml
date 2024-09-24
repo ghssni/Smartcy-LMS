@@ -13,7 +13,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="Smartcy@Development" uuid="28c027de-09ca-4225-8289-08cf3576de0c">
+    <data-source source="LOCAL" name="postgres@Email-service" uuid="8a703b21-2cf4-4428-958c-b782aa942921">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

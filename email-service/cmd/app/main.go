@@ -13,6 +13,8 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 var db *gorm.DB
@@ -66,6 +68,14 @@ func runGrpcServer() {
 	// Register gRPC services
 	pb.RegisterEmailServiceServer(grpcServer, emailService)
 
+	// Graceful shutdown for gRPC server
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-quit
+		log.Println("Gracefully stopping gRPC server...")
+		grpcServer.GracefulStop()
+	}()
 	// Start gRPC server
 	log.Printf("gRPC server listening on %s", address)
 	if err := grpcServer.Serve(listener); err != nil {

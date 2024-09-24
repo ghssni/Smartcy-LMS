@@ -36,9 +36,8 @@ message SendForgotPasswordEmailResponse {
 message SendPaymentDueEmailRequest {
   string user_id = 1;
   string email = 2;
-  string enrollment_id = 3;
-  string payment_link = 4;
-  string course_name =5;
+  string payment_link = 3;
+  string course_name =4;
 }
 
 message SendPaymentDueEmailResponse {
