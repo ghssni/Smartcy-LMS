@@ -1,21 +1,33 @@
 package main
 
 import (
+<<<<<<< HEAD
 	"context"
 	"github.com/ghssni/Smartcy-LMS/pkg"
 	"github.com/ghssni/Smartcy-LMS/user-service/database"
+=======
+	"github.com/ghssni/Smartcy-LMS/User-Service/database"
+	"github.com/ghssni/Smartcy-LMS/User-Service/internal/repository"
+	"github.com/ghssni/Smartcy-LMS/User-Service/internal/service"
+	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
+>>>>>>> user-service
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
+<<<<<<< HEAD
 
 	"os"
 	"os/signal"
 	"time"
+=======
+	"go.mongodb.org/mongo-driver/mongo"
+	"google.golang.org/grpc"
+	"log"
+	"net"
+>>>>>>> user-service
 )
 
-type Config struct {
-}
+var db *mongo.Database
 
 func main() {
 	//.env
@@ -25,50 +37,32 @@ func main() {
 	// Setup logger
 	pkg.SetupLogger()
 
-	// Config
-	db, err := database.InitMongoDB()
+	// Config Db
+	var err error
+	db, err = database.InitMongoDB()
 	if err != nil {
 		logrus.Fatalf("Error connecting to database: %v", err)
 	}
 
-	e := echo.New()
-	//	init controller
-	c := NewController(db, os.Getenv("JWT_SECRET"))
-	app := Config{}
-
-	// Routes
-	app.Routes(e, c, []byte(os.Getenv("JWT_SECRET")))
-	// Server
-	app.server(e)
-
+	runGrpcServer()
 }
 
-func (app *Config) server(e *echo.Echo) {
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+func runGrpcServer() {
+	grpcServer := grpc.NewServer()
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	go func() {
-		if err := e.Start(":" + port); err != nil {
-			logrus.Info("shutting down the server")
-		}
-	}()
+	// initialize all services
+	userRepo := repository.NewUserRepo(db)
+	userActivityLogRepo := repository.NewUserActivityLogRepo(db)
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-
-	<-quit
-	logrus.Info("shutting down the server")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	if err := e.Shutdown(ctx); err != nil {
-		logrus.Fatal(err)
+	pb.RegisterUserServiceServer(grpcServer, service.NewUserService(userRepo, userActivityLogRepo))
+	listener, err := net.Listen("tcp", ":50051")
+	if err != nil {
+		logrus.Fatalf("Failed to listen: %v", err)
 	}
 
-	logrus.Info("Server shutdown")
+	log.Println("gRPC server is running on port 50051")
+
+	if err := grpcServer.Serve(listener); err != nil {
+		logrus.Fatalf("Failed to serve: %v", err)
+	}
 }
