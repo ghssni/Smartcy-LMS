@@ -1,22 +1,26 @@
 package service
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/middleware"
 	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/repository"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/pkg"
 	"github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
 	pb "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
 	"github.com/ghssni/Smartcy-LMS/enrollment-service/proto/meta"
+	"github.com/ghssni/Smartcy-LMS/pkg"
 	"github.com/go-playground/validator/v10"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -110,10 +114,10 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 		return nil, status.Errorf(codes.Internal, "failed to commit transaction: %v", err)
 	}
 	// log user activity
-	//err = s.logUserActivity(ctx, studentId, "enrollment Course "+"example course")
-	//if err != nil {
-	//	return nil, status.Errorf(codes.Internal, "failed to log user activity")
-	//}
+	err = s.logUserActivity(ctx, studentId, "enrollment Course "+"example course")
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to log user activity")
+	}
 
 	response := &enrollment.CreateEnrollmentResponse{
 		Meta: &meta.Meta{
@@ -149,10 +153,10 @@ func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *
 		return nil, status.Errorf(codes.Internal, "failed to get enrollments: %v", err)
 	}
 
-	//err = s.logUserActivity(ctx, studentId, "get enrollments")
-	//if err != nil {
-	//	return nil, status.Errorf(codes.Internal, "failed to log user activity")
-	//}
+	err = s.logUserActivity(ctx, studentId, "get enrollments")
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to log user activity")
+	}
 
 	enrollmentsResponse := make([]*enrollment.Enrollment, 0, len(enrollments))
 
@@ -199,10 +203,10 @@ func (s *enrollmentService) DeleteEnrollmentById(ctx context.Context, req *enrol
 		return nil, status.Errorf(codes.Internal, "failed to delete enrollment: %v", err)
 	}
 
-	//err = s.logUserActivity(ctx, studentId, "delete enrollment ID : "+fmt.Sprint(req.Id))
-	//if err != nil {
-	//	return nil, status.Errorf(codes.Internal, "failed to log user activity")
-	//}
+	err = s.logUserActivity(ctx, studentId, "delete enrollment ID : "+fmt.Sprint(req.Id))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to log user activity")
+	}
 
 	response := &enrollment.DeleteEnrollmentByIdResponse{
 		Meta: &meta.Meta{
@@ -215,53 +219,53 @@ func (s *enrollmentService) DeleteEnrollmentById(ctx context.Context, req *enrol
 	return response, nil
 }
 
-//func (s *enrollmentService) logUserActivity(ctx context.Context, studentId string, activityType string) error {
-//	logRequest := map[string]interface{}{
-//		"user_id":       studentId,
-//		"course_id":     "",
-//		"activity_type": activityType,
-//	}
-//
-//	// Log user activity
-//	jsonData, err := json.Marshal(logRequest)
-//	if err != nil {
-//		return err
-//	}
-//
-//	// URL user-service
-//	url := os.Getenv("API_USER_SERVICE_URL")
-//	if url == "" {
-//		return fmt.Errorf("API_USER_SERVICE_URL is not set")
-//	}
-//
-//	// Get JWT token from context or metadata
-//	token, err := middleware.GetTokenFromContext(ctx)
-//	if err != nil {
-//		return fmt.Errorf("failed to get JWT token from context: %v", err)
-//	}
-//
-//	// HTTP POST request to log user activity
-//	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-//	if err != nil {
-//		return err
-//	}
-//	req.Header.Set("Content-Type", "application/json")
-//	req.Header.Set("Authorization", "Bearer "+token)
-//
-//	client := &http.Client{Timeout: 10 * time.Second}
-//	resp, err := client.Do(req)
-//	if err != nil {
-//		return err
-//	}
-//	defer resp.Body.Close()
-//
-//	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-//		ioutil.ReadAll(resp.Body)
-//		return fmt.Errorf("failed to log user activity: %s", resp.Status)
-//	}
-//	return nil
-//
-//}
+func (s *enrollmentService) logUserActivity(ctx context.Context, studentId string, activityType string) error {
+	logRequest := map[string]interface{}{
+		"user_id":       studentId,
+		"course_id":     "",
+		"activity_type": activityType,
+	}
+
+	// Log user activity
+	jsonData, err := json.Marshal(logRequest)
+	if err != nil {
+		return err
+	}
+
+	// URL user-service
+	url := os.Getenv("API_USER_SERVICE_URL")
+	if url == "" {
+		return fmt.Errorf("API_USER_SERVICE_URL is not set")
+	}
+
+	// Get JWT token from context or metadata
+	token, err := middleware.GetTokenFromContext(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get JWT token from context: %v", err)
+	}
+
+	// HTTP POST request to log user activity
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		ioutil.ReadAll(resp.Body)
+		return fmt.Errorf("failed to log user activity: %s", resp.Status)
+	}
+	return nil
+
+}
 
 func NewEnrollmentService(er repository.EnrollmentRepository, payment repository.PaymentRepository) EnrollmentService {
 	return &enrollmentService{

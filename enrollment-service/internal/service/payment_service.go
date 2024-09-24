@@ -98,13 +98,13 @@ func (s *paymentService) HandleWebhook(ctx context.Context, req *payments.Handle
 		return nil, status.Errorf(codes.Internal, "Failed to update payment status: %v", err)
 	}
 
-	////Send email to student if payment is successful
-	//if req.Status == "PAID" {
-	//	err := config.SendEmailSuccess(newInvoice.PayerEmail, newInvoice.Description)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//}
+	//Send email to student if payment is successful
+	if req.Status == "PAID" {
+		err := config.SendEmailSuccess(newInvoice.PayerEmail, newInvoice.Description)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return &payments.HandleWebhookResponse{
 		Meta: &meta.Meta{
@@ -216,10 +216,10 @@ func CreateInvoiceAndSendEmailPayment(studentId, email, courseName string, price
 		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
 	}
 
-	//err = config.SendEmailPayment(email, courseName, invoiceURL)
-	//if err != nil {
-	//	return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
-	//}
+	err = config.SendEmailPayment(email, courseName, invoiceURL)
+	if err != nil {
+		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
+	}
 
 	return invoiceURL, externalId, price, nil
 }
