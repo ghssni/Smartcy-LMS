@@ -48,30 +48,3 @@ func (r *RegisterInput) Validate() error {
 	validate := validator.New()
 	return validate.Struct(r)
 }
-<<<<<<< HEAD
-
-// UserResponse struct is used for user response
-type UserResponse struct {
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	Address   string `json:"address"`
-	Phone     string `json:"phone"`
-	Role      string `json:"role" validate:"required,oneof=instructor student" `
-	Age       int    `json:"age"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-	UserToken struct {
-		Token string `json:"token"`
-	}
-}
-
-// UserActivityLog struct is used for user activity
-type UserActivityLog struct {
-	ID                primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	UserID            string             `json:"user_id" bson:"user_id"`
-	CourseID          string             `json:"course_id" bson:"course_id,omitempty"`
-	ActivityType      string             `json:"activity_type" bson:"activity_type"`
-	ActivityTimestamp string             `json:"activity_timestamp" bson:"activity_timestamp"`
-}
-=======
->>>>>>> user-service

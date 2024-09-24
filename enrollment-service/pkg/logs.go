@@ -33,27 +33,25 @@ func (hook *FileHook) Levels() []logrus.Level {
 }
 
 func (hook *FileHook) Fire(entry *logrus.Entry) error {
-<<<<<<<< HEAD:pkg/logs.go
 	if os.Getenv("PORT") == "8080" || os.Getenv("port") == "8081" || os.Getenv("grpc_port") == "50051" {
-========
-	if os.Getenv("GRPC_PORT") == "50052" {
->>>>>>>> email-service:email-service/helper/logs.go
-		entry.Data["Environment"] = "Development"
-	} else {
-		entry.Data["Environment"] = "Production"
-	}
+		if os.Getenv("GRPC_PORT") == "50052" {
+			entry.Data["Environment"] = "Development"
+		} else {
+			entry.Data["Environment"] = "Production"
+		}
 
-	line, err := hook.Formatter.Format(entry)
-	if err != nil {
-		logrus.Errorf("Error formatting log entry for file: %v", err)
-		return err
-	}
+		line, err := hook.Formatter.Format(entry)
+		if err != nil {
+			logrus.Errorf("Error formatting log entry for file: %v", err)
+			return err
+		}
 
-	// Write the formatted entry to the writer
-	_, err = hook.Writer.Write(line)
-	if err != nil {
-		logrus.Errorf("Error writing log entry to file: %v", err)
-		return err
+		// Write the formatted entry to the writer
+		_, err = hook.Writer.Write(line)
+		if err != nil {
+			logrus.Errorf("Error writing log entry to file: %v", err)
+			return err
+		}
 	}
 	return nil
 }

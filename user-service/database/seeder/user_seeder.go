@@ -3,17 +3,10 @@ package seeder
 import (
 	"context"
 	"github.com/brianvoe/gofakeit/v7"
-<<<<<<< HEAD
-	"github.com/ghssni/Smartcy-LMS/pkg"
-	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
-	"github.com/sirupsen/logrus"
-
-=======
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
->>>>>>> user-service
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"

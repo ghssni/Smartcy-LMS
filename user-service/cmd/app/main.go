@@ -1,41 +1,28 @@
 package main
 
 import (
-<<<<<<< HEAD
-	"context"
-	"github.com/ghssni/Smartcy-LMS/pkg"
-	"github.com/ghssni/Smartcy-LMS/user-service/database"
-=======
 	"github.com/ghssni/Smartcy-LMS/User-Service/database"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/repository"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/service"
 	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
 	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
->>>>>>> user-service
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
-<<<<<<< HEAD
-
-	"os"
-	"os/signal"
-	"time"
-=======
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"log"
 	"net"
->>>>>>> user-service
 )
 
 var db *mongo.Database
 
 func main() {
+	// Setup logger
+	pkg.SetupLogger()
 	//.env
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatal("Error loading .env file")
 	}
-	// Setup logger
-	pkg.SetupLogger()
 
 	// Config Db
 	var err error

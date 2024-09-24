@@ -2,11 +2,7 @@ package database
 
 import (
 	"context"
-<<<<<<< HEAD
-	"github.com/ghssni/Smartcy-LMS/user-service/database/migrations"
-=======
 	"github.com/ghssni/Smartcy-LMS/User-Service/database/migrations"
->>>>>>> user-service
 	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
