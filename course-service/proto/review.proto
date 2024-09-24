@@ -1,0 +1,98 @@
+syntax = "proto3";
+package reviews;
+import "google/protobuf/empty.proto";
+option go_package = "course-service/pb";
+
+service ReviewService {
+  // Create a new review (with enrollment and progress check)
+  rpc CreateReview(CreateReviewRequest) returns (Review);
+
+  // Get a specific review by course_id and review id
+  rpc GetReview(GetReviewRequest) returns (Review);
+
+  // Get all reviews by a student for a specific course
+  rpc GetReviewsByStudent(GetReviewsByStudentRequest) returns (GetReviewsByStudentResponse);
+
+  // Get average rating for a course
+  rpc GetAverageRatingByCourse(GetAverageRatingByCourseRequest) returns (GetAverageRatingByCourseResponse);
+
+  // Get total number of reviews for a course
+  rpc GetTotalReviewsByCourse(GetTotalReviewsByCourseRequest) returns (GetTotalReviewsByCourseResponse);
+
+  // List all reviews for a course
+  rpc ListReviews(ListReviewsRequest) returns (ListReviewsResponse);
+
+  // Update a review
+  rpc UpdateReview(UpdateReviewRequest) returns (Review);
+
+  // Delete a review
+  rpc DeleteReview(DeleteReviewRequest) returns (google.protobuf.Empty);
+
+}
+
+message Review {
+  uint32 id = 1;
+  uint32 course_id = 2;
+  string student_id = 3;  // MongoDB user ID
+  uint32 rating = 4;
+  string review_text = 5;
+  string created_at = 6;
+  string updated_at = 7;
+  string deleted_at = 8;
+}
+
+// Request and Response messages
+message CreateReviewRequest {
+  uint32 course_id = 1;
+  string student_id = 2;
+  uint32 rating = 3;
+  string review_text = 4;
+}
+
+message GetReviewRequest {
+  uint32 review_id = 1;
+}
+
+message GetAverageRatingByCourseRequest {
+  uint32 course_id = 1; // ID of the course
+}
+
+message GetAverageRatingByCourseResponse {
+  float average_rating = 1;
+}
+
+message GetReviewsByStudentRequest {
+  uint32 course_id = 1;  // ID of the course
+  string student_id = 2; // ID of the student (from MongoDB)
+}
+
+message GetReviewsByStudentResponse {
+  repeated Review reviews = 1;
+}
+
+message GetTotalReviewsByCourseRequest {
+  uint32 course_id = 1; // ID of the course
+}
+
+message GetTotalReviewsByCourseResponse {
+  uint32 total_reviews = 1;
+}
+
+message UpdateReviewRequest {
+  uint32 review_id = 1;
+  uint32 course_id = 2;
+  uint32 rating = 3;
+  string review_text = 4;
+}
+
+message ListReviewsRequest {
+  uint32 course_id = 1;
+}
+
+message ListReviewsResponse {
+  repeated Review reviews = 1;
+}
+
+message DeleteReviewRequest {
+  uint32 review_id = 1;
+}
