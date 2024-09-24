@@ -27,9 +27,12 @@ func main() {
 	courseServer := service.NewCourseService()
 	lessonServer := service.NewLessonService()
 	reviewServer := service.NewReviewService()
+	progressServer := service.NewLearningProgressService()
+
 	pb.RegisterCourseServiceServer(grpcServer, courseServer)
 	pb.RegisterLessonServiceServer(grpcServer, lessonServer)
 	pb.RegisterReviewServiceServer(grpcServer, reviewServer)
+	pb.RegisterLearningProgressServiceServer(grpcServer, progressServer)
 
 	gRPCPort := config.Viper.GetString("PORT")
 

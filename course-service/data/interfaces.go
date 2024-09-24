@@ -15,7 +15,6 @@ type CourseInterfaces interface {
 	DeleteCourse(ctx context.Context, courseID uint32, deletedAt time.Time) error
 	CheckCourseByID(ctx context.Context, courseID uint32) (bool, error)
 }
-
 type LessonInterfaces interface {
 	CreateLesson(ctx context.Context, lesson *Lesson, createdAt, updatedAt time.Time) (uint32, error)
 	GetLesson(ctx context.Context, lessonID, courseID uint32) (*Lesson, error)
@@ -28,7 +27,6 @@ type LessonInterfaces interface {
 	GetTotalLessonsByCourseID(ctx context.Context, courseID uint32) (uint32, error)
 	GetTotalLessonsByCourseIDAndType(ctx context.Context, courseID uint32, lessonType string) (uint32, error)
 }
-
 type ReviewInterfaces interface {
 	CreateReview(ctx context.Context, review *Review, createdAt, updatedAt time.Time) (uint32, error)
 	GetReview(ctx context.Context, reviewID uint32) (*Review, error)
@@ -38,4 +36,13 @@ type ReviewInterfaces interface {
 	ListReviews(ctx context.Context, courseID uint32) ([]Review, error)
 	UpdateReview(ctx context.Context, review *Review, updatedAt time.Time) error
 	DeleteReview(ctx context.Context, reviewID uint32, deletedAt time.Time) error
+}
+type LearningProgressInterfaces interface {
+	MarkLessonAsCompleted(ctx context.Context, enrollmentID, lessonID uint32, lastAccessed, completedAt time.Time) error
+	ResetLessonMark(ctx context.Context, enrollmentID, lessonID uint32) error
+	ResetAllLessonMarks(ctx context.Context, enrollmentID uint32) error
+	GetTotalCompletedLessons(ctx context.Context, enrollmentID uint32) (*CompletedProgress, error)
+	GetTotalCompletedProgress(ctx context.Context) ([]CompletedProgress, error)
+	ListLearningProgress(ctx context.Context, enrollmentID uint32) ([]LearningProgress, error)
+	UpdateLastAccessed(ctx context.Context, enrollmentID, lessonID uint32, lastAccessed time.Time) error
 }

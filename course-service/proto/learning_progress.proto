@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package learning_progress;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+option go_package = "course-service/pb";
+
+/**
+ * Service for managing learning progress, including marking lessons as completed,
+ * resetting lesson progress, tracking total progress, and updating access timestamps.
+ */
+service LearningProgressService {
+
+  /**
+   * Marks a lesson as completed.
+   * If the lesson has already been marked as completed, updates the completion timestamp.
+   * Creates a new learning progress record if none exists.
+   */
+  rpc MarkLessonAsCompleted(MarkLessonAsCompletedRequest) returns (MarkLessonAsCompletedResponse);
+
+  /**
+   * Resets the progress of a specific lesson, removing its completion status.
+   * This essentially allows a user to restart or reattempt a lesson.
+   */
+  rpc ResetLessonMark(ResetLessonMarkRequest) returns (google.protobuf.Empty);
+
+  /**
+   * Resets all lesson marks for a specific enrollment.
+   * This operation removes the completion status of all lessons for a specific enrollment ID.
+   */
+  rpc ResetAllLessonMarks(ResetAllLessonMarksRequest) returns (google.protobuf.Empty);
+
+  /**
+   * Retrieves the total number of lessons completed for a specific enrollment.
+   * This is useful for tracking the learner's progress within a course.
+   */
+  rpc GetTotalCompletedLessons(GetTotalCompletedLessonsRequest) returns (CompletedProgress);
+
+  /**
+   * Retrieves the total completed learning progress for all enrollments.
+   * It returns a list of progress summaries for multiple enrollments.
+   */
+  rpc GetTotalCompletedProgress(GetTotalCompletedProgressRequest) returns (GetTotalCompletedProgressResponse);
+
+  /**
+   * Lists all learning progress records for a specific enrollment.
+   * This can be used to display the progress of all lessons within a course for a user.
+   */
+  rpc ListLearningProgress(ListLearningProgressRequest) returns (ListLearningProgressResponse);
+
+  /**
+   * Updates the last accessed timestamp for a lesson.
+   * This is used to track when a user revisits a completed lesson.
+   */
+  rpc UpdateLastAccessed(UpdateLastAccessedRequest) returns (google.protobuf.Empty);
+}
+
+// Represents a learning progress entry for a lesson.
+message LearningProgress {
+  uint32 id = 1; // Unique identifier for the learning progress record
+  uint32 enrollment_id = 2; // The ID of the enrollment (user-course relation)
+  uint32 lesson_id = 3; // The ID of the lesson being tracked
+  bool status = 4; // Indicates whether the lesson is completed (true) or incomplete (false)
+  google.protobuf.Timestamp last_accessed = 5; // Timestamp of when the lesson was last accessed
+  google.protobuf.Timestamp completed_at = 6; // Timestamp of when the lesson was marked as completed
+  google.protobuf.Timestamp deleted_at = 7; // Timestamp for soft delete (if applicable)
+}
+
+// Request message to mark a lesson as completed.
+message MarkLessonAsCompletedRequest {
+  uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
+  uint32 lesson_id = 2; // The ID of the lesson to mark as completed
+}
+
+// Response message for marking a lesson as completed.
+message MarkLessonAsCompletedResponse {
+  string message = 1; // Success or failure message (e.g., "Lesson completed", "Already completed")
+}
+
+// Request message to get the total number of completed lessons for an enrollment.
+message GetTotalCompletedLessonsRequest {
+  uint32 enrollment_id = 1; // The ID of the enrollment for which to count completed lessons
+}
+
+// Response message containing the total number of completed lessons for an enrollment.
+message CompletedProgress {
+  uint32 enrollment_id = 1; // The ID of the enrollment
+  uint32 total_completed = 2; // The total number of completed lessons
+}
+
+// Request message for retrieving total completed learning progress across multiple enrollments.
+message GetTotalCompletedProgressRequest {}
+
+// Response message containing the total completed progress across multiple enrollments.
+message GetTotalCompletedProgressResponse {
+  repeated CompletedProgress progress = 1; // A list of completed progress entries per enrollment
+}
+
+// Request message to reset the progress of a specific lesson.
+message ResetLessonMarkRequest {
+  uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
+  uint32 lesson_id = 2; // The ID of the lesson to reset
+}
+
+// Request message to reset all lesson marks for a specific enrollment ID.
+message ResetAllLessonMarksRequest {
+  uint32 enrollment_id = 1; // Enrollment ID for which to reset all lesson marks
+}
+
+// Request message to update the last accessed timestamp for a completed lesson.
+message UpdateLastAccessedRequest {
+  uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
+  uint32 lesson_id = 2; // The ID of the lesson being accessed
+}
+
+// Request message for listing all learning progress records for an enrollment.
+message ListLearningProgressRequest {
+  uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
+}
+
+// Response message for listing all learning progress records for an enrollment.
+message ListLearningProgressResponse {
+  repeated LearningProgress learning_progress = 1; // A list of learning progress records for the enrollment
+}
