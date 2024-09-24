@@ -144,3 +144,4 @@ time="2024-09-24 23:20:48" level=info msg="gRPC request" Environment=Development
 time="2024-09-24 23:21:31" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
 time="2024-09-24 23:23:50" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
 time="2024-09-24 23:23:52" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency="514µs" method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-24 23:37:02" level=fatal msg="Error loading .env file" Environment=Production
