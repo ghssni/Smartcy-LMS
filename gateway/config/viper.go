@@ -21,10 +21,14 @@ func InitViper() {
 func LoadConfig() {
 
 	// Directly read the environment variable using os.Getenv
+	// Directly read the environment variable using os.Getenv
 	env := os.Getenv("APP_ENV")
-	if env == "" {
+	if env == "dev" {
 		log.Println("APP_ENV not set, defaulting to 'development'")
 		env = "development"
+	} else if env == "example" {
+		log.Println("APP_ENV not set, defaulting to 'example'")
+		env = "example"
 	}
 
 	if err := checkFileExists(env); err != nil {
