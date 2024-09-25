@@ -1,6 +1,7 @@
 syntax = "proto3";
 package course;
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 option go_package = "course-service/pb";
 
 
@@ -40,9 +41,9 @@ message Course {
   string thumbnail_url = 5;
   string instructor_id = 6;  // MongoDB ObjectId
   string category = 7;  // Enum: frontend, backend, etc.
-  string created_at = 8;  // ISO format timestamp
-  string updated_at = 9;
-  string deleted_at = 10;  // Nullable for soft deletes
+  google.protobuf.Timestamp created_at = 8;  // ISO format timestamp
+  google.protobuf.Timestamp updated_at = 9;
+  google.protobuf.Timestamp deleted_at = 10;  // Nullable for soft deletes
 }
 
 
