@@ -43,7 +43,9 @@ message Course {
   string category = 7;  // Enum: frontend, backend, etc.
   google.protobuf.Timestamp created_at = 8;  // ISO format timestamp
   google.protobuf.Timestamp updated_at = 9;
-  google.protobuf.Timestamp deleted_at = 10;  // Nullable for soft deletes
+  google.protobuf.Timestamp deleted_at = 10;  // Nullable for soft deletes\
+  float average_rating = 11;  // Average rating (1-5 scale)
+  uint32 total_reviews = 12;  // Total number of reviews
 }
 
 
