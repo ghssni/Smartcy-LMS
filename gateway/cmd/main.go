@@ -22,8 +22,8 @@ func main() {
 	}
 
 	courseServiceClient := pb.NewCourseServiceClient(courseServiceDial)
-	reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
-	courseHandler := handler.NewCourseHandler(courseServiceClient, reviewServiceClient)
+	//reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
+	courseHandler := handler.NewCourseHandler(courseServiceClient)
 
 	e := echo.New()
 

@@ -8,19 +8,16 @@ import (
 	"gateway-service/pb"
 	"gateway-service/utils"
 	"github.com/labstack/echo/v4"
-	"log"
 	"net/http"
 )
 
 type CourseHandler struct {
 	courseService pb.CourseServiceClient
-	reviewService pb.ReviewServiceClient
 }
 
-func NewCourseHandler(courseService pb.CourseServiceClient, reviewService pb.ReviewServiceClient) *CourseHandler {
+func NewCourseHandler(courseService pb.CourseServiceClient) *CourseHandler {
 	return &CourseHandler{
 		courseService: courseService,
-		reviewService: reviewService,
 	}
 }
 
@@ -73,19 +70,6 @@ func (h *CourseHandler) GetCourseByID(c echo.Context) error {
 	if err != nil {
 		return utils.HandleError(c, constans.ErrNotFound, err.Error())
 	}
-
-	averageRating, err := h.reviewService.GetAverageRatingByCourse(c.Request().Context(), &pb.GetAverageRatingByCourseRequest{CourseId: res.Id})
-	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
-	}
-
-	totalReview, err := h.reviewService.GetTotalReviewsByCourse(c.Request().Context(), &pb.GetTotalReviewsByCourseRequest{CourseId: res.Id})
-	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
-	}
-
-	log.Printf("averageRating: %v", averageRating)
-	log.Printf("totalReview: %v", totalReview)
 
 	course := model.CourseWithReview{
 		ID:            res.Id,
