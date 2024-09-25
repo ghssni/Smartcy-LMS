@@ -47,7 +47,7 @@ func (c *Course) GetCourseByID(ctx context.Context, courseID uint32) (*Course, e
     c.thumbnail_url,
     c.instructor_id,
     c.category,
-    c.created_at,
+    c.updated_at,
     COALESCE(AVG(r.rating), 0) AS average_rating,
     COUNT(r.id) AS total_reviews
 FROM courses c
@@ -72,7 +72,7 @@ func (c *Course) GetCourseByInstructorID(ctx context.Context, instructorID strin
             c.thumbnail_url,
             c.instructor_id,
             c.category,
-            c.created_at, 
+            c.updated_at, 
             COALESCE(AVG(r.rating), 0) AS average_rating, 
             COUNT(r.id) AS total_reviews
         FROM courses c
@@ -102,7 +102,7 @@ func (c *Course) GetCourseByCategory(ctx context.Context, category string) ([]Co
             c.thumbnail_url,
             c.instructor_id,
             c.category,
-            c.created_at, 
+            c.updated_at, 
             COALESCE(AVG(r.rating), 0) AS average_rating, 
             COUNT(r.id) AS total_reviews
         FROM courses c
@@ -131,7 +131,7 @@ func (c *Course) GetAllCourses(ctx context.Context) ([]Course, error) {
             c.thumbnail_url,
             c.instructor_id,
             c.category,
-            c.created_at, 
+            c.updated_at, 
             COALESCE(AVG(r.rating), 0) AS average_rating, 
             COUNT(r.id) AS total_reviews
         FROM courses c
