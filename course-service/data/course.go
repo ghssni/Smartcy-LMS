@@ -43,6 +43,10 @@ func (c *Course) GetCourseByID(ctx context.Context, courseID uint32) (*Course, e
     c.id,
     c.title,
     c.description,
+    c.price,
+    c.thumbnail_url,
+    c.instructor_id,
+    c.category,
     c.created_at,
     COALESCE(AVG(r.rating), 0) AS average_rating,
     COUNT(r.id) AS total_reviews
@@ -63,13 +67,17 @@ func (c *Course) GetCourseByInstructorID(ctx context.Context, instructorID strin
         SELECT 
             c.id, 
             c.title, 
-            c.description, 
+            c.description,
+            c.price,
+            c.thumbnail_url,
+            c.instructor_id,
+            c.category,
             c.created_at, 
             COALESCE(AVG(r.rating), 0) AS average_rating, 
             COUNT(r.id) AS total_reviews
         FROM courses c
-        WHERE c.deleted_at IS NULL AND c.instructor_id = $1
         LEFT JOIN reviews r ON c.id = r.course_id
+        WHERE c.instructor_id = $1 AND c.deleted_at IS NULL
         GROUP BY c.id
         ORDER BY total_reviews DESC, average_rating DESC;
     `
@@ -84,17 +92,22 @@ func (c *Course) GetCourseByInstructorID(ctx context.Context, instructorID strin
 }
 
 func (c *Course) GetCourseByCategory(ctx context.Context, category string) ([]Course, error) {
+
 	sqlStatement := `
         SELECT 
             c.id, 
             c.title, 
             c.description, 
+            c.price,
+            c.thumbnail_url,
+            c.instructor_id,
+            c.category,
             c.created_at, 
             COALESCE(AVG(r.rating), 0) AS average_rating, 
             COUNT(r.id) AS total_reviews
         FROM courses c
-        WHERE c.deleted_at IS NULL AND c.category = $1
         LEFT JOIN reviews r ON c.id = r.course_id
+        WHERE c.category = $1  AND c.deleted_at IS NULL
         GROUP BY c.id
         ORDER BY total_reviews DESC, average_rating DESC;
     `
@@ -114,11 +127,16 @@ func (c *Course) GetAllCourses(ctx context.Context) ([]Course, error) {
             c.id, 
             c.title, 
             c.description, 
+            c.price,
+            c.thumbnail_url,
+            c.instructor_id,
+            c.category,
             c.created_at, 
             COALESCE(AVG(r.rating), 0) AS average_rating, 
             COUNT(r.id) AS total_reviews
         FROM courses c
         LEFT JOIN reviews r ON c.id = r.course_id
+        WHERE c.deleted_at IS NULL
         GROUP BY c.id
         ORDER BY average_rating DESC, total_reviews DESC;
     `
