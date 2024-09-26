@@ -4,4 +4,6 @@ use (
 	email-service
 	enrollment-service
 	user-service
+	gateway
+	course-service
 )

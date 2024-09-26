@@ -13,11 +13,13 @@ import (
 
 type CourseHandler struct {
 	courseService pb.CourseServiceClient
+	lessonService pb.LessonServiceClient
 }
 
-func NewCourseHandler(courseService pb.CourseServiceClient) *CourseHandler {
+func NewCourseHandler(courseService pb.CourseServiceClient, lessonService pb.LessonServiceClient) *CourseHandler {
 	return &CourseHandler{
 		courseService: courseService,
+		lessonService: lessonService,
 	}
 }
 
@@ -223,7 +225,7 @@ func (h *CourseHandler) DeleteCourse(c echo.Context) error {
 	if err != nil {
 		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
 	}
-
+	
 	deleteCourseReq := pb.DeleteCourseRequest{
 		Id: utils.StringToUint(courseID),
 	}
