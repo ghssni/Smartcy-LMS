@@ -1,11 +1,18 @@
 root_dir = "."
 tmp_dir = "tmp"
 [build]
-cmd = "go build -o ./tmp/main.exe ./cmd/app"
-bin = "./tmp/main.exe"
-full_bin = "./tmp/main.exe"
+cmd = "go build -o ./tmp/main ./cmd/app"
+bin = "./tmp/main"
+full_bin = "./tmp/main"
 
 [log]
 level = "debug"
 
 env_file = ".env"
+
+[misc]
+clean_on_exit = true
+
+[screen]
+clear_on_rebuild = true
+keep_scroll = true
