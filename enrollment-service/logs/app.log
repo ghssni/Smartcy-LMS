@@ -474,3 +474,27 @@ time="2024-09-26 18:43:31" level=info msg="Starting gRPC server on port 50052" E
 time="2024-09-26 20:25:55" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-26 20:25:55" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
 time="2024-09-26 20:25:55" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:55:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:55:26" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:55:26" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:55:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:55:58" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:55:58" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:56:01" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:56:01" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:56:01" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:56:20" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:56:20" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:56:20" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:56:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:56:26" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:56:26" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:56:47" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:56:47" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:56:47" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:57:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:57:45" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:57:45" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 20:58:32" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 20:58:32" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 20:58:32" level=info msg="Starting gRPC server on port 50052" Environment=Production
