@@ -18,3 +18,10 @@ var (
 	ErrConflict            = utils.NewAPIError(http.StatusConflict, "Resource already exists", nil)
 	ErrForbidden           = utils.NewAPIError(http.StatusForbidden, "Forbidden access", nil)
 )
+
+type UserRoleEnum string
+
+const (
+	UserRoleReader UserRoleEnum = "reader"
+	UserRoleAdmin  UserRoleEnum = "admin"
+)
