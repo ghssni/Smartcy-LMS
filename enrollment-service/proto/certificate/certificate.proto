@@ -2,9 +2,16 @@ syntax = "proto3";
 package certificate;
 
 import "google/protobuf/timestamp.proto";
-import "meta/meta.proto";
+
+
 option go_package = "certificate/certificate;certificate";
 
+
+message MetaCertificate {
+  uint32 code = 1;
+  string message = 2;
+  string status = 3;
+}
 
 message Certificate {
   uint32 id = 1;
@@ -24,7 +31,7 @@ message CreateCertificateRequest {
 }
 
 message CreateCertificateResponse {
-  meta.Meta meta = 1;
+  MetaCertificate meta = 1;
   Certificate certificate = 2;
 }
 
@@ -33,7 +40,7 @@ message GetCertificateByEnrollmentIdRequest {
 }
 
 message GetCertificateByEnrollmentIdResponse {
-  meta.Meta meta = 1;
+  MetaCertificate meta = 1;
   Certificate certificate = 2;
 }
 

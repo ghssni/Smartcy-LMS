@@ -6,14 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/middleware"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/models"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/internal/repository"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
-	pb "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/enrollment"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/proto/meta"
-	"github.com/ghssni/Smartcy-LMS/pkg"
-	"github.com/go-playground/validator/v10"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/middleware"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
+
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
+	pb "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -50,16 +48,6 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 		UpdatedAt:     time.Now(),
 	}
 
-	// validate enrollment input
-	if err := enrollmentInput.Validate(); err != nil {
-		var validationError validator.ValidationErrors
-		if errors.As(err, &validationError) {
-			formatterError := pkg.FormatValidationError(enrollmentInput, validationError)
-			if formatterError != "" {
-				return nil, status.Errorf(codes.InvalidArgument, formatterError)
-			}
-		}
-	}
 	tx := s.er.BeginTransaction()
 
 	// check if student is already enrolled example courseID = 1
@@ -85,7 +73,7 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 		return nil, status.Errorf(codes.Internal, "failed to create enrollment: %v", err)
 	}
 
-	invoiceUrl, invoiceId, price, err := CreateInvoiceAndSendEmailPayment(studentId, email, "example course", 100000)
+	invoiceUrl, invoiceId, price, err := CreateInvoiceAndSendEmailPayment(req.StudentId, email, "example course", 100000)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create invoice and send email: %v", err)
 	}
@@ -93,7 +81,7 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 	payment := &models.Payments{
 		EnrollmentID: newEnrollment.ID,
 		ExternalID:   invoiceId,
-		UserID:       studentId,
+		UserID:       req.StudentId,
 		IsHigh:       false,
 		Status:       "PENDING",
 		Amount:       price,
@@ -120,9 +108,9 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 	}
 
 	response := &enrollment.CreateEnrollmentResponse{
-		Meta: &meta.Meta{
+		Meta: &pb.MetaEnrollment{
 			Message: "enrollment created successfully",
-			Code:    int32(http.StatusCreated),
+			Code:    uint32(http.StatusCreated),
 			Status:  http.StatusText(http.StatusCreated),
 		},
 		Data: &enrollment.Enrollment{
@@ -173,9 +161,9 @@ func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *
 	}
 
 	response := &enrollment.GetEnrollmentsByStudentIdResponse{
-		Meta: &meta.Meta{
+		Meta: &pb.MetaEnrollment{
 			Message: "enrollments retrieved successfully",
-			Code:    int32(codes.OK),
+			Code:    uint32(codes.OK),
 			Status:  codes.OK.String(),
 		},
 		Data: enrollmentsResponse,
@@ -209,9 +197,9 @@ func (s *enrollmentService) DeleteEnrollmentById(ctx context.Context, req *enrol
 	}
 
 	response := &enrollment.DeleteEnrollmentByIdResponse{
-		Meta: &meta.Meta{
+		Meta: &pb.MetaEnrollment{
 			Message: "enrollment deleted successfully",
-			Code:    int32(http.StatusOK),
+			Code:    uint32(http.StatusOK),
 			Status:  http.StatusText(http.StatusOK),
 		},
 	}

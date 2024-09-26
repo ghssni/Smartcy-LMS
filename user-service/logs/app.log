@@ -1,0 +1,98 @@
+time="2024-09-25 00:50:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 03:49:13" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 01:35:22" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 01:37:13" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 01:51:16" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 01:51:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:05:19" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:07:29" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:08:06" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:14:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:18:14" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:18:28" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:18:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:19:02" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:20:51" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:24:01" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:26:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:29:09" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:36:15" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:36:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:38:57" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:51:35" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:52:32" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:00:41" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 03:01:59" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 03:04:00" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 03:10:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:11:11" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 03:11:12" level=info msg="Rollback: create_UserActivityLog_collection completed" Environment=Production
+time="2024-09-26 03:11:12" level=info msg="Rollback: create_users_collection completed" Environment=Production
+time="2024-09-26 03:11:12" level=info msg="Migration: create_users_collection completed. Index created on field: email" Environment=Production
+time="2024-09-26 03:11:12" level=info msg="Migration: create_UserActivityLog_collection completed. Index created on field: user_id" Environment=Production
+time="2024-09-26 03:11:13" level=info msg="Seed users success" Environment=Production
+time="2024-09-26 03:11:13" level=info msg="Seed all success" Environment=Production
+time="2024-09-26 03:11:13" level=info msg="AutoMigrate and Seeders completed." Environment=Production
+time="2024-09-26 03:11:38" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:15:51" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:17:36" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:17:42" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:19:31" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:25:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:25:37" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:27:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:27:28" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:27:28" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:28:47" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:28:47" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:28:47" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:29:39" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:29:39" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:30:20" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:31:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:31:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:31:05" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:31:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:31:17" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:32:08" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:32:56" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:32:56" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:32:56" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:33:25" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:33:31" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:33:37" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:33:37" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:34:07" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:35:36" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:35:42" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:35:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:36:07" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:36:07" level=fatal msg="Failed to listen: listen tcp :50051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted." Environment=Production
+time="2024-09-26 03:39:15" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:39:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:42:42" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:43:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:44:42" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:45:02" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:47:03" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:47:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:53:02" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:54:06" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:54:33" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:54:41" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:54:46" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:55:14" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:55:21" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:55:26" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:56:24" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:56:28" level=info msg="meta:{message:\"User registered successfully\"  status:\"OK\"}  user:{id:\"66f4a32c776e8a95082f833f\"  name:\"John Doe\"  email:\"oksasatyaa2@gmail.com\"  address:\"123 Main Street\"  role:\"student\"  phone:\"123456789\"  age:25  created_at:{seconds:1727308588  nanos:267000000}  updated_at:{seconds:1727308588  nanos:267000000}}" Environment=Production
+time="2024-09-26 03:56:51" level=info msg="meta:{message:\"User registered successfully\"  status:\"OK\"}  user:{id:\"66f4a343776e8a95082f8340\"  name:\"John Doe\"  email:\"oksasatyaa22@gmail.com\"  address:\"123 Main Street\"  role:\"student\"  phone:\"123456789\"  age:25  created_at:{seconds:1727308611  nanos:117000000}  updated_at:{seconds:1727308611  nanos:117000000}}" Environment=Production
+time="2024-09-26 03:57:04" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:00:23" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:00:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:01:34" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:04:16" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:04:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:05:24" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:05:33" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:50:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production

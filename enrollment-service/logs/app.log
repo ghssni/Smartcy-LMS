@@ -393,3 +393,63 @@ time="2024-09-23 02:39:28" level=info msg="Starting gRPC server on port 50051" E
 time="2024-09-23 02:40:09" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
 time="2024-09-23 02:40:09" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
 time="2024-09-23 02:40:09" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-25 03:42:16" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-25 03:42:16" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-25 03:42:16" level=info msg="Starting gRPC server on port 50051" Environment=Production
+time="2024-09-25 03:42:42" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-25 03:42:42" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-25 03:42:42" level=info msg="Starting gRPC server on port 50051" Environment=Production
+time="2024-09-25 03:42:59" level=info msg="Running AutoMigrate..." Environment=Production
+time="2024-09-25 03:42:59" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-25 03:42:59" level=info msg="Starting gRPC server on port 50051" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Running AutoMigrate..." Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Running Seeders..." Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Enrollments seeder success" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Certificate seeder success" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Assessments seeder success" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Payments seeder success" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Seed all success" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="AutoMigrate and Seeders completed." Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-25 03:43:56" level=info msg="Starting gRPC server on port 50051" Environment=Production
+time="2024-09-25 03:44:56" level=info msg="Running AutoMigrate..." Environment=Production
+time="2024-09-25 03:44:56" level=info msg="Running Seeders..." Environment=Production
+time="2024-09-25 03:44:56" level=fatal msg="Failed to seed enrollments: ERROR: duplicate key value violates unique constraint \"enrollments_pkey\" (SQLSTATE 23505)" Environment=Production
+time="2024-09-25 03:45:56" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Running Seeders..." Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Enrollments seeder success" Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Certificate seeder success" Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Assessments seeder success" Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Payments seeder success" Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Seed all success" Environment=Development
+time="2024-09-25 03:45:57" level=info msg="AutoMigrate and Seeders completed." Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Development
+time="2024-09-25 03:45:57" level=info msg="Starting gRPC server on port 50051" Environment=Development
+time="2024-09-25 03:49:21" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 03:49:21" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-25 03:49:21" level=info msg="Starting gRPC server on port 50051" Environment=Production
+time="2024-09-25 03:49:47" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 03:49:47" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-25 03:49:47" level=info msg="Starting gRPC server on port 50053" Environment=Production
+time="2024-09-26 00:52:48" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 00:52:48" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 00:52:48" level=info msg="Starting gRPC server on port 50053" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Running Seeders..." Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Enrollments seeder success" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Certificate seeder success" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Assessments seeder success" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Payments seeder success" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Seed all success" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="AutoMigrate and Seeders completed." Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 02:46:02" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 02:51:29" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:51:29" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 02:51:29" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 03:30:39" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:30:39" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 03:30:39" level=info msg="Starting gRPC server on port 50052" Environment=Production
+time="2024-09-26 03:39:08" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:39:08" level=info msg="Echo server with gRPC-Gateway is running on port 8081" Environment=Production
+time="2024-09-26 03:39:08" level=info msg="Starting gRPC server on port 50052" Environment=Production

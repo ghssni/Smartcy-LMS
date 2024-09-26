@@ -11,6 +11,5 @@ func SeedAll(db *gorm.DB) {
 	CertificateSeeder(db)
 	AssessmentsSeeder(db)
 	PaymentsSeeder(db)
-	LearningProgressSeeder(db)
 	logrus.Println("Seed all success")
 }
