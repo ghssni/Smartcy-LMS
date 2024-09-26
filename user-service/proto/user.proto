@@ -3,6 +3,7 @@ syntax = "proto3";
 package proto;
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 option go_package = "github.com/ghssni/Smartcy-LMS/User-Service/pb;pb";
 
 message MetaUser {
@@ -150,4 +151,11 @@ service UserService {
   rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
   rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
   rpc GenerateResetToken(GenerateResetTokenRequest) returns (GenerateResetTokenResponse);
+
+  rpc NewPassword(NewPasswordRequest) returns (NewPasswordResponse) {
+    option (google.api.http) = {
+      post: "/reset-password"
+      body: "*"
+    };
+  };
 }

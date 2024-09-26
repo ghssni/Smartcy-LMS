@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
-	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb"
+	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -41,7 +41,7 @@ func main() {
 	// init xendit
 	config.InitXendit()
 
-	go runGrpcServer() // Run gRPC server on port 50051
+	go runGrpcServer() // Run gRPC server on port 50052
 	go runGrpcGatewayServer()
 
 	// run scheduler
@@ -73,7 +73,7 @@ func runGrpcServer() {
 
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-			middleware.JWTInterceptor(os.Getenv("JWT_SECRET")),
+			//middleware.JWTInterceptor(os.Getenv("JWT_SECRET")),
 			middleware.AccessKeyInterceptor(accessKey),
 		),
 	)
@@ -81,6 +81,7 @@ func runGrpcServer() {
 	enrollmentRepo := repository.NewEnrollmentRepository(db)
 	paymentRepo := repository.NewPaymentRepository(db)
 	assessmentsRepo := repository.NewAssessmentsRepository(db)
+	//certificateRepo := repository.NewCertificateRepository(db)
 
 	// Register gRPC server from service
 	pbEnrollment.RegisterEnrollmentServiceServer(grpcServer, service.NewEnrollmentService(enrollmentRepo, paymentRepo))
@@ -128,25 +129,5 @@ func runGrpcGatewayServer() {
 	if err := e.Start(":8081"); err != nil {
 		logrus.Fatalf("Failed to serve Echo server with gRPC-Gateway: %v", err)
 	}
-
-	//err := pbEnrollment.RegisterEnrollmentServiceHandlerFromEndpoint(context.Background(), mux, "localhost:50051", opts)
-	//if err != nil {
-	//	logrus.Fatalf("Failed to register gRPC Gateway for Enrollment service: %v", err)
-	//}
-	//
-	//err = pbAssessments.RegisterAssessmentsServiceHandlerFromEndpoint(context.Background(), mux, "localhost:50051", opts)
-	//if err != nil {
-	//	logrus.Fatalf("Failed to register gRPC Gateway for Assessments service: %v", err)
-	//}
-	//
-	//err = pbCertificate.RegisterCertificateServiceHandlerFromEndpoint(context.Background(), mux, "localhost:50051", opts)
-	//if err != nil {
-	//	logrus.Fatalf("Failed to register gRPC Gateway for Certificate service: %v", err)
-	//}
-	//
-	//err = pbLearningProgress.RegisterLearningProgressServiceHandlerFromEndpoint(context.Background(), mux, "localhost:50051", opts)
-	//if err != nil {
-	//	logrus.Fatalf("Failed to register gRPC Gateway for LearningProgress service: %v", err)
-	//}
 
 }

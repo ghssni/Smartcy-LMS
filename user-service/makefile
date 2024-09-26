@@ -3,17 +3,22 @@ PROTOC := protoc
 
 PROTOS := proto/user.proto proto/userLog.proto
 
+# Output directories for generated Go files
+PB_DIR := ./pb
+
 all: generate
 
 generate:
 	$(PROTOC) \
-    --proto_path=./proto \
-    --go_out=./pb --go_opt=paths=source_relative \
-    --go-grpc_out=./pb --go-grpc_opt=paths=source_relative \
-    $(PROTOS)
+		-I . \
+		-I ./googleapis \
+		--go_out=$(PB_DIR) --go_opt=paths=source_relative \
+		--go-grpc_out=$(PB_DIR) --go-grpc_opt=paths=source_relative \
+		--grpc-gateway_out=$(PB_DIR) --grpc-gateway_opt=paths=source_relative \
+		$(PROTOS)
 
 # Clean generated files
 clean:
-	rm -rf pb/*.pb.go
+	rm -rf $(PB_DIR)/*.pb.go
 
 .PHONY: all generate clean

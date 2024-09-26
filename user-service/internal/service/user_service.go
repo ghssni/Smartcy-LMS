@@ -7,8 +7,9 @@ import (
 	"github.com/ghssni/Smartcy-LMS/User-Service/config"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/repository"
-	"github.com/ghssni/Smartcy-LMS/User-Service/pb"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
 	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
+	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
@@ -18,6 +19,11 @@ import (
 	"os"
 	"time"
 )
+
+//type UserService interface {
+//	pb.UserServiceServer
+//	NewPasswordHTTP(c echo.Context) error
+//}
 
 type UserService struct {
 	pb.UnimplementedUserServiceServer
@@ -293,7 +299,7 @@ func (s *UserService) GenerateResetToken(ctx context.Context, req *pb.GenerateRe
 		return nil, status.Errorf(codes.Internal, "Error generating reset token: %v", err)
 	}
 
-	resetURL := fmt.Sprintf("https://localhost:8080/reset-password?token=%s", resetToken)
+	resetURL := fmt.Sprintf("http://localhost:8080/reset-password?token=%s", resetToken)
 
 	return &pb.GenerateResetTokenResponse{
 		Meta: &pb.MetaUser{
@@ -304,4 +310,39 @@ func (s *UserService) GenerateResetToken(ctx context.Context, req *pb.GenerateRe
 		ResetToken: resetToken,
 		ResetUrl:   resetURL,
 	}, nil
+}
+
+// NewPasswordHTTP resets the user's password using HTTP via Echo
+func (s *UserService) NewPasswordHTTP(c echo.Context) error {
+	// Bind the incoming request to the NewPasswordRequest struct
+	req := new(pb.NewPasswordRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
+	}
+
+	// Create a new context for the gRPC call
+	ctx := context.Background()
+
+	// Call the NewPassword gRPC function
+	res, err := s.NewPassword(ctx, req)
+	if err != nil {
+		// Return appropriate HTTP error based on gRPC error codes
+		grpcErr, ok := status.FromError(err)
+		if ok {
+			switch grpcErr.Code() {
+			case codes.InvalidArgument:
+				return c.JSON(http.StatusBadRequest, map[string]string{"error": grpcErr.Message()})
+			case codes.NotFound:
+				return c.JSON(http.StatusNotFound, map[string]string{"error": grpcErr.Message()})
+			case codes.Internal:
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": grpcErr.Message()})
+			default:
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Unexpected error"})
+			}
+		}
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to reset password"})
+	}
+
+	// Return the response as JSON
+	return c.JSON(http.StatusOK, res)
 }

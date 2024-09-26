@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/User-Service/pb"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
 	"google.golang.org/grpc"
 )
 

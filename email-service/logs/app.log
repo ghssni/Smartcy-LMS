@@ -76,3 +76,5 @@ time="2024-09-26 02:37:06" level=info msg="Skipping AutoMigrate and AutoDrop." E
 time="2024-09-26 02:37:19" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-26 03:39:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-26 04:51:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 17:38:24" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 17:38:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production

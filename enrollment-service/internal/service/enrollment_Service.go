@@ -41,7 +41,7 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 
 	enrollmentInput := &models.EnrollmentInput{
 		CourseID:      req.CourseId,
-		StudentID:     studentId,
+		StudentID:     req.StudentId,
 		PaymentStatus: "Pending",
 		EnrolledAt:    time.Now(),
 		CreatedAt:     time.Now(),
@@ -51,7 +51,7 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 	tx := s.er.BeginTransaction()
 
 	// check if student is already enrolled example courseID = 1
-	_, err = s.er.ExistingEnrollment(studentId, req.CourseId)
+	_, err = s.er.ExistingEnrollment(req.StudentId, req.CourseId)
 	if err != nil {
 		tx.Rollback()
 		return nil, status.Errorf(codes.AlreadyExists, "student is already enrolled in this course")
