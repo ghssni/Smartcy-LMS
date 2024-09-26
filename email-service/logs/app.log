@@ -1,0 +1,81 @@
+time="2024-09-25 01:45:55" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 01:46:15" level=info msg="gRPC request" Environment=Production content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:51:15" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:51:37" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:52:29" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:52:31" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:52:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:54:07" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:55:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:55:39" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:57:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:58:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:58:35" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:58:50" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:59:03" level=info msg="gRPC request" Environment=Development content_length=64 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:59:23" level=info msg="gRPC request" Environment=Development content_length=129 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:59:29" level=info msg="gRPC request" Environment=Development content_length=91 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:59:51" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 01:59:53" level=info msg="gRPC request" Environment=Development content_length=91 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 01:59:59" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:01:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:01:50" level=info msg="gRPC request" Environment=Development content_length=91 error="<nil>" grpc_status=OK latency=0s method=/proto.EmailService/SendPaymentDueEmail request_id="" user_agent=grpc-node-js/1.11.0-postman.1
+time="2024-09-25 02:02:45" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:03:30" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:04:29" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:04:51" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:04:54" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:04:58" level=info msg="Error sending email: error sending request: Post \"sandbox.api.mailtrap.io\": unsupported protocol scheme \"\"" Environment=Development
+time="2024-09-25 02:16:14" level=info msg="Error sending email: error sending request: Post \"sandbox.api.mailtrap.io\": unsupported protocol scheme \"\"" Environment=Development
+time="2024-09-25 02:17:35" level=info msg="Error sending email: error sending request: Post \"sandbox.api.mailtrap.io\": unsupported protocol scheme \"\"" Environment=Development
+time="2024-09-25 02:19:10" level=info msg="Error sending email: error sending request: Post \"sandbox.api.mailtrap.io\": unsupported protocol scheme \"\"" Environment=Development
+time="2024-09-25 02:19:28" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:19:31" level=info msg="Error sending email: error: received non-2xx response code: 404" Environment=Development
+time="2024-09-25 02:20:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:20:58" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:21:01" level=info msg="Error sending email: error: received non-2xx response code: 404, body: 404 page not found" Environment=Development
+time="2024-09-25 02:21:28" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:21:34" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:21:37" level=info msg="Error sending email: error: received non-2xx response code: 404, body: 404 page not found" Environment=Development
+time="2024-09-25 02:29:12" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:29:14" level=info msg="Error sending email: error: received non-2xx response code: 400, body: {\"errors\":[\"invalid type for field `from`, expected: `object`, given: `string`\"]}" Environment=Development
+time="2024-09-25 02:30:30" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:30:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:30:50" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:31:01" level=info msg="Error sending email: error: received non-2xx response code: 400, body: {\"errors\":[\"invalid type for field `to`, expected: `object`, given: `string`\"]}" Environment=Development
+time="2024-09-25 02:31:34" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:31:46" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:31:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:32:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:32:35" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:32:39" level=info msg="Email log inserted successfully for: oksasatyaa@gmail.com" Environment=Development
+time="2024-09-25 02:32:39" level=info msg="Response Success: true" Environment=Development
+time="2024-09-25 02:35:29" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:35:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:35:53" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 02:35:56" level=info msg="Email log inserted successfully for: oksasatyaa@gmail.com" Environment=Development
+time="2024-09-25 02:35:56" level=info msg="Response Success: true" Environment=Development
+time="2024-09-25 02:38:34" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 03:49:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 15:46:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 15:47:02" level=info msg="Error sending email: you called Send() with a domain that contains invalid characters" Environment=Production
+time="2024-09-25 15:47:02" level=info msg="Error sending email: you called Send() with a domain that contains invalid characters" Environment=Production
+time="2024-09-25 15:48:03" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 15:48:15" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 00:52:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Running Seeders..." Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Emails seeded successfully" Environment=Production
+time="2024-09-26 02:28:25" level=info msg="EmailLogs seeded successfully" Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Seed all success" Environment=Production
+time="2024-09-26 02:28:25" level=info msg="AutoMigrate and Seeders completed." Environment=Production
+time="2024-09-26 02:28:41" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:29:43" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:32:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:37:06" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:37:19" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:39:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:51:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 17:38:24" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 17:38:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 21:03:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production

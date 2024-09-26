@@ -42,11 +42,8 @@ func (s *LearningProgressService) ResetLessonMark(ctx context.Context, in *pb.Re
 	enrollmentID := in.GetEnrollmentId()
 	lessonID := in.GetLessonId()
 
-	// lastAccessed
-	lastAccessed := time.Now()
-
 	// Insert data to database
-	err := repo.LearningProgress.ResetLessonMark(ctx, enrollmentID, lessonID, lastAccessed)
+	err := repo.LearningProgress.ResetLessonMark(ctx, enrollmentID, lessonID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to reset lesson mark: %v", err))
 	}
