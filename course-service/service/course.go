@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )
 
@@ -62,13 +63,17 @@ func (s *CourseService) GetCourseById(ctx context.Context, in *pb.GetCourseByIdR
 
 	// Return response
 	res := &pb.Course{
-		Id:           course.ID,
-		Title:        course.Title,
-		Description:  course.Description,
-		Price:        course.Price,
-		ThumbnailUrl: course.ThumbnailURL,
-		InstructorId: course.InstructorID,
-		Category:     course.Category,
+		Id:            course.ID,
+		Title:         course.Title,
+		Description:   course.Description,
+		Price:         course.Price,
+		ThumbnailUrl:  course.ThumbnailURL,
+		InstructorId:  course.InstructorID,
+		Category:      course.Category,
+		CreatedAt:     timestamppb.New(course.CreatedAt),
+		UpdatedAt:     timestamppb.New(course.UpdatedAt),
+		AverageRating: course.AverageRating,
+		TotalReviews:  course.TotalReviews,
 	}
 
 	return res, nil
@@ -88,13 +93,17 @@ func (s *CourseService) GetCoursesByInstructorID(ctx context.Context, in *pb.Get
 
 	for i, course := range courses {
 		res.Courses[i] = &pb.Course{
-			Id:           course.ID,
-			Title:        course.Title,
-			Description:  course.Description,
-			Price:        course.Price,
-			ThumbnailUrl: course.ThumbnailURL,
-			InstructorId: course.InstructorID,
-			Category:     course.Category,
+			Id:            course.ID,
+			Title:         course.Title,
+			Description:   course.Description,
+			Price:         course.Price,
+			ThumbnailUrl:  course.ThumbnailURL,
+			InstructorId:  course.InstructorID,
+			Category:      course.Category,
+			CreatedAt:     timestamppb.New(course.CreatedAt),
+			UpdatedAt:     timestamppb.New(course.UpdatedAt),
+			AverageRating: course.AverageRating,
+			TotalReviews:  course.TotalReviews,
 		}
 	}
 
@@ -113,13 +122,17 @@ func (s *CourseService) GetCoursesByCategory(ctx context.Context, in *pb.GetCour
 
 	for i, course := range courses {
 		res.Courses[i] = &pb.Course{
-			Id:           course.ID,
-			Title:        course.Title,
-			Description:  course.Description,
-			Price:        course.Price,
-			ThumbnailUrl: course.ThumbnailURL,
-			InstructorId: course.InstructorID,
-			Category:     course.Category,
+			Id:            course.ID,
+			Title:         course.Title,
+			Description:   course.Description,
+			Price:         course.Price,
+			ThumbnailUrl:  course.ThumbnailURL,
+			InstructorId:  course.InstructorID,
+			Category:      course.Category,
+			CreatedAt:     timestamppb.New(course.CreatedAt),
+			UpdatedAt:     timestamppb.New(course.UpdatedAt),
+			AverageRating: course.AverageRating,
+			TotalReviews:  course.TotalReviews,
 		}
 	}
 
@@ -138,13 +151,17 @@ func (s *CourseService) GetAllCourses(ctx context.Context, in *pb.GetAllCoursesR
 
 	for i, course := range courses {
 		res.Courses[i] = &pb.Course{
-			Id:           course.ID,
-			Title:        course.Title,
-			Description:  course.Description,
-			Price:        course.Price,
-			ThumbnailUrl: course.ThumbnailURL,
-			InstructorId: course.InstructorID,
-			Category:     course.Category,
+			Id:            course.ID,
+			Title:         course.Title,
+			Description:   course.Description,
+			Price:         course.Price,
+			ThumbnailUrl:  course.ThumbnailURL,
+			InstructorId:  course.InstructorID,
+			Category:      course.Category,
+			CreatedAt:     timestamppb.New(course.CreatedAt),
+			UpdatedAt:     timestamppb.New(course.UpdatedAt),
+			AverageRating: course.AverageRating,
+			TotalReviews:  course.TotalReviews,
 		}
 	}
 

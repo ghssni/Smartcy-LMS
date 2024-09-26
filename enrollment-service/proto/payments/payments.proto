@@ -3,9 +3,14 @@ package payments;
 
 
 import "google/protobuf/timestamp.proto";
-import "meta/meta.proto";
 import "google/api/annotations.proto";
 option go_package = "payments/payments;payments";
+
+message MetaPayments {
+  uint32 code = 1;
+  string message = 2;
+  string status = 3;
+}
 
 message Payments {
   uint32 id = 1;
@@ -37,7 +42,7 @@ message GetPaymentByEnrollmentIdRequest {
 }
 
 message GetPaymentByEnrollmentIdResponse {
-  meta.Meta meta = 1;
+  MetaPayments meta = 1;
   Payments payments = 2;
 }
 
@@ -60,9 +65,11 @@ message HandleWebhookRequest {
   string currency = 15;
 }
 
+
+
 message HandleWebhookResponse {
-  meta.Meta meta = 1;
-  Payments payments = 2;
+    MetaPayments meta = 1;
+    Payments payments = 2;
 }
 
 
@@ -72,7 +79,7 @@ message UpdateExpiredPaymentStatusRequest {
 }
 
 message UpdateExpiredPaymentStatusResponse {
-  meta.Meta meta = 1;
+    MetaPayments meta = 1;
 }
 
 //endpoints

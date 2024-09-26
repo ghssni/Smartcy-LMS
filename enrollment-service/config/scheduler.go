@@ -2,7 +2,7 @@ package config
 
 import (
 	"context"
-	pb "github.com/ghssni/Smartcy-LMS/enrollment-service/proto/payments"
+	pb "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/payments"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"

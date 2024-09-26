@@ -37,11 +37,11 @@ func (l *Lesson) CreateLesson(ctx context.Context, lesson *Lesson, createdAt, up
 	return lastInsertID, nil
 }
 
-func (l *Lesson) GetLesson(ctx context.Context, lessonID, courseID uint32) (*Lesson, error) {
+func (l *Lesson) GetLesson(ctx context.Context, lessonID uint32) (*Lesson, error) {
 	var lesson Lesson
 
 	// Execute the SQL query to retrieve the lesson details
-	err := db.GetContext(ctx, &lesson, `SELECT id, title, content_url, lesson_type, sequence, course_id, created_at, updated_at FROM lessons WHERE id = $1 AND course_id = $2 AND deleted_at IS NULL`, lessonID, courseID)
+	err := db.GetContext(ctx, &lesson, `SELECT id, title, content_url, lesson_type, sequence, course_id, created_at, updated_at FROM lessons WHERE id = $1 AND deleted_at IS NULL`, lessonID)
 	if err != nil {
 		return nil, err
 	}
@@ -83,11 +83,22 @@ func (l *Lesson) UpdateLesson(ctx context.Context, lesson *Lesson, updatedAt tim
 	return err
 }
 
-func (l *Lesson) DeleteLesson(ctx context.Context, lessonID, courseID uint32, deletedAt time.Time) error {
-	sql := `UPDATE lessons SET deleted_at=$1 WHERE id=$2 AND course_id=$3 AND deleted_at IS NULL`
+func (l *Lesson) DeleteLesson(ctx context.Context, lessonID uint32, deletedAt time.Time) error {
+	sql := `UPDATE lessons SET deleted_at=$1 WHERE id=$2 AND deleted_at IS NULL`
 
-	_, err := db.ExecContext(ctx, sql, deletedAt, lessonID, courseID)
-	return err
+	result, err := db.ExecContext(ctx, sql, deletedAt, lessonID)
+
+	// check if the lesson was deleted
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return err
+	}
+
+	return nil
 }
 
 func (l *Lesson) DeleteLessonByCourse(ctx context.Context, courseID uint32, deletedAt time.Time) error {
@@ -98,10 +109,22 @@ func (l *Lesson) DeleteLessonByCourse(ctx context.Context, courseID uint32, dele
 }
 
 func (l *Lesson) SearchLessonByTitle(ctx context.Context, courseID uint32, title string) ([]Lesson, error) {
-	sqlStatement := `SELECT id, title, content_url, lesson_type, sequence, course_id, created_at, updated_at FROM lessons WHERE course_id = $1 AND title ILIKE '%' || $2 || '%' AND (deleted_at IS NULL OR $3);`
+	sqlStatement := `SELECT id, title, content_url, lesson_type, sequence, course_id, created_at, updated_at FROM lessons WHERE course_id = $1 AND title ILIKE '%' || $2 || '%' AND deleted_at IS NULL`
 
 	var lessons []Lesson
 	err := db.SelectContext(ctx, &lessons, sqlStatement, courseID, title)
+	if err != nil {
+		return nil, err
+	}
+
+	return lessons, nil
+}
+
+func (l *Lesson) SearchLessonByType(ctx context.Context, courseID uint32, lessonType string) ([]Lesson, error) {
+	sqlStatement := `SELECT id, title, content_url, lesson_type, sequence, course_id, created_at, updated_at FROM lessons WHERE course_id = $1 AND lesson_type = $2 AND deleted_at IS NULL`
+
+	var lessons []Lesson
+	err := db.SelectContext(ctx, &lessons, sqlStatement, courseID, lessonType)
 	if err != nil {
 		return nil, err
 	}

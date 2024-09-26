@@ -3,118 +3,305 @@ package service
 import (
 	"context"
 	"errors"
-	"github.com/ghssni/Smartcy-LMS/pkg"
-	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
-	"github.com/ghssni/Smartcy-LMS/user-service/internal/repository"
-	"github.com/labstack/gommon/log"
-	"time"
-
+	"fmt"
+	"github.com/ghssni/Smartcy-LMS/User-Service/config"
+	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/User-Service/internal/repository"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pb"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"net/http"
+	"os"
+	"time"
 )
 
-type UserService interface {
-	RegisterUser(ctx context.Context, req models.RegisterInput) (*models.User, error)
-	LoginUser(ctx context.Context, req *models.LoginInput) (*models.User, error)
-	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
-	RegisterActivity(ctx context.Context, userId string, activityType string) error
+type UserService struct {
+	pb.UnimplementedUserServiceServer
+	userRepo        repository.UserRepo
+	activityLogRepo repository.UserActivityLogRepo
 }
 
-type userService struct {
-	userRepo  repository.UserRepo
-	jwtSecret string
+func NewUserService(userRepo repository.UserRepo, activityLogRepo repository.UserActivityLogRepo) *UserService {
+	return &UserService{
+		userRepo:        userRepo,
+		activityLogRepo: activityLogRepo,
+	}
 }
 
-func (u *userService) RegisterUser(ctx context.Context, req models.RegisterInput) (*models.User, error) {
-	hashPassword, err := pkg.HashPassword(req.Password)
+func (s *UserService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	hashedPassword, err := pkg.HashPassword(req.RegisterInput.Password)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.InvalidArgument, "Error hashing password: %v", err)
 	}
 
-	objectId := primitive.NewObjectID()
-	user := models.User{
-		ID:        objectId,
-		Email:     req.Email,
-		Password:  hashPassword,
-		Address:   req.Address,
+	user := &models.User{
+		ID:        primitive.NewObjectID(),
+		Name:      req.RegisterInput.Name,
+		Email:     req.RegisterInput.Email,
+		Password:  hashedPassword,
+		Address:   req.RegisterInput.Address,
+		Role:      req.RegisterInput.Role,
+		Phone:     req.RegisterInput.Phone,
+		Age:       req.RegisterInput.Age,
+		CreatedAt: primitive.NewDateTimeFromTime(time.Now()),
+		UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
+	}
+
+	_, err = s.userRepo.Register(ctx, user)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Error registering user: %v", err)
+	}
+
+	response := &pb.RegisterResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "User registered successfully",
+		},
+		User: &pb.User{
+			Id:        user.ID.Hex(),
+			Name:      user.Name,
+			Email:     user.Email,
+			Address:   user.Address,
+			Role:      user.Role,
+			Phone:     user.Phone,
+			Age:       user.Age,
+			CreatedAt: timestamppb.New(user.CreatedAt.Time()),
+			UpdatedAt: timestamppb.New(user.UpdatedAt.Time()),
+		},
+	}
+
+	return response, nil
+}
+
+func (s *UserService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	user, err := s.userRepo.Login(ctx, req.LoginInput.Email)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
+	}
+
+	if !pkg.CheckPasswordHash(req.LoginInput.Password, user.Password) {
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid password")
+	}
+
+	log := &models.UserActivityLog{
+		UserID:            user.ID,
+		ActivityType:      "login",
+		ActivityTimestamp: primitive.NewDateTimeFromTime(time.Now()),
+	}
+
+	_, err = s.activityLogRepo.CreateUserActivityLog(ctx, log)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Error creating user activity log: %v", err)
+	}
+
+	response := &pb.LoginResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "Login successful",
+		},
+		User: &pb.User{
+			Id:        user.ID.Hex(),
+			Name:      user.Name,
+			Email:     user.Email,
+			Address:   user.Address,
+			Role:      user.Role,
+			Phone:     user.Phone,
+			Age:       user.Age,
+			CreatedAt: timestamppb.New(user.CreatedAt.Time()),
+			UpdatedAt: timestamppb.New(user.UpdatedAt.Time()),
+		},
+	}
+	return response, nil
+}
+
+func (s *UserService) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+	user, err := s.userRepo.GetUserProfile(ctx, req.UserId)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
+	}
+
+	response := &pb.GetUserProfileResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "User profile retrieved successfully",
+		},
+		UserProfile: &pb.UserProfile{
+			Id:        user.ID.Hex(),
+			Name:      user.Name,
+			Email:     user.Email,
+			Phone:     user.Phone,
+			Age:       user.Age,
+			Address:   user.Address,
+			CreatedAt: timestamppb.New(user.CreatedAt.Time()),
+			UpdatedAt: timestamppb.New(user.UpdatedAt.Time()),
+		},
+	}
+	return response, nil
+}
+
+func (s *UserService) GetUserByEmail(ctx context.Context, req *pb.GetUserByEmailRequest) (*pb.GetUserByEmailResponse, error) {
+	user, err := s.userRepo.FindUserByEmail(ctx, req.Email)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
+	}
+
+	response := &pb.GetUserByEmailResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "User retrieved successfully",
+		},
+		User: &pb.User{
+			Id:        user.ID.Hex(),
+			Name:      user.Name,
+			Email:     user.Email,
+			Phone:     user.Phone,
+			Age:       user.Age,
+			Address:   user.Address,
+			CreatedAt: timestamppb.New(user.CreatedAt.Time()),
+			UpdatedAt: timestamppb.New(user.UpdatedAt.Time()),
+		},
+	}
+	return response, nil
+}
+
+func (s *UserService) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordRequest) (*pb.ForgotPasswordResponse, error) {
+	user, err := s.userRepo.FindUserByEmail(ctx, req.Email)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
+	}
+
+	resetToken, err := s.GenerateResetToken(ctx, &pb.GenerateResetTokenRequest{
+		Email: req.Email,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Failed to generate reset token: %v", err)
+	}
+
+	emailClient := config.SendEmailForgotPassword(user.Email, resetToken.ResetUrl, resetToken.ResetToken)
+	if emailClient != nil {
+		return nil, status.Errorf(codes.Internal, "Failed to send email: %v", err)
+	}
+
+	response := &pb.ForgotPasswordResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "Password reset link sent to email",
+		},
+	}
+	return response, nil
+}
+
+// NewPassword resets the user's password
+func (s *UserService) NewPassword(ctx context.Context, req *pb.NewPasswordRequest) (*pb.NewPasswordResponse, error) {
+	if req.Password != req.ConfirmPassword {
+		return nil, status.Errorf(codes.InvalidArgument, "Passwords do not match")
+	}
+
+	hashedPassword, err := pkg.HashPassword(req.Password)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Error hashing password: %v", err)
+	}
+
+	_, err = s.userRepo.NewPassword(ctx, req.UserId, hashedPassword)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
+		}
+		return nil, status.Errorf(codes.Internal, "Failed to update password: %v", err)
+	}
+
+	// log activity
+	log := &models.UserActivityLog{
+		UserID:            primitive.NewObjectID(),
+		ActivityType:      "password_reset",
+		ActivityTimestamp: primitive.NewDateTimeFromTime(time.Now()),
+	}
+
+	_, err = s.activityLogRepo.CreateUserActivityLog(ctx, log)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Error creating user activity log: %v", err)
+	}
+
+	response := &pb.NewPasswordResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "Password reset successfully",
+		},
+	}
+	return response, nil
+}
+
+func (s *UserService) UpdateUserProfile(ctx context.Context, req *pb.UpdateUserProfileRequest) (*pb.UpdateUserProfileResponse, error) {
+	user := &models.User{
 		Name:      req.Name,
-		Role:      req.Role,
-		Age:       req.Age,
+		Email:     req.Email,
+		Address:   req.Address,
 		Phone:     req.Phone,
-		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		Age:       req.Age,
+		UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
 	}
 
-	_, err = u.userRepo.SaveUser(ctx, &user)
+	updatedUser, err := s.userRepo.UpdateUserProfile(ctx, req.UserId, user)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "Error updating user profile: %v", err)
 	}
 
-	return &user, nil
+	response := &pb.UpdateUserProfileResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "User profile updated successfully",
+		},
+		UserProfile: &pb.UserProfile{
+			Id:        req.UserId,
+			Name:      updatedUser.Name,
+			Email:     updatedUser.Email,
+			Phone:     updatedUser.Phone,
+			Age:       updatedUser.Age,
+			Address:   updatedUser.Address,
+			CreatedAt: timestamppb.New(updatedUser.CreatedAt.Time()),
+			UpdatedAt: timestamppb.New(time.Now()),
+		},
+	}
+	return response, nil
 }
 
-func (u *userService) LoginUser(ctx context.Context, req *models.LoginInput) (*models.User, error) {
-	user, err := u.userRepo.FindUserByEmail(ctx, req.Email)
+// GenerateResetToken generates a reset token for the user
+func (s *UserService) GenerateResetToken(ctx context.Context, req *pb.GenerateResetTokenRequest) (*pb.GenerateResetTokenResponse, error) {
+	user, err := s.userRepo.FindUserByEmail(ctx, req.Email)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
 	}
 
-	if !pkg.CheckPasswordHash(req.Password, user.Password) {
-		return nil, errors.New("invalid email or password")
+	token := os.Getenv("jwt_secret")
+	if token == "" {
+		return nil, status.Errorf(codes.Internal, "JWT secret is not set")
 	}
 
-	//email, err := u.FindUserByEmail(ctx, req.Email)
-	//if err != nil {
-	//	return nil, err
-	//}
-	token, err := pkg.GenerateToken(user.ID.Hex(), user.Email, u.jwtSecret)
+	resetToken, err := pkg.GenerateToken(user.ID.Hex(), token)
 	if err != nil {
-		return nil, err
-	}
-	user.Token = token
-
-	// Update user token
-	//err = u.userRepo.UpdateUser(ctx, user)
-	//if err != nil {
-	//	return nil, err
-	//}
-	// Register user activity
-	err = u.RegisterActivity(ctx, user.ID.Hex(), "login")
-	if err != nil {
-		log.Printf("Error inserting user activity: %v", err)
+		return nil, status.Errorf(codes.Internal, "Error generating reset token: %v", err)
 	}
 
-	return user, nil
-}
+	resetURL := fmt.Sprintf("https://localhost:8080/reset-password?token=%s", resetToken)
 
-func (u *userService) FindUserByEmail(ctx context.Context, email string) (*models.User, error) {
-	user, err := u.userRepo.FindUserByEmail(ctx, email)
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
-}
-
-func (u *userService) RegisterActivity(ctx context.Context, userId string, activityType string) error {
-	objectId := primitive.NewObjectID()
-	activity := models.UserActivityLog{
-		ID:                objectId,
-		UserID:            userId,
-		ActivityType:      activityType,
-		ActivityTimestamp: time.Now().Format("2006-01-02 15:04:05"),
-	}
-
-	_, err := u.userRepo.LogUserActivity(ctx, &activity)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func NewUserService(userRepo repository.UserRepo, jwtSecret string) UserService {
-	return &userService{
-		userRepo:  userRepo,
-		jwtSecret: jwtSecret,
-	}
+	return &pb.GenerateResetTokenResponse{
+		Meta: &pb.MetaUser{
+			Code:    uint32(codes.OK),
+			Status:  http.StatusText(http.StatusOK),
+			Message: "Reset token generated successfully",
+		},
+		ResetToken: resetToken,
+		ResetUrl:   resetURL,
+	}, nil
 }

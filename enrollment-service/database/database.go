@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/database/migrations"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/database/migrations"
 	"github.com/labstack/gommon/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -28,7 +28,7 @@ func InitDB() (*gorm.DB, error) {
 		port := os.Getenv("DB_PORT")
 
 		// Build DSN
-		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require", host, user, password, dbname, port)
+		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, password, dbname, port)
 
 		// Open connection to the database
 		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{

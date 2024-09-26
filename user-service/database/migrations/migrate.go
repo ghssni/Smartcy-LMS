@@ -2,7 +2,7 @@ package migrations
 
 import (
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/user-service/database/seeder"
+	"github.com/ghssni/Smartcy-LMS/User-Service/database/seeder"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"

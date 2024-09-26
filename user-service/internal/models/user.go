@@ -13,10 +13,9 @@ type User struct {
 	Address   string             `json:"address" bson:"address"`
 	Role      string             `json:"role" bson:"role"`
 	Phone     string             `json:"phone" bson:"phone"`
-	Age       int                `json:"age" bson:"age"`
-	Token     string             `json:"token" bson:"token"`
-	CreatedAt string             `json:"created_at" bson:"created_at"`
-	UpdatedAt string             `json:"updated_at" bson:"updated_at"`
+	Age       uint32             `json:"age" bson:"age"`
+	CreatedAt primitive.DateTime `json:"created_at" bson:"created_at"`
+	UpdatedAt primitive.DateTime `json:"updated_at" bson:"updated_at"`
 }
 
 // LoginInput struct is used for user login input
@@ -39,7 +38,7 @@ type RegisterInput struct {
 	Address   string `json:"address" validate:"required"`
 	Role      string `json:"role" validate:"required,oneof=instructor student" default:"student"`
 	Phone     string `json:"phone" validate:"required"`
-	Age       int    `json:"age" validate:"required,gt=0"`
+	Age       uint32 `json:"age" validate:"required,gt=0"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }
@@ -48,28 +47,4 @@ type RegisterInput struct {
 func (r *RegisterInput) Validate() error {
 	validate := validator.New()
 	return validate.Struct(r)
-}
-
-// UserResponse struct is used for user response
-type UserResponse struct {
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	Address   string `json:"address"`
-	Phone     string `json:"phone"`
-	Role      string `json:"role" validate:"required,oneof=instructor student" `
-	Age       int    `json:"age"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-	UserToken struct {
-		Token string `json:"token"`
-	}
-}
-
-// UserActivityLog struct is used for user activity
-type UserActivityLog struct {
-	ID                primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	UserID            string             `json:"user_id" bson:"user_id"`
-	CourseID          string             `json:"course_id" bson:"course_id,omitempty"`
-	ActivityType      string             `json:"activity_type" bson:"activity_type"`
-	ActivityTimestamp string             `json:"activity_timestamp" bson:"activity_timestamp"`
 }

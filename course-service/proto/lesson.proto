@@ -7,36 +7,38 @@ service LessonService {
   // CRUD Operations
 
   // Create a new lesson
-  rpc CreateLesson(CreateLessonRequest) returns (Lesson);
+  rpc CreateLesson(CreateLessonRequest) returns (CreateLessonResponse);
 
   // Get a specific lesson by course_id and lesson id (excludes soft-deleted)
-  rpc GetLesson(GetLessonRequest) returns (Lesson);
+  rpc GetLesson(GetLessonRequest) returns (GetLessonResponse);
 
   // Get a lesson by course_id and sequence (excludes soft-deleted)
-  rpc GetLessonBySequence(GetLessonBySequenceRequest) returns (Lesson);
+  rpc GetLessonBySequence(GetLessonBySequenceRequest) returns (GetLessonBySequenceResponse);
 
   // List all lessons by course_id (excludes soft-deleted)
   rpc ListLessons(ListLessonsRequest) returns (ListLessonsResponse);
 
   // Update a lesson
-  rpc UpdateLesson(UpdateLessonRequest) returns (google.protobuf.Empty);
+  rpc UpdateLesson(UpdateLessonRequest) returns (UpdateLessonResponse);
 
   // Soft delete a lesson
   rpc DeleteLesson(DeleteLessonRequest) returns (google.protobuf.Empty);
-
-  // Soft delete a lesson by course_id
-  rpc DeleteLessonByCourseID(DeleteLessonByCourseIDRequest) returns (google.protobuf.Empty);
 
   // Additional Features
 
   // Search lessons by title within a course (excludes soft-deleted)
   rpc SearchLessonsByTitle(SearchLessonsByTitleRequest) returns (ListLessonsResponse);
 
+  // Search lessons by lesson type within a course (excludes soft-deleted)
+  rpc SearchLessonsByType(SearchLessonsByTypeRequest) returns (ListLessonsResponse);
+
   // Get the total number of lessons for a course (excludes soft-deleted)
   rpc GetTotalLessons(GetTotalLessonsRequest) returns (GetTotalLessonsResponse);
 
   // Get total lessons by lesson type (video/article) for a course (excludes soft-deleted)
   rpc GetTotalLessonsByType(GetTotalLessonsByTypeRequest) returns (GetTotalLessonsResponse);
+
+
 }
 
 // Define the Lesson message
@@ -70,6 +72,10 @@ message CreateLessonRequest {
   uint32 sequence = 5;
 }
 
+message CreateLessonResponse {
+  uint32 id = 1;
+}
+
 message UpdateLessonRequest {
   uint32 id = 1;
   uint32 course_id = 2;
@@ -79,14 +85,25 @@ message UpdateLessonRequest {
   uint32 sequence = 6;
 }
 
+message UpdateLessonResponse {
+  Lesson lesson = 1;
+}
+
 message GetLessonRequest {
-  uint32 course_id = 1;
-  uint32 id = 2;  // ID of the lesson
+  uint32 id = 1;  // ID of the lesson
+}
+
+message GetLessonResponse {
+  Lesson lesson = 1;
 }
 
 message GetLessonBySequenceRequest {
   uint32 course_id = 1;
   uint32 sequence = 2;
+}
+
+message GetLessonBySequenceResponse {
+  Lesson lesson = 1;
 }
 
 message ListLessonsRequest {
@@ -102,15 +119,16 @@ message DeleteLessonRequest {
   uint32 id = 2;
 }
 
-message DeleteLessonByCourseIDRequest {
-  uint32 course_id = 1;
-}
-
 // Additional Features
 
 message SearchLessonsByTitleRequest {
   uint32 course_id = 1;
   string title = 2;
+}
+
+message SearchLessonsByTypeRequest {
+  uint32 course_id = 1;
+  string lesson_type = 2;  // 'video' or 'article'
 }
 
 message GetTotalLessonsRequest {

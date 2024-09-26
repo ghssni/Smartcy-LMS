@@ -2,35 +2,38 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/user-service/internal/models"
+	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
 type UserRepo interface {
-	SaveUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error)
+	Register(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error)
 	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
-	FindUserByID(ctx context.Context, id string) (*models.User, error)
-	UpdateUser(ctx context.Context, user *models.User) error
-	LogUserActivity(ctx context.Context, activity *models.UserActivityLog) (*mongo.InsertOneResult, error)
-	FindUserActivityByUserID(ctx context.Context, userID string) ([]models.UserActivityLog, error)
+	Login(ctx context.Context, id string) (*models.User, error)
+	GetUserProfile(ctx context.Context, id string) (*models.User, error)
+	ForgotPassword(ctx context.Context, email string) (*models.User, error)
+	UpdateUserProfile(ctx context.Context, id string, user *models.User) (*models.User, error)
+	NewPassword(ctx context.Context, id string, hashedPassword string) (*models.User, error)
 }
 
 type userRepo struct {
 	db *mongo.Database
 }
 
-func (r *userRepo) SaveUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error) {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+func (r *userRepo) Register(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
 	result, err := r.db.Collection("users").InsertOne(ctx, user)
 	if err != nil {
 		return nil, err
 	}
-
 	return result, nil
 }
 
@@ -39,20 +42,19 @@ func (r *userRepo) FindUserByEmail(ctx context.Context, email string) (*models.U
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := r.db.Collection("users").FindOne(ctx, map[string]string{"email": email}).Decode(&user)
+	err := r.db.Collection("users").FindOne(ctx, bson.M{"email": email}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
-
 	return &user, nil
 }
 
-func (r *userRepo) FindUserByID(ctx context.Context, id string) (*models.User, error) {
+func (r *userRepo) Login(ctx context.Context, email string) (*models.User, error) {
 	var user models.User
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err := r.db.Collection("users").FindOne(ctx, map[string]string{"_id": id}).Decode(&user)
+	err := r.db.Collection("users").FindOne(ctx, bson.M{"email": email}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
@@ -60,64 +62,89 @@ func (r *userRepo) FindUserByID(ctx context.Context, id string) (*models.User, e
 	return &user, nil
 }
 
-func (r *userRepo) UpdateUser(ctx context.Context, user *models.User) error {
-	filter := bson.M{"_id": user.ID}
-	update := bson.M{"$set": bson.M{"token": user.Token}}
-
-	res, err := r.db.Collection("users").UpdateOne(ctx, filter, update)
-	if err != nil {
-		return fmt.Errorf("failed update user: %v", err)
-	}
-
-	if res.MatchedCount == 0 {
-		return fmt.Errorf("user not found for ID: %v", user.ID)
-	}
-
-	if res.ModifiedCount == 0 {
-		return fmt.Errorf("token not updated!: %v", user.ID)
-	}
-
-	return nil
-}
-
-func (r *userRepo) LogUserActivity(ctx context.Context, activity *models.UserActivityLog) (*mongo.InsertOneResult, error) {
+func (r *userRepo) GetUserProfile(ctx context.Context, id string) (*models.User, error) {
+	var user models.User
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	result, err := r.db.Collection("user_activity_log").InsertOne(ctx, activity)
+	objectId, err := primitive.ObjectIDFromHex(id)
+
+	err = r.db.Collection("users").FindOne(ctx, bson.M{"_id": objectId}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
 
-	return result, nil
+	return &user, nil
 }
 
-func (r *userRepo) FindUserActivityByUserID(ctx context.Context, userID string) ([]models.UserActivityLog, error) {
-	var activities []models.UserActivityLog
+func (r *userRepo) ForgotPassword(ctx context.Context, email string) (*models.User, error) {
+	var user models.User
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	cursor, err := r.db.Collection("user_activity_log").Find(ctx, map[string]string{"user_id": userID})
+	err := r.db.Collection("users").FindOne(ctx, bson.M{"email": email}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
-	defer cursor.Close(ctx)
 
-	for cursor.Next(ctx) {
-		var activity models.UserActivityLog
-		err := cursor.Decode(&activity)
-		if err != nil {
-			return nil, err
+	return &user, nil
+}
+
+func (r *userRepo) UpdateUserProfile(ctx context.Context, id string, user *models.User) (*models.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":       user.Name,
+			"email":      user.Email,
+			"address":    user.Address,
+			"role":       user.Role,
+			"phone":      user.Phone,
+			"age":        user.Age,
+			"updated_at": time.Now(),
+		},
+	}
+
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	updatedUser := &models.User{}
+	err = r.db.Collection("users").FindOneAndUpdate(ctx, bson.M{"_id": objectID}, update, opts).Decode(updatedUser)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedUser, nil
+}
+
+func (r *userRepo) NewPassword(ctx context.Context, id string, hashedPassword string) (*models.User, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user ID: %v", err)
+	}
+
+	update := bson.M{"$set": bson.M{"password": hashedPassword}}
+
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	result := r.db.Collection("users").FindOneAndUpdate(ctx, bson.M{"_id": objectId}, update, opts)
+	if err := result.Err(); err != nil {
+		if errors.Is(mongo.ErrNoDocuments, err) {
+			return nil, fmt.Errorf("user not found")
 		}
-
-		activities = append(activities, activity)
+		return nil, fmt.Errorf("failed to update password: %v", err)
 	}
 
-	if err := cursor.Err(); err != nil {
-		return nil, err
+	var updatedUser models.User
+	if err := result.Decode(&updatedUser); err != nil {
+		return nil, fmt.Errorf("failed to decode user: %v", err)
 	}
 
-	return activities, nil
+	return &updatedUser, nil
 }
 
 func NewUserRepo(db *mongo.Database) UserRepo {

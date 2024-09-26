@@ -2,7 +2,7 @@ package migrations
 
 import (
 	"fmt"
-	"github.com/ghssni/Smartcy-LMS/enrollment-service/database/seeder"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/database/seeder"
 	"github.com/go-gormigrate/gormigrate/v2"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -16,7 +16,6 @@ func Migrate(db *gorm.DB) error {
 		createAssessmentsTableMigration(),
 		createCertificateTableMigration(),
 		createPaymentsTableMigration(),
-		createLearningprogressTableMigration(),
 	}
 
 	m := gormigrate.New(db, &gormigrate.Options{

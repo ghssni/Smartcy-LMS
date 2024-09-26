@@ -3,8 +3,15 @@ package assessments;
 
 
 import "google/protobuf/timestamp.proto";
-import "meta/meta.proto";
+
 option go_package = "assessments/assessments;assessments";
+
+message MetaAssessment {
+  uint32 code = 1;
+  string message = 2;
+  string status = 3;
+}
+
 
 message Assessments {
   uint32 id = 1;
@@ -27,7 +34,7 @@ message CreateAssessmentRequest {
 }
 
 message CreateAssessmentResponse {
-  meta.Meta meta = 1;
+  MetaAssessment meta = 1;
   Assessments assessments = 2;
 }
 
@@ -37,7 +44,7 @@ message GetAssessmentByStudentIdRequest {
 }
 
 message GetAssessmentByStudentIdResponse {
-  meta.Meta meta = 1;
+  MetaAssessment meta = 1;
   Assessments assessments = 2;
 }
 
