@@ -56,3 +56,23 @@ time="2024-09-25 02:35:53" level=info msg="Skipping AutoMigrate and AutoDrop." E
 time="2024-09-25 02:35:56" level=info msg="Email log inserted successfully for: oksasatyaa@gmail.com" Environment=Development
 time="2024-09-25 02:35:56" level=info msg="Response Success: true" Environment=Development
 time="2024-09-25 02:38:34" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-25 03:49:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 15:46:49" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 15:47:02" level=info msg="Error sending email: you called Send() with a domain that contains invalid characters" Environment=Production
+time="2024-09-25 15:47:02" level=info msg="Error sending email: you called Send() with a domain that contains invalid characters" Environment=Production
+time="2024-09-25 15:48:03" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-25 15:48:15" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 00:52:17" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Running AutoDrop (Rollback all migrations) and AutoMigrate..." Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Running Seeders..." Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Emails seeded successfully" Environment=Production
+time="2024-09-26 02:28:25" level=info msg="EmailLogs seeded successfully" Environment=Production
+time="2024-09-26 02:28:25" level=info msg="Seed all success" Environment=Production
+time="2024-09-26 02:28:25" level=info msg="AutoMigrate and Seeders completed." Environment=Production
+time="2024-09-26 02:28:41" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:29:43" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:32:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:37:06" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 02:37:19" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 03:39:52" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 04:51:05" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production

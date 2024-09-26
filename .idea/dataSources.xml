@@ -13,11 +13,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@development" uuid="79e4de70-c683-4dcc-ac43-ca80a57aae40">
+    <data-source source="LOCAL" name="@smartcylms.ciirr.mongodb.net" uuid="a580a20f-3ad7-4ad1-a27f-a9d89f61c280">
       <driver-ref>mongo</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb+srv://smartcylms.iaklm.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=SmartcyLMS</jdbc-url>
+      <jdbc-url>mongodb+srv://smartcylms.ciirr.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=SmartcyLMS</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

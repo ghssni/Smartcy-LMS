@@ -2,9 +2,16 @@ syntax = "proto3";
 package enrollment;
 
 import "google/protobuf/timestamp.proto";
-import "meta/meta.proto";
+
+
+
 option go_package = "enrollment/enrollment;enrollment";
 
+message MetaEnrollment {
+    uint32 code = 1;
+    string message = 2;
+    string status = 3;
+}
 
 message Enrollment {
     uint32 id = 1;
@@ -29,7 +36,7 @@ message CreateEnrollmentRequest {
 }
 
 message CreateEnrollmentResponse {
-    meta.Meta meta = 1;
+    MetaEnrollment meta = 1;
     Enrollment data = 2;
 }
 
@@ -39,7 +46,7 @@ message DeleteEnrollmentByIdRequest {
 }
 
 message DeleteEnrollmentByIdResponse {
-    meta.Meta meta = 1;
+    MetaEnrollment meta = 1;
 }
 
 
@@ -49,7 +56,7 @@ message GetEnrollmentsByStudentIdRequest {
 }
 
 message GetEnrollmentsByStudentIdResponse {
-    meta.Meta meta = 1;
+    MetaEnrollment meta = 1;
     repeated Enrollment data = 2;
 }
 

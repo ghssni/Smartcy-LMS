@@ -21,7 +21,7 @@ func createUserActivityLogCollectionMigration(database *mongo.Database, indexFie
 	return &Migration{
 		ID: "20240923202011_create_UserActivityLog_collection",
 		Migrate: func() error {
-			collection := database.Collection("user_activity_log")
+			collection := database.Collection("UserActivityLog")
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 
@@ -42,7 +42,7 @@ func createUserActivityLogCollectionMigration(database *mongo.Database, indexFie
 		Rollback: func() error {
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
-			err := database.Collection("user_activity_log").Drop(ctx)
+			err := database.Collection("UserActivityLog").Drop(ctx)
 			if err != nil {
 				return err
 			}

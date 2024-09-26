@@ -5,7 +5,7 @@ package proto;
 option go_package = "github.com/ghssni/Smartcy-LMS/Email-Service/pb;pb";
 
 // Meta message to standardize the response
-message Meta {
+message MetaEmail {
   string message = 1;
   int32 code = 2;
   string status = 3;
@@ -28,7 +28,7 @@ message SendForgotPasswordEmailRequest {
 }
 
 message SendForgotPasswordEmailResponse {
-  Meta meta = 1;
+  MetaEmail meta = 1;
   bool success = 2;
 }
 
@@ -41,7 +41,7 @@ message SendPaymentDueEmailRequest {
 }
 
 message SendPaymentDueEmailResponse {
-  Meta meta = 1;
+  MetaEmail meta = 1;
   bool success = 2;
 }
 
@@ -49,12 +49,13 @@ message SendPaymentDueEmailResponse {
 message SendPaymentSuccessEmailRequest {
   string user_id = 1;
   string email = 2;
-  string enrollment_id = 3;
   string invoice_id = 4;
   string course_name = 5;
+  string Description = 6;
+  float amount = 7;
 }
 
 message SendPaymentSuccessEmailResponse {
-  Meta meta = 1;
+  MetaEmail meta = 1;
   bool success = 2;
 }

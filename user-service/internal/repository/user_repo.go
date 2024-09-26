@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,6 +19,7 @@ type UserRepo interface {
 	GetUserProfile(ctx context.Context, id string) (*models.User, error)
 	ForgotPassword(ctx context.Context, email string) (*models.User, error)
 	UpdateUserProfile(ctx context.Context, id string, user *models.User) (*models.User, error)
+	NewPassword(ctx context.Context, id string, hashedPassword string) (*models.User, error)
 }
 
 type userRepo struct {
@@ -117,6 +120,31 @@ func (r *userRepo) UpdateUserProfile(ctx context.Context, id string, user *model
 	}
 
 	return updatedUser, nil
+}
+
+func (r *userRepo) NewPassword(ctx context.Context, id string, hashedPassword string) (*models.User, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user ID: %v", err)
+	}
+
+	update := bson.M{"$set": bson.M{"password": hashedPassword}}
+
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	result := r.db.Collection("users").FindOneAndUpdate(ctx, bson.M{"_id": objectId}, update, opts)
+	if err := result.Err(); err != nil {
+		if errors.Is(mongo.ErrNoDocuments, err) {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("failed to update password: %v", err)
+	}
+
+	var updatedUser models.User
+	if err := result.Decode(&updatedUser); err != nil {
+		return nil, fmt.Errorf("failed to decode user: %v", err)
+	}
+
+	return &updatedUser, nil
 }
 
 func NewUserRepo(db *mongo.Database) UserRepo {

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
-	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
+	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,7 +21,7 @@ type userActivityLogRepo struct {
 }
 
 func (r *userActivityLogRepo) CreateUserActivityLog(ctx context.Context, log *models.UserActivityLog) (*mongo.InsertOneResult, error) {
-	collection := r.db.Collection("user_activity_log")
+	collection := r.db.Collection("UserActivityLog")
 
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()

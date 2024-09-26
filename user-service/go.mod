@@ -3,7 +3,6 @@ module github.com/ghssni/Smartcy-LMS/User-Service
 go 1.23.0
 
 //replace github.com/ghssni/Smartcy-LMS => ../
-
 require (
 	github.com/brianvoe/gofakeit/v7 v7.0.4
 	github.com/go-playground/validator/v10 v10.22.1

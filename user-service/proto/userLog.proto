@@ -3,8 +3,16 @@ syntax = "proto3";
 package proto;
 
 import "google/protobuf/timestamp.proto";
-import "proto/meta.proto";
+
 option go_package = "github.com/ghssni/Smartcy-LMS/User-Service/pb;pb";
+
+
+
+message MetaUserLog {
+  uint32 code = 1;
+  string message = 2;
+  string status = 3;
+}
 // Message for User Activity Log
 message UserActivityLog {
   string id = 1;
@@ -23,7 +31,7 @@ message CreateUserActivityLogRequest {
 }
 
 message CreateUserActivityLogResponse {
-  Meta meta = 1;
+   MetaUserLog MetaUserLog = 1;
   UserActivityLog activity_log = 2;
 }
 
@@ -33,7 +41,7 @@ message GetUserActivityLogsRequest {
 }
 
 message GetUserActivityLogsResponse {
-  Meta meta = 1;
+   MetaUserLog MetaUserLog = 1;
   repeated UserActivityLog activity_logs = 2;
 }
 

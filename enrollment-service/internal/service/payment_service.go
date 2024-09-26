@@ -7,7 +7,6 @@ import (
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/config"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
-	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/meta"
 	pb "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/payments"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -99,15 +98,15 @@ func (s *paymentService) HandleWebhook(ctx context.Context, req *pb.HandleWebhoo
 	}
 
 	//Send email to student if payment is successful
-	//if req.Status == "PAID" {
-	//	err := config.SendEmailSuccess(newInvoice.PayerEmail, newInvoice.Description)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//}
+	if req.Status == "PAID" {
+		err := config.SendPaymentSuccessEmail(req.Email, req.Description, newInvoice.UserID, newInvoice.ExternalID, float32(newInvoice.Amount))
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return &pb.HandleWebhookResponse{
-		Meta: &meta.Meta{
+		Meta: &pb.MetaPayments{
 			Message: "Payment status updated successfully",
 			Code:    http.StatusOK,
 			Status:  http.StatusText(http.StatusOK),
@@ -216,10 +215,10 @@ func CreateInvoiceAndSendEmailPayment(studentId, email, courseName string, price
 		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
 	}
 
-	//err = config.SendEmailPayment(email, courseName, invoiceURL)
-	//if err != nil {
-	//	return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
-	//}
+	err = config.SendPaymentDueEmail(email, courseName, invoiceURL)
+	if err != nil {
+		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
+	}
 
 	return invoiceURL, externalId, price, nil
 }
@@ -242,10 +241,18 @@ func (s *paymentService) UpdateExpiredPaymentStatus(ctx context.Context, req *pb
 	}
 
 	return &pb.UpdateExpiredPaymentStatusResponse{
-		Meta: &meta.Meta{
+		Meta: &pb.MetaPayments{
 			Message: "Expired payment status updated successfully",
-			Code:    int32(codes.OK),
+			Code:    uint32(codes.OK),
 			Status:  codes.OK.String(),
 		},
 	}, nil
+}
+
+func (s *paymentService) GetUserEmailFromUserService(email string) (string, error) {
+	userClient, err := config.GetUserFromEmail(email)
+	if err != nil {
+		return "", fmt.Errorf("failed to get user from user service: %v", err)
+	}
+	return userClient, nil
 }

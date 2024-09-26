@@ -45,9 +45,9 @@ func runGrpcServer() {
 	if grpcHost == "" {
 		grpcHost = "localhost"
 	}
-	grpcPort := os.Getenv("GRPC_PORT")
+	grpcPort := os.Getenv("GRPC_PORT_EMAIL_SERVICE")
 	if grpcPort == "" {
-		grpcPort = "50052"
+		grpcPort = "50053"
 	}
 	address := grpcHost + ":" + grpcPort
 

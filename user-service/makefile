@@ -1,14 +1,16 @@
-PROTOC_GEN_GO := protoc --go_out=pb --go_opt=paths=source_relative \
-    --go-grpc_out=pb --go-grpc_opt=paths=source_relative
+# Command for generating Go code from .proto files
+PROTOC := protoc
 
-PROTOS := proto/meta.proto proto/user.proto proto/userLog.proto
-
+PROTOS := proto/user.proto proto/userLog.proto
 
 all: generate
 
-# Generate Go files from proto
 generate:
-	$(PROTOC_GEN_GO) $(PROTOS)
+	$(PROTOC) \
+    --proto_path=./proto \
+    --go_out=./pb --go_opt=paths=source_relative \
+    --go-grpc_out=./pb --go-grpc_opt=paths=source_relative \
+    $(PROTOS)
 
 # Clean generated files
 clean:

@@ -46,7 +46,7 @@ func main() {
 
 	// run scheduler
 	go func() {
-		conn, err := grpc.Dial(":50053", grpc.WithInsecure())
+		conn, err := grpc.Dial(":50054", grpc.WithInsecure())
 		if err != nil {
 			logrus.Fatalf("Failed to dial gRPC server: %v", err)
 		}
@@ -64,9 +64,9 @@ func main() {
 
 func runGrpcServer() {
 	// Run gRPC server
-	lis, err := net.Listen("tcp", ":"+os.Getenv("GRPC_PORT"))
+	lis, err := net.Listen("tcp", ":"+os.Getenv("GRPC_PORT_ENROLLMENT_SERVICE"))
 	if err != nil {
-		logrus.Fatalf("Failed to listen on port 50053: %v", err)
+		logrus.Fatalf("Failed to listen on port 50052: %v", err)
 	}
 
 	accessKey := os.Getenv("CRON_ACCESS_KEY")
@@ -80,12 +80,13 @@ func runGrpcServer() {
 
 	enrollmentRepo := repository.NewEnrollmentRepository(db)
 	paymentRepo := repository.NewPaymentRepository(db)
+	assessmentsRepo := repository.NewAssessmentsRepository(db)
 
 	// Register gRPC server from service
 	pbEnrollment.RegisterEnrollmentServiceServer(grpcServer, service.NewEnrollmentService(enrollmentRepo, paymentRepo))
 
 	//register gRPC server from service
-	pbAssessments.RegisterAssessmentsServiceServer(grpcServer, pbAssessments.UnimplementedAssessmentsServiceServer{})
+	pbAssessments.RegisterAssessmentsServiceServer(grpcServer, service.NewAssessmentsService(assessmentsRepo))
 
 	pbCertificate.RegisterCertificateServiceServer(grpcServer, pbCertificate.UnimplementedCertificateServiceServer{})
 
@@ -93,7 +94,7 @@ func runGrpcServer() {
 
 	// Start gRPC server in a goroutine
 	go func() {
-		logrus.Println("Starting gRPC server on port 50051")
+		logrus.Println("Starting gRPC server on port 50052")
 		if err := grpcServer.Serve(lis); err != nil {
 			logrus.Fatalf("Failed to serve gRPC server: %v", err)
 		}

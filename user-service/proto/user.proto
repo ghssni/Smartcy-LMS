@@ -3,22 +3,25 @@ syntax = "proto3";
 package proto;
 
 import "google/protobuf/timestamp.proto";
-import "proto/meta.proto";
 option go_package = "github.com/ghssni/Smartcy-LMS/User-Service/pb;pb";
 
+message MetaUser {
+  uint32 code = 1;
+  string message = 2;
+  string status = 3;
+}
 
 // Message for User
 message User {
   string id = 1;
   string name = 2;
   string email = 3;
-  string password = 4;
-  string address = 5;
-  string role = 6;
-  string phone = 7;
-  uint32 age = 8;
-  google.protobuf.Timestamp created_at = 9;
-  google.protobuf.Timestamp updated_at = 10;
+  string address = 4;
+  string role = 5;
+  string phone = 6;
+  uint32 age = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
 }
 
 // Message for Register Input
@@ -39,9 +42,6 @@ message LoginInput {
   string email = 1;
   string password = 2;
 }
-
-
-
 
 // Message for User Profile
 message UserProfile {
@@ -71,13 +71,13 @@ message GetUserProfileRequest {
 }
 
 message GetUserProfileResponse {
-  Meta meta = 1;
+  MetaUser meta = 1;
   UserProfile user_profile = 2;
 }
 
 // Update Profile Response
 message UpdateUserProfileResponse {
-  Meta meta = 1;
+  MetaUser meta = 1;
   UserProfile user_profile = 2;
 }
 
@@ -87,7 +87,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  Meta meta = 1;
+  MetaUser meta = 1;
   User user = 2;
 }
 
@@ -97,7 +97,17 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  Meta meta = 1;
+  MetaUser meta = 1;
+  User user = 2;
+}
+
+// Get User By Email Request & Response
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByEmailResponse {
+  MetaUser meta = 1;
   User user = 2;
 }
 
@@ -107,7 +117,28 @@ message ForgotPasswordRequest {
 }
 
 message ForgotPasswordResponse {
-  Meta meta = 1;
+  MetaUser meta = 1;
+}
+
+// New Password Request & Response
+message NewPasswordRequest {
+  string user_id = 1;
+  string password = 2;
+  string confirm_password = 3;
+}
+
+
+message NewPasswordResponse {
+  MetaUser meta = 1;
+}
+message GenerateResetTokenRequest {
+  string email = 1;
+}
+
+message GenerateResetTokenResponse {
+  MetaUser meta = 1;
+  string reset_token = 2;
+  string reset_url = 3;
 }
 
 // User Service Definition
@@ -115,6 +146,8 @@ service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
   rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
   rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
+  rpc GenerateResetToken(GenerateResetTokenRequest) returns (GenerateResetTokenResponse);
 }

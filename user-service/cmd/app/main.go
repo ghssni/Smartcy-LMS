@@ -4,7 +4,7 @@ import (
 	"github.com/ghssni/Smartcy-LMS/User-Service/database"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/repository"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/service"
-	pb "github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
+	"github.com/ghssni/Smartcy-LMS/User-Service/pb"
 	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
 )
 
 var db *mongo.Database
@@ -42,7 +43,7 @@ func runGrpcServer() {
 	userActivityLogRepo := repository.NewUserActivityLogRepo(db)
 
 	pb.RegisterUserServiceServer(grpcServer, service.NewUserService(userRepo, userActivityLogRepo))
-	listener, err := net.Listen("tcp", ":50051")
+	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_PORT_USER_SERVICE"))
 	if err != nil {
 		logrus.Fatalf("Failed to listen: %v", err)
 	}
