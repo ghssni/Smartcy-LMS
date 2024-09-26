@@ -6,7 +6,9 @@ import (
 	"gateway-service/constans"
 	"gateway-service/model"
 	"gateway-service/pb"
+	"gateway-service/server/middlewares"
 	"gateway-service/utils"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -25,6 +27,14 @@ func NewLessonHandler(lessonService pb.LessonServiceClient) *LessonHandler {
 }
 
 func (h *LessonHandler) CreateLesson(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middlewares.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "instructor" {
+		return utils.HandleError(c, constans.ErrForbidden, "Only instructor can create course")
+	}
+
 	lesson := new(model.Lesson)
 
 	// Bind the lesson struct
@@ -64,7 +74,7 @@ func (h *LessonHandler) CreateLesson(c echo.Context) error {
 				return utils.HandleError(c, constans.ErrNotFound, st.Message())
 			}
 		} else {
-			return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+			return utils.HandleError(c, constans.ErrInternalServerError, "Failed to create lesson")
 		}
 	}
 
@@ -108,7 +118,7 @@ func (h *LessonHandler) GetLessonBySequence(c echo.Context) error {
 	// Do the gRPC call
 	res, err := h.lessonService.GetLessonBySequence(c.Request().Context(), &req)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrNotFound, "Lesson not found")
 	}
 
 	return c.JSON(http.StatusOK, model.JsonResponse{Status: "success", Message: "Lesson found", Data: res.Lesson})
@@ -130,7 +140,7 @@ func (h *LessonHandler) GetAllLessons(c echo.Context) error {
 		// Do the gRPC call
 		res, err := h.lessonService.ListLessons(c.Request().Context(), &req)
 		if err != nil {
-			return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+			return utils.HandleError(c, constans.ErrNotFound, "Lesson not found")
 		}
 
 		lessonRes = res.Lessons
@@ -145,7 +155,7 @@ func (h *LessonHandler) GetAllLessons(c echo.Context) error {
 		// Do the gRPC call
 		res, err := h.lessonService.SearchLessonsByType(c.Request().Context(), &req)
 		if err != nil {
-			return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+			return utils.HandleError(c, constans.ErrNotFound, "Lesson not found")
 		}
 
 		lessonRes = res.Lessons
@@ -158,7 +168,7 @@ func (h *LessonHandler) GetAllLessons(c echo.Context) error {
 		// Do the gRPC call
 		res, err := h.lessonService.SearchLessonsByTitle(c.Request().Context(), &req)
 		if err != nil {
-			return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+			return utils.HandleError(c, constans.ErrNotFound, "Lesson not found")
 		}
 
 		lessonRes = res.Lessons
@@ -179,6 +189,14 @@ func (h *LessonHandler) GetAllLessons(c echo.Context) error {
 }
 
 func (h *LessonHandler) UpdateLesson(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middlewares.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "instructor" {
+		return utils.HandleError(c, constans.ErrForbidden, "Only instructor can create course")
+	}
+
 	id := c.Param("id")
 	lesson := new(model.Lesson)
 
@@ -217,6 +235,14 @@ func (h *LessonHandler) UpdateLesson(c echo.Context) error {
 }
 
 func (h *LessonHandler) DeleteLesson(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middlewares.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "instructor" {
+		return utils.HandleError(c, constans.ErrForbidden, "Only instructor can create course")
+	}
+
 	id := c.Param("id")
 
 	// Check user Role from jwt
@@ -228,7 +254,7 @@ func (h *LessonHandler) DeleteLesson(c echo.Context) error {
 	// Do the gRPC call
 	_, err := h.lessonService.DeleteLesson(c.Request().Context(), &req)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrNotFound, "Lesson not found")
 	}
 
 	return c.JSON(http.StatusOK, model.JsonResponse{Status: "success", Message: "Lesson deleted"})

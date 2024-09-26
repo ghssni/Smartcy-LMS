@@ -6,7 +6,9 @@ import (
 	"gateway-service/constans"
 	"gateway-service/model"
 	"gateway-service/pb"
+	"gateway-service/server/middlewares"
 	"gateway-service/utils"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -24,6 +26,14 @@ func NewCourseHandler(courseService pb.CourseServiceClient, lessonService pb.Les
 }
 
 func (h *CourseHandler) CreateCourse(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middlewares.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "instructor" {
+		return utils.HandleError(c, constans.ErrForbidden, "Only instructor can create course")
+	}
+
 	course := new(model.Course)
 
 	err := c.Bind(&course)
@@ -53,7 +63,7 @@ func (h *CourseHandler) CreateCourse(c echo.Context) error {
 	// Do the gRPC call
 	res, err := h.courseService.CreateCourse(c.Request().Context(), &req)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrInternalServerError, "Failed to create course")
 	}
 
 	course.ID = res.Id
@@ -70,7 +80,7 @@ func (h *CourseHandler) GetCourseByID(c echo.Context) error {
 
 	res, err := h.courseService.GetCourseById(c.Request().Context(), &req)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrNotFound, err.Error())
+		return utils.HandleError(c, constans.ErrNotFound, fmt.Sprintf("Course with ID %s not found", courseID))
 	}
 
 	course := model.CourseWithReview{
@@ -101,7 +111,7 @@ func (h *CourseHandler) GetAllCourses(c echo.Context) error {
 		req := pb.GetAllCoursesRequest{}
 		res, err := h.courseService.GetAllCourses(c.Request().Context(), &req)
 		if err != nil {
-			return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+			return utils.HandleError(c, constans.ErrInternalServerError, "Failed to get courses")
 		}
 		coursesRes = res.Courses
 	} else if category != "" && instructorID != "" {
@@ -112,7 +122,7 @@ func (h *CourseHandler) GetAllCourses(c echo.Context) error {
 		}
 		res, err := h.courseService.GetCoursesByInstructorID(c.Request().Context(), &req)
 		if err != nil {
-			return utils.HandleError(c, constans.ErrInternalServerError)
+			return utils.HandleError(c, constans.ErrInternalServerError, "Failed to get courses by instructor")
 		}
 		coursesRes = res.Courses
 	} else if category != "" {
@@ -121,7 +131,7 @@ func (h *CourseHandler) GetAllCourses(c echo.Context) error {
 		}
 		res, err := h.courseService.GetCoursesByCategory(c.Request().Context(), &req)
 		if err != nil {
-			return utils.HandleError(c, constans.ErrInternalServerError)
+			return utils.HandleError(c, constans.ErrInternalServerError, "Failed to get courses by category")
 		}
 		coursesRes = res.Courses
 	} else {
@@ -150,6 +160,14 @@ func (h *CourseHandler) GetAllCourses(c echo.Context) error {
 }
 
 func (h *CourseHandler) UpdateCourse(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middlewares.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "instructor" {
+		return utils.HandleError(c, constans.ErrForbidden, "Only instructor can create course")
+	}
+
 	courseID := c.Param("id")
 
 	// check courseID is valid
@@ -164,7 +182,7 @@ func (h *CourseHandler) UpdateCourse(c echo.Context) error {
 
 	res, err := h.courseService.GetCourseById(c.Request().Context(), &getCourseReq)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrNotFound, fmt.Sprintf("Course with ID %s not found", courseID))
 	}
 
 	course := model.Course{
@@ -202,13 +220,21 @@ func (h *CourseHandler) UpdateCourse(c echo.Context) error {
 
 	_, err = h.courseService.UpdateCourse(c.Request().Context(), &updateCourseReq)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrInternalServerError, "Failed to update course")
 	}
 
 	return c.JSON(http.StatusOK, model.JsonResponse{Status: "success", Message: "Course updated"})
 }
 
 func (h *CourseHandler) DeleteCourse(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*middlewares.JWTCustomClaims)
+	role := claims.Role
+
+	if role != "instructor" {
+		return utils.HandleError(c, constans.ErrForbidden, "Only instructor can create course")
+	}
+
 	courseID := c.Param("id")
 
 	// check courseID is valid
@@ -223,16 +249,16 @@ func (h *CourseHandler) DeleteCourse(c echo.Context) error {
 
 	_, err := h.courseService.GetCourseById(c.Request().Context(), &getCourseReq)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrNotFound, fmt.Sprintf("Course with ID %s not found", courseID))
 	}
-	
+
 	deleteCourseReq := pb.DeleteCourseRequest{
 		Id: utils.StringToUint(courseID),
 	}
 
 	_, err = h.courseService.DeleteCourse(c.Request().Context(), &deleteCourseReq)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrInternalServerError, "Failed to delete course")
 	}
 
 	return c.JSON(http.StatusOK, model.JsonResponse{Status: "success", Message: "Course deleted"})
