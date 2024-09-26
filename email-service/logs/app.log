@@ -79,3 +79,4 @@ time="2024-09-26 04:51:05" level=info msg="Skipping AutoMigrate and AutoDrop." E
 time="2024-09-26 17:38:24" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-26 17:38:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-26 21:03:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
+time="2024-09-26 21:06:59" level=fatal msg="Error loading .env file" Environment=Production

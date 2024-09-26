@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ghssni/Smartcy-LMS/User-Service/pb;pb";
+
+
+
+message MetaUserLog {
+  uint32 code = 1;
+  string message = 2;
+  string status = 3;
+}
+// Message for User Activity Log
+message UserActivityLog {
+  string id = 1;
+  string user_id = 2;
+  uint32 course_id = 3;
+  string activity_type = 4;
+  google.protobuf.Timestamp activity_timestamp = 5;
+}
+
+// Create Activity Log Request & Response
+message CreateUserActivityLogRequest {
+  string user_id = 1;
+  uint32 course_id = 2;
+  string activity_type = 3;
+  google.protobuf.Timestamp activity_timestamp = 4;
+}
+
+message CreateUserActivityLogResponse {
+   MetaUserLog MetaUserLog = 1;
+  UserActivityLog activity_log = 2;
+}
+
+// Get Activity Log by User ID Request & Response
+message GetUserActivityLogsRequest {
+  string user_id = 1;
+}
+
+message GetUserActivityLogsResponse {
+   MetaUserLog MetaUserLog = 1;
+  repeated UserActivityLog activity_logs = 2;
+}
+
+// Activity Log Service Definition
+service UserActivityLogService {
+  rpc CreateUserActivityLog(CreateUserActivityLogRequest) returns (CreateUserActivityLogResponse);
+  rpc GetUserActivityLogs(GetUserActivityLogsRequest) returns (GetUserActivityLogsResponse);
+}
