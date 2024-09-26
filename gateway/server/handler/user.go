@@ -5,7 +5,7 @@ import (
 	"gateway-service/constans"
 	"gateway-service/model"
 	"gateway-service/pb"
-	"gateway-service/server/middleware"
+	"gateway-service/server/middlewares"
 	"gateway-service/utils"
 	"github.com/labstack/echo/v4"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -25,7 +25,7 @@ func NewUserHandler(userService pb.UserServiceClient) *UserHandler {
 }
 
 func (h *UserHandler) Register(c echo.Context) error {
-	user := new(model.User)
+	user := new(model.UserRequest)
 
 	// Bind the user struct
 	err := c.Bind(&user)
@@ -41,10 +41,20 @@ func (h *UserHandler) Register(c echo.Context) error {
 		return utils.HandleValidationError(c, errors)
 	}
 
+	// Get user by email
+	req1 := pb.GetUserByEmailRequest{
+		Email: user.Email,
+	}
+
+	_, err = h.userService.GetUserByEmail(c.Request().Context(), &req1)
+	if err == nil {
+		return utils.HandleError(c, constans.ErrConflict, "Email already registered")
+	}
+
 	createdAt := time.Now()
 	updatedAt := time.Now()
 
-	req := pb.RegisterRequest{
+	req2 := pb.RegisterRequest{
 		RegisterInput: &pb.RegisterInput{
 			Name:      user.Name,
 			Email:     user.Email,
@@ -59,7 +69,7 @@ func (h *UserHandler) Register(c echo.Context) error {
 	}
 
 	// Do the gRPC call
-	res, err := h.userService.Register(c.Request().Context(), &req)
+	res, err := h.userService.Register(c.Request().Context(), &req2)
 	if err != nil {
 		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
 	}
@@ -99,18 +109,13 @@ func (h *UserHandler) Login(c echo.Context) error {
 	// Do the gRPC call
 	res, err := h.userService.Login(c.Request().Context(), &req)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
+		return utils.HandleError(c, constans.ErrNotFound, "Invalid email or password")
 	}
 
 	// Generate JWT token
-	token, expiredAt, err := middleware.GenerateToken(utils.StringToUint(res.User.Id), res.User.Email, res.User.Role)
+	token, err := middlewares.GenerateToken(res.User.Id, res.User.Email, res.User.Role)
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
-	}
-
-	jwtResponse := model.JWTResponse{
-		Token:   token,
-		Expires: expiredAt.Format(time.RFC3339),
+		return utils.HandleError(c, constans.ErrInternalServerError, "Failed to generate token")
 	}
 
 	userResponse := &model.User{
@@ -121,7 +126,7 @@ func (h *UserHandler) Login(c echo.Context) error {
 		Role:    res.User.Role,
 		Phone:   res.User.Phone,
 		Age:     res.User.Age,
-		Token:   jwtResponse,
+		Token:   token,
 	}
 
 	return c.JSON(http.StatusOK, model.JsonResponse{
