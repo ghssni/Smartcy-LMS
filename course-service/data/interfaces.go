@@ -17,13 +17,14 @@ type CourseInterfaces interface {
 }
 type LessonInterfaces interface {
 	CreateLesson(ctx context.Context, lesson *Lesson, createdAt, updatedAt time.Time) (uint32, error)
-	GetLesson(ctx context.Context, lessonID, courseID uint32) (*Lesson, error)
+	GetLesson(ctx context.Context, lessonID uint32) (*Lesson, error)
 	GetLessonBySequence(ctx context.Context, sequence, courseID uint32) (*Lesson, error)
 	GetAllLessons(ctx context.Context, courseID uint32) ([]LessonSummary, error)
 	UpdateLesson(ctx context.Context, lesson *Lesson, updatedAt time.Time) error
-	DeleteLesson(ctx context.Context, lessonID, courseID uint32, deletedAt time.Time) error
+	DeleteLesson(ctx context.Context, lessonID uint32, deletedAt time.Time) error
 	DeleteLessonByCourse(ctx context.Context, courseID uint32, deletedAt time.Time) error
 	SearchLessonByTitle(ctx context.Context, courseID uint32, title string) ([]Lesson, error)
+	SearchLessonByType(ctx context.Context, courseID uint32, lessonType string) ([]Lesson, error)
 	GetTotalLessonsByCourseID(ctx context.Context, courseID uint32) (uint32, error)
 	GetTotalLessonsByCourseIDAndType(ctx context.Context, courseID uint32, lessonType string) (uint32, error)
 }

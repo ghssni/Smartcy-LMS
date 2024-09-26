@@ -20,16 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LessonService_CreateLesson_FullMethodName           = "/lessons.LessonService/CreateLesson"
-	LessonService_GetLesson_FullMethodName              = "/lessons.LessonService/GetLesson"
-	LessonService_GetLessonBySequence_FullMethodName    = "/lessons.LessonService/GetLessonBySequence"
-	LessonService_ListLessons_FullMethodName            = "/lessons.LessonService/ListLessons"
-	LessonService_UpdateLesson_FullMethodName           = "/lessons.LessonService/UpdateLesson"
-	LessonService_DeleteLesson_FullMethodName           = "/lessons.LessonService/DeleteLesson"
-	LessonService_DeleteLessonByCourseID_FullMethodName = "/lessons.LessonService/DeleteLessonByCourseID"
-	LessonService_SearchLessonsByTitle_FullMethodName   = "/lessons.LessonService/SearchLessonsByTitle"
-	LessonService_GetTotalLessons_FullMethodName        = "/lessons.LessonService/GetTotalLessons"
-	LessonService_GetTotalLessonsByType_FullMethodName  = "/lessons.LessonService/GetTotalLessonsByType"
+	LessonService_CreateLesson_FullMethodName          = "/lessons.LessonService/CreateLesson"
+	LessonService_GetLesson_FullMethodName             = "/lessons.LessonService/GetLesson"
+	LessonService_GetLessonBySequence_FullMethodName   = "/lessons.LessonService/GetLessonBySequence"
+	LessonService_ListLessons_FullMethodName           = "/lessons.LessonService/ListLessons"
+	LessonService_UpdateLesson_FullMethodName          = "/lessons.LessonService/UpdateLesson"
+	LessonService_DeleteLesson_FullMethodName          = "/lessons.LessonService/DeleteLesson"
+	LessonService_SearchLessonsByTitle_FullMethodName  = "/lessons.LessonService/SearchLessonsByTitle"
+	LessonService_SearchLessonsByType_FullMethodName   = "/lessons.LessonService/SearchLessonsByType"
+	LessonService_GetTotalLessons_FullMethodName       = "/lessons.LessonService/GetTotalLessons"
+	LessonService_GetTotalLessonsByType_FullMethodName = "/lessons.LessonService/GetTotalLessonsByType"
 )
 
 // LessonServiceClient is the client API for LessonService service.
@@ -37,21 +37,21 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LessonServiceClient interface {
 	// Create a new lesson
-	CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*Lesson, error)
+	CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error)
 	// Get a specific lesson by course_id and lesson id (excludes soft-deleted)
-	GetLesson(ctx context.Context, in *GetLessonRequest, opts ...grpc.CallOption) (*Lesson, error)
+	GetLesson(ctx context.Context, in *GetLessonRequest, opts ...grpc.CallOption) (*GetLessonResponse, error)
 	// Get a lesson by course_id and sequence (excludes soft-deleted)
-	GetLessonBySequence(ctx context.Context, in *GetLessonBySequenceRequest, opts ...grpc.CallOption) (*Lesson, error)
+	GetLessonBySequence(ctx context.Context, in *GetLessonBySequenceRequest, opts ...grpc.CallOption) (*GetLessonBySequenceResponse, error)
 	// List all lessons by course_id (excludes soft-deleted)
 	ListLessons(ctx context.Context, in *ListLessonsRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
 	// Update a lesson
-	UpdateLesson(ctx context.Context, in *UpdateLessonRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	UpdateLesson(ctx context.Context, in *UpdateLessonRequest, opts ...grpc.CallOption) (*UpdateLessonResponse, error)
 	// Soft delete a lesson
 	DeleteLesson(ctx context.Context, in *DeleteLessonRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	// Soft delete a lesson by course_id
-	DeleteLessonByCourseID(ctx context.Context, in *DeleteLessonByCourseIDRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// Search lessons by title within a course (excludes soft-deleted)
 	SearchLessonsByTitle(ctx context.Context, in *SearchLessonsByTitleRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
+	// Search lessons by lesson type within a course (excludes soft-deleted)
+	SearchLessonsByType(ctx context.Context, in *SearchLessonsByTypeRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error)
 	// Get the total number of lessons for a course (excludes soft-deleted)
 	GetTotalLessons(ctx context.Context, in *GetTotalLessonsRequest, opts ...grpc.CallOption) (*GetTotalLessonsResponse, error)
 	// Get total lessons by lesson type (video/article) for a course (excludes soft-deleted)
@@ -66,9 +66,9 @@ func NewLessonServiceClient(cc grpc.ClientConnInterface) LessonServiceClient {
 	return &lessonServiceClient{cc}
 }
 
-func (c *lessonServiceClient) CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*Lesson, error) {
+func (c *lessonServiceClient) CreateLesson(ctx context.Context, in *CreateLessonRequest, opts ...grpc.CallOption) (*CreateLessonResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Lesson)
+	out := new(CreateLessonResponse)
 	err := c.cc.Invoke(ctx, LessonService_CreateLesson_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -76,9 +76,9 @@ func (c *lessonServiceClient) CreateLesson(ctx context.Context, in *CreateLesson
 	return out, nil
 }
 
-func (c *lessonServiceClient) GetLesson(ctx context.Context, in *GetLessonRequest, opts ...grpc.CallOption) (*Lesson, error) {
+func (c *lessonServiceClient) GetLesson(ctx context.Context, in *GetLessonRequest, opts ...grpc.CallOption) (*GetLessonResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Lesson)
+	out := new(GetLessonResponse)
 	err := c.cc.Invoke(ctx, LessonService_GetLesson_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -86,9 +86,9 @@ func (c *lessonServiceClient) GetLesson(ctx context.Context, in *GetLessonReques
 	return out, nil
 }
 
-func (c *lessonServiceClient) GetLessonBySequence(ctx context.Context, in *GetLessonBySequenceRequest, opts ...grpc.CallOption) (*Lesson, error) {
+func (c *lessonServiceClient) GetLessonBySequence(ctx context.Context, in *GetLessonBySequenceRequest, opts ...grpc.CallOption) (*GetLessonBySequenceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Lesson)
+	out := new(GetLessonBySequenceResponse)
 	err := c.cc.Invoke(ctx, LessonService_GetLessonBySequence_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -106,9 +106,9 @@ func (c *lessonServiceClient) ListLessons(ctx context.Context, in *ListLessonsRe
 	return out, nil
 }
 
-func (c *lessonServiceClient) UpdateLesson(ctx context.Context, in *UpdateLessonRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *lessonServiceClient) UpdateLesson(ctx context.Context, in *UpdateLessonRequest, opts ...grpc.CallOption) (*UpdateLessonResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(empty.Empty)
+	out := new(UpdateLessonResponse)
 	err := c.cc.Invoke(ctx, LessonService_UpdateLesson_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -126,20 +126,20 @@ func (c *lessonServiceClient) DeleteLesson(ctx context.Context, in *DeleteLesson
 	return out, nil
 }
 
-func (c *lessonServiceClient) DeleteLessonByCourseID(ctx context.Context, in *DeleteLessonByCourseIDRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *lessonServiceClient) SearchLessonsByTitle(ctx context.Context, in *SearchLessonsByTitleRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, LessonService_DeleteLessonByCourseID_FullMethodName, in, out, cOpts...)
+	out := new(ListLessonsResponse)
+	err := c.cc.Invoke(ctx, LessonService_SearchLessonsByTitle_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *lessonServiceClient) SearchLessonsByTitle(ctx context.Context, in *SearchLessonsByTitleRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error) {
+func (c *lessonServiceClient) SearchLessonsByType(ctx context.Context, in *SearchLessonsByTypeRequest, opts ...grpc.CallOption) (*ListLessonsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListLessonsResponse)
-	err := c.cc.Invoke(ctx, LessonService_SearchLessonsByTitle_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LessonService_SearchLessonsByType_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -171,21 +171,21 @@ func (c *lessonServiceClient) GetTotalLessonsByType(ctx context.Context, in *Get
 // for forward compatibility.
 type LessonServiceServer interface {
 	// Create a new lesson
-	CreateLesson(context.Context, *CreateLessonRequest) (*Lesson, error)
+	CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error)
 	// Get a specific lesson by course_id and lesson id (excludes soft-deleted)
-	GetLesson(context.Context, *GetLessonRequest) (*Lesson, error)
+	GetLesson(context.Context, *GetLessonRequest) (*GetLessonResponse, error)
 	// Get a lesson by course_id and sequence (excludes soft-deleted)
-	GetLessonBySequence(context.Context, *GetLessonBySequenceRequest) (*Lesson, error)
+	GetLessonBySequence(context.Context, *GetLessonBySequenceRequest) (*GetLessonBySequenceResponse, error)
 	// List all lessons by course_id (excludes soft-deleted)
 	ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error)
 	// Update a lesson
-	UpdateLesson(context.Context, *UpdateLessonRequest) (*empty.Empty, error)
+	UpdateLesson(context.Context, *UpdateLessonRequest) (*UpdateLessonResponse, error)
 	// Soft delete a lesson
 	DeleteLesson(context.Context, *DeleteLessonRequest) (*empty.Empty, error)
-	// Soft delete a lesson by course_id
-	DeleteLessonByCourseID(context.Context, *DeleteLessonByCourseIDRequest) (*empty.Empty, error)
 	// Search lessons by title within a course (excludes soft-deleted)
 	SearchLessonsByTitle(context.Context, *SearchLessonsByTitleRequest) (*ListLessonsResponse, error)
+	// Search lessons by lesson type within a course (excludes soft-deleted)
+	SearchLessonsByType(context.Context, *SearchLessonsByTypeRequest) (*ListLessonsResponse, error)
 	// Get the total number of lessons for a course (excludes soft-deleted)
 	GetTotalLessons(context.Context, *GetTotalLessonsRequest) (*GetTotalLessonsResponse, error)
 	// Get total lessons by lesson type (video/article) for a course (excludes soft-deleted)
@@ -199,29 +199,29 @@ type LessonServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedLessonServiceServer struct{}
 
-func (UnimplementedLessonServiceServer) CreateLesson(context.Context, *CreateLessonRequest) (*Lesson, error) {
+func (UnimplementedLessonServiceServer) CreateLesson(context.Context, *CreateLessonRequest) (*CreateLessonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLesson not implemented")
 }
-func (UnimplementedLessonServiceServer) GetLesson(context.Context, *GetLessonRequest) (*Lesson, error) {
+func (UnimplementedLessonServiceServer) GetLesson(context.Context, *GetLessonRequest) (*GetLessonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLesson not implemented")
 }
-func (UnimplementedLessonServiceServer) GetLessonBySequence(context.Context, *GetLessonBySequenceRequest) (*Lesson, error) {
+func (UnimplementedLessonServiceServer) GetLessonBySequence(context.Context, *GetLessonBySequenceRequest) (*GetLessonBySequenceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLessonBySequence not implemented")
 }
 func (UnimplementedLessonServiceServer) ListLessons(context.Context, *ListLessonsRequest) (*ListLessonsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListLessons not implemented")
 }
-func (UnimplementedLessonServiceServer) UpdateLesson(context.Context, *UpdateLessonRequest) (*empty.Empty, error) {
+func (UnimplementedLessonServiceServer) UpdateLesson(context.Context, *UpdateLessonRequest) (*UpdateLessonResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateLesson not implemented")
 }
 func (UnimplementedLessonServiceServer) DeleteLesson(context.Context, *DeleteLessonRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLesson not implemented")
 }
-func (UnimplementedLessonServiceServer) DeleteLessonByCourseID(context.Context, *DeleteLessonByCourseIDRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteLessonByCourseID not implemented")
-}
 func (UnimplementedLessonServiceServer) SearchLessonsByTitle(context.Context, *SearchLessonsByTitleRequest) (*ListLessonsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchLessonsByTitle not implemented")
+}
+func (UnimplementedLessonServiceServer) SearchLessonsByType(context.Context, *SearchLessonsByTypeRequest) (*ListLessonsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchLessonsByType not implemented")
 }
 func (UnimplementedLessonServiceServer) GetTotalLessons(context.Context, *GetTotalLessonsRequest) (*GetTotalLessonsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTotalLessons not implemented")
@@ -357,24 +357,6 @@ func _LessonService_DeleteLesson_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LessonService_DeleteLessonByCourseID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteLessonByCourseIDRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LessonServiceServer).DeleteLessonByCourseID(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: LessonService_DeleteLessonByCourseID_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LessonServiceServer).DeleteLessonByCourseID(ctx, req.(*DeleteLessonByCourseIDRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _LessonService_SearchLessonsByTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchLessonsByTitleRequest)
 	if err := dec(in); err != nil {
@@ -389,6 +371,24 @@ func _LessonService_SearchLessonsByTitle_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LessonServiceServer).SearchLessonsByTitle(ctx, req.(*SearchLessonsByTitleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LessonService_SearchLessonsByType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchLessonsByTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LessonServiceServer).SearchLessonsByType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LessonService_SearchLessonsByType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LessonServiceServer).SearchLessonsByType(ctx, req.(*SearchLessonsByTypeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -461,12 +461,12 @@ var LessonService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _LessonService_DeleteLesson_Handler,
 		},
 		{
-			MethodName: "DeleteLessonByCourseID",
-			Handler:    _LessonService_DeleteLessonByCourseID_Handler,
-		},
-		{
 			MethodName: "SearchLessonsByTitle",
 			Handler:    _LessonService_SearchLessonsByTitle_Handler,
+		},
+		{
+			MethodName: "SearchLessonsByType",
+			Handler:    _LessonService_SearchLessonsByType_Handler,
 		},
 		{
 			MethodName: "GetTotalLessons",

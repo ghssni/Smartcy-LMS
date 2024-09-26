@@ -4,6 +4,7 @@ import (
 	"context"
 	"course-service/data"
 	"course-service/pb"
+	"course-service/utils"
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,7 +16,7 @@ type LessonService struct{}
 
 func NewLessonService() *LessonService { return &LessonService{} }
 
-func (s *LessonService) CreateLesson(ctx context.Context, in *pb.CreateLessonRequest) (*pb.Lesson, error) {
+func (s *LessonService) CreateLesson(ctx context.Context, in *pb.CreateLessonRequest) (*pb.CreateLessonResponse, error) {
 	// Get data from request
 	courseID := in.GetCourseId()
 	title := in.GetTitle()
@@ -38,50 +39,44 @@ func (s *LessonService) CreateLesson(ctx context.Context, in *pb.CreateLessonReq
 	// Insert data to database
 	lessonId, err := repo.Lesson.CreateLesson(ctx, lesson, createdAt, updatedAt)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to create lesson: %v", err))
+		return nil, utils.HandlePostgresError(err)
 	}
 
-	res := &pb.Lesson{
-		Id:         lessonId,
-		CourseId:   courseID,
-		Title:      title,
-		ContentUrl: contentUrl,
-		LessonType: lessonType,
-		Sequence:   sequence,
-		CreatedAt:  createdAt.String(),
-		UpdatedAt:  updatedAt.String(),
+	res := &pb.CreateLessonResponse{
+		Id: lessonId,
 	}
 
 	return res, nil
 }
 
-func (s *LessonService) GetLesson(ctx context.Context, in *pb.GetLessonRequest) (*pb.Lesson, error) {
+func (s *LessonService) GetLesson(ctx context.Context, in *pb.GetLessonRequest) (*pb.GetLessonResponse, error) {
 	// Get data from request
 	lessonID := in.GetId()
-	courseID := in.GetCourseId()
 
 	// Get lesson from database
-	lesson, err := repo.Lesson.GetLesson(ctx, lessonID, courseID)
+	lesson, err := repo.Lesson.GetLesson(ctx, lessonID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Failed to get lesson: %v", err))
 	}
 
 	// Return response
-	res := &pb.Lesson{
-		Id:         lesson.ID,
-		CourseId:   courseID,
-		Title:      lesson.Title,
-		ContentUrl: lesson.ContentURL,
-		LessonType: lesson.LessonType,
-		Sequence:   lesson.Sequence,
-		CreatedAt:  lesson.CreatedAt.String(),
-		UpdatedAt:  lesson.UpdatedAt.String(),
+	res := &pb.GetLessonResponse{
+		Lesson: &pb.Lesson{
+			Id:         lesson.ID,
+			CourseId:   lesson.CourseID,
+			Title:      lesson.Title,
+			ContentUrl: lesson.ContentURL,
+			LessonType: lesson.LessonType,
+			Sequence:   lesson.Sequence,
+			CreatedAt:  lesson.CreatedAt.Format("02-01-2006"),
+			UpdatedAt:  lesson.UpdatedAt.Format("02-01-2006"),
+		},
 	}
 
 	return res, nil
 }
 
-func (s *LessonService) GetLessonBySequence(ctx context.Context, in *pb.GetLessonBySequenceRequest) (*pb.Lesson, error) {
+func (s *LessonService) GetLessonBySequence(ctx context.Context, in *pb.GetLessonBySequenceRequest) (*pb.GetLessonBySequenceResponse, error) {
 	// Get data from request
 	sequence := in.GetSequence()
 	courseID := in.GetCourseId()
@@ -93,15 +88,17 @@ func (s *LessonService) GetLessonBySequence(ctx context.Context, in *pb.GetLesso
 	}
 
 	// Return response
-	res := &pb.Lesson{
-		Id:         lesson.ID,
-		CourseId:   courseID,
-		Title:      lesson.Title,
-		ContentUrl: lesson.ContentURL,
-		LessonType: lesson.LessonType,
-		Sequence:   lesson.Sequence,
-		CreatedAt:  lesson.CreatedAt.String(),
-		UpdatedAt:  lesson.UpdatedAt.String(),
+	res := &pb.GetLessonBySequenceResponse{
+		Lesson: &pb.Lesson{
+			Id:         lesson.ID,
+			CourseId:   courseID,
+			Title:      lesson.Title,
+			ContentUrl: lesson.ContentURL,
+			LessonType: lesson.LessonType,
+			Sequence:   lesson.Sequence,
+			CreatedAt:  lesson.CreatedAt.Format("02-01-2006"),
+			UpdatedAt:  lesson.UpdatedAt.Format("02-01-2006"),
+		},
 	}
 
 	return res, nil
@@ -135,7 +132,7 @@ func (s *LessonService) ListLessons(ctx context.Context, in *pb.ListLessonsReque
 	return res, nil
 }
 
-func (s *LessonService) UpdateLesson(ctx context.Context, in *pb.UpdateLessonRequest) (*emptypb.Empty, error) {
+func (s *LessonService) UpdateLesson(ctx context.Context, in *pb.UpdateLessonRequest) (*pb.UpdateLessonResponse, error) {
 	// Get data from request
 	lessonID := in.GetId()
 	courseID := in.GetCourseId()
@@ -164,37 +161,31 @@ func (s *LessonService) UpdateLesson(ctx context.Context, in *pb.UpdateLessonReq
 	}
 
 	// Return response
+	res := &pb.UpdateLessonResponse{
+		Lesson: &pb.Lesson{
+			Id:         lessonID,
+			CourseId:   courseID,
+			Title:      title,
+			ContentUrl: contentUrl,
+			LessonType: lessonType,
+			Sequence:   sequence,
+			CreatedAt:  lesson.CreatedAt.Format("02-01-2006"),
+			UpdatedAt:  updatedAt.Format("02-01-2006"),
+		},
+	}
 
-	return &emptypb.Empty{}, nil
+	return res, nil
 }
 
 func (s *LessonService) DeleteLesson(ctx context.Context, in *pb.DeleteLessonRequest) (*emptypb.Empty, error) {
 	// Get data from request
 	lessonID := in.GetId()
-	courseID := in.GetCourseId()
 
 	// DeletedAt
 	deletedAt := time.Now()
 
 	// Delete lesson from database
-	err := repo.Lesson.DeleteLesson(ctx, lessonID, courseID, deletedAt)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to delete lesson: %v", err))
-	}
-
-	// Return response
-	return &emptypb.Empty{}, nil
-}
-
-func (s *LessonService) DeleteLessonByCourseID(ctx context.Context, in *pb.DeleteLessonByCourseIDRequest) (*emptypb.Empty, error) {
-	// Get data from request
-	courseID := in.GetCourseId()
-
-	// DeletedAt
-	deletedAt := time.Now()
-
-	// Delete lesson from database
-	err := repo.Lesson.DeleteLessonByCourse(ctx, courseID, deletedAt)
+	err := repo.Lesson.DeleteLesson(ctx, lessonID, deletedAt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to delete lesson: %v", err))
 	}
@@ -210,6 +201,36 @@ func (s *LessonService) SearchLessonsByTitle(ctx context.Context, in *pb.SearchL
 
 	// Search lesson from database
 	lessons, err := repo.Lesson.SearchLessonByTitle(ctx, courseID, title)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to search lesson: %v", err))
+	}
+
+	// Return response
+	var lessonsRes []*pb.LessonSummary
+
+	for _, lesson := range lessons {
+		lessonsRes = append(lessonsRes, &pb.LessonSummary{
+			Id:         lesson.ID,
+			Title:      lesson.Title,
+			LessonType: lesson.LessonType,
+			Sequence:   lesson.Sequence,
+		})
+	}
+
+	res := &pb.ListLessonsResponse{
+		Lessons: lessonsRes,
+	}
+
+	return res, nil
+}
+
+func (s *LessonService) SearchLessonsByType(ctx context.Context, in *pb.SearchLessonsByTypeRequest) (*pb.ListLessonsResponse, error) {
+	// Get data from request
+	courseID := in.GetCourseId()
+	lessonType := in.GetLessonType()
+
+	// Search lesson from database
+	lessons, err := repo.Lesson.SearchLessonByType(ctx, courseID, lessonType)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to search lesson: %v", err))
 	}

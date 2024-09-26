@@ -25,6 +25,7 @@ func main() {
 	//reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
 	courseHandler := handler.NewCourseHandler(courseServiceClient)
 
+
 	e := echo.New()
 
 	handlers := server.NewHandlers(courseHandler)

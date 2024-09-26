@@ -171,20 +171,36 @@ func (c *Course) UpdateCourse(ctx context.Context, course *Course, updatedAt tim
 }
 
 func (c *Course) DeleteCourse(ctx context.Context, courseID uint32, deletedAt time.Time) error {
-	sqlStatement := `UPDATE courses SET deleted_at = $1 WHERE id = $2`
 
-	result, err := db.ExecContext(ctx, sqlStatement, deletedAt, courseID)
+	tx, err := db.BeginTxx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	_, err = tx.ExecContext(ctx, `UPDATE reviews SET deleted_at = $1 WHERE course_id = $2`, deletedAt, courseID)
 	if err != nil {
 		return err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	//_, err = tx.ExecContext(ctx, `UPDATE enrollments SET deleted_at = $1 WHERE course_id = $2`, deletedAt, courseID)
+	//if err != nil {
+	//	return err
+	//}
+
+	_, err = tx.ExecContext(ctx, `UPDATE lessons SET deleted_at = $1 WHERE course_id = $2`, deletedAt, courseID)
 	if err != nil {
 		return err
 	}
 
-	if rowsAffected == 0 {
-		return errors.New("failed to delete course")
+	_, err = tx.ExecContext(ctx, `UPDATE courses SET deleted_at = $1 WHERE id = $2`, deletedAt, courseID)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return err
 	}
 
 	return nil
