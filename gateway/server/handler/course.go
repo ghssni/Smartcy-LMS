@@ -49,8 +49,6 @@ func (h *CourseHandler) CreateCourse(c echo.Context) error {
 		return utils.HandleValidationError(c, errors)
 	}
 
-	// Check user Role from jwt
-
 	req := pb.CreateCourseRequest{
 		Title:        course.Title,
 		Description:  course.Description,

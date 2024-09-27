@@ -81,7 +81,11 @@ CREATE TABLE reviews
     created_at  TIMESTAMP DEFAULT NOW(),
     updated_at  TIMESTAMP DEFAULT NOW(),
     deleted_at  TIMESTAMP
+    Constraint reviews_course_student_unique UNIQUE (course_id, student_id)
 );
+
+-- Add CONSTRAINT reviews_course_student_unique UNIQUE (course_id, student_id) to reviews table
+-- ALTER TABLE reviews ADD CONSTRAINT reviews_course_student_unique UNIQUE (course_id, student_id );
 
 -- User activity log table
 CREATE TABLE user_activity_log
@@ -196,6 +200,8 @@ VALUES (1, 1, TRUE, NOW(), NOW()),
        (1, 2, FALSE, NOW(), NULL),
        (3, 1, TRUE, NOW(), NOW()),
        (5, 1, TRUE, NOW(), NOW()),
+       (5, 2, FALSE, NOW(), NULL),
+       (5, 4, TRUE, NOW(), NOW()),
        (5, 2, FALSE, NOW(), NULL);
 
 -- Seeding data for assessments

@@ -31,11 +31,73 @@ type CompletedProgress struct {
 //
 // Returns:
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) MarkLessonAsCompleted(ctx context.Context, enrollmentID, lessonID uint32, lastAccessed, completedAt time.Time) error {
-	query := `INSERT INTO learning_progress (enrollment_id, lesson_id, status, last_accessed, completed_at) VALUES ($1, $2, $3, $4, $5)`
-	_, err := db.ExecContext(ctx, query, enrollmentID, lessonID, true, lastAccessed, completedAt)
+func (lp *LearningProgress) MarkLessonAsCompleted(ctx context.Context, userID string, enrollmentID, lessonID uint32, lastAccessed, completedAt time.Time) error {
+
+	// Check if the learning progress exists
+	query := `SELECT COUNT(*) FROM learning_progress WHERE enrollment_id = $1 AND lesson_id = $2`
+	var count int
+	err := db.GetContext(ctx, &count, query, enrollmentID, lessonID)
 	if err != nil {
 		return err
+	}
+
+	if count > 0 {
+		// Update the learning progress if it exists
+		query = `UPDATE learning_progress SET status = true, last_accessed = $1, completed_at = $2 WHERE enrollment_id = $3 AND lesson_id = $4`
+		_, err = db.ExecContext(ctx, query, lastAccessed, completedAt, enrollmentID, lessonID)
+		if err != nil {
+			return err
+		}
+	} else {
+		// Insert a new learning progress record if it doesn't exist
+		query = `INSERT INTO learning_progress (enrollment_id, lesson_id, status, last_accessed, completed_at) VALUES ($1, $2, true, $3, $4)`
+		_, err = db.ExecContext(ctx, query, enrollmentID, lessonID, lastAccessed, completedAt)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// UpsertLearningProgress checks if the learning progress exists and updates it if it does,
+// or inserts a new record if it doesn't.
+//
+// Parameters:
+// - ctx: The context for the database operation.
+// - enrollmentID: The ID of the enrollment.
+// - lessonID: The ID of the lesson.
+// - lastAccessed: The timestamp when the lesson was last accessed.
+// - completedAt: The timestamp when the lesson was completed.
+//
+// Returns:
+// - error: An error object if the operation fails, otherwise nil.
+func (lp *LearningProgress) UpsertLearningProgress(ctx context.Context, enrollmentID, lessonID uint32) error {
+	lastAccessed := time.Now()
+	completedAt := time.Now()
+
+	// Check if the learning progress exists
+	query := `SELECT COUNT(*) FROM learning_progress WHERE enrollment_id = $1 AND lesson_id = $2`
+	var count int
+	err := db.GetContext(ctx, &count, query, enrollmentID, lessonID)
+	if err != nil {
+		return err
+	}
+
+	if count > 0 {
+		// Update the learning progress if it exists
+		query = `UPDATE learning_progress SET status = true, last_accessed = $1, completed_at = $2 WHERE enrollment_id = $3 AND lesson_id = $4`
+		_, err = db.ExecContext(ctx, query, lastAccessed, completedAt, enrollmentID, lessonID)
+		if err != nil {
+			return err
+		}
+	} else {
+		// Insert a new learning progress record if it doesn't exist
+		query = `INSERT INTO learning_progress (enrollment_id, lesson_id, status, last_accessed, completed_at) VALUES ($1, $2, true, $3, $4)`
+		_, err = db.ExecContext(ctx, query, enrollmentID, lessonID, lastAccessed, completedAt)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -52,7 +114,7 @@ func (lp *LearningProgress) MarkLessonAsCompleted(ctx context.Context, enrollmen
 //
 // Returns:
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) ResetLessonMark(ctx context.Context, enrollmentID, lessonID uint32) error {
+func (lp *LearningProgress) ResetLessonMark(ctx context.Context, userID string, enrollmentID, lessonID uint32) error {
 
 	query := `UPDATE learning_progress SET status = false, completed_at = NULL, last_accessed = NULL WHERE enrollment_id = $1 AND lesson_id = $2`
 
@@ -74,7 +136,7 @@ func (lp *LearningProgress) ResetLessonMark(ctx context.Context, enrollmentID, l
 //
 // Returns:
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) ResetAllLessonMarks(ctx context.Context, enrollmentID uint32) error {
+func (lp *LearningProgress) ResetAllLessonMarks(ctx context.Context, userID string, enrollmentID uint32) error {
 	query := `UPDATE learning_progress SET status = false, last_accessed = NULL, completed_at = NULL WHERE enrollment_id = $1`
 
 	_, err := db.ExecContext(ctx, query, enrollmentID)
@@ -95,14 +157,19 @@ func (lp *LearningProgress) ResetAllLessonMarks(ctx context.Context, enrollmentI
 // Returns:
 // - *CompletedProgress: A pointer to a CompletedProgress struct containing the total completed lessons.
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) GetTotalCompletedLessons(ctx context.Context, enrollmentID uint32) (*CompletedProgress, error) {
-	query := `SELECT COUNT(*) FROM learning_progress WHERE enrollment_id = $1 AND status = true `
+func (lp *LearningProgress) GetTotalCompletedLessons(ctx context.Context, userID string, enrollmentID uint32) (*CompletedProgress, error) {
+	query := `SELECT COUNT(*) AS total_completed FROM learning_progress WHERE enrollment_id = $1 AND completed_at IS NOT NULL`
 
-	completedProgress := new(CompletedProgress)
+	totalCompleted := uint32(0)
 
-	err := db.GetContext(ctx, &completedProgress, query, enrollmentID)
+	err := db.GetContext(ctx, &totalCompleted, query, enrollmentID)
 	if err != nil {
 		return nil, err
+	}
+
+	completedProgress := &CompletedProgress{
+		EnrollmentID:   enrollmentID,
+		TotalCompleted: totalCompleted,
 	}
 
 	return completedProgress, nil
@@ -117,11 +184,17 @@ func (lp *LearningProgress) GetTotalCompletedLessons(ctx context.Context, enroll
 // Returns:
 // - []CompletedProgress: A slice of CompletedProgress structs containing the enrollment ID and total completed lessons.
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) GetTotalCompletedProgress(ctx context.Context) ([]CompletedProgress, error) {
-	query := `SELECT enrollment_id, COUNT(*) FROM learning_progress WHERE status = true IS NULL GROUP BY enrollment_id`
+func (lp *LearningProgress) GetTotalCompletedProgress(ctx context.Context, userID string) ([]CompletedProgress, error) {
+	//query := `-- SELECT enrollment_id, COUNT(*) FROM learning_progress WHERE status = true IS NULL GROUP BY enrollment_id`
+
+	query := `SELECT lp.enrollment_id, COUNT(*) AS total_completed
+FROM learning_progress lp
+         JOIN enrollments e ON lp.enrollment_id = e.id
+WHERE e.student_id = $1 AND lp.status = true
+GROUP BY lp.enrollment_id`
 
 	var completedProgress []CompletedProgress
-	err := db.SelectContext(ctx, &completedProgress, query)
+	err := db.SelectContext(ctx, &completedProgress, query, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +213,7 @@ func (lp *LearningProgress) GetTotalCompletedProgress(ctx context.Context) ([]Co
 // Returns:
 // - []LearningProgress: A slice of LearningProgress structs containing the progress records.
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) ListLearningProgress(ctx context.Context, enrollmentID uint32) ([]LearningProgress, error) {
+func (lp *LearningProgress) ListLearningProgress(ctx context.Context, userID string, enrollmentID uint32) ([]LearningProgress, error) {
 	query := `SELECT id, enrollment_id, lesson_id, status, last_accessed, completed_at FROM learning_progress WHERE enrollment_id = $1`
 
 	var learningProgress []LearningProgress
@@ -164,7 +237,7 @@ func (lp *LearningProgress) ListLearningProgress(ctx context.Context, enrollment
 //
 // Returns:
 // - error: An error object if the operation fails, otherwise nil.
-func (lp *LearningProgress) UpdateLastAccessed(ctx context.Context, enrollmentID, lessonID uint32, lastAccessed time.Time) error {
+func (lp *LearningProgress) UpdateLastAccessed(ctx context.Context, userID string, enrollmentID, lessonID uint32, lastAccessed time.Time) error {
 	query := `UPDATE learning_progress SET last_accessed = $1 WHERE enrollment_id = $2 AND lesson_id = $3`
 
 	_, err := db.ExecContext(ctx, query, lastAccessed, enrollmentID, lessonID)

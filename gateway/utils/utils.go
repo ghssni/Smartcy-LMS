@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"strconv"
 	"time"
@@ -67,4 +68,11 @@ func TimeToProtoTime(goTime string) *timestamppb.Timestamp {
 // TimeToProtoTimestamp time.Time to google.protobuf.Timestamp
 func TimeToProtoTimestamp(goTime time.Time) *timestamppb.Timestamp {
 	return timestamppb.New(goTime)
+}
+
+func FormatTimestamp(ts *timestamp.Timestamp) string {
+	if ts == nil {
+		return ""
+	}
+	return ts.AsTime().Format(time.RFC3339)
 }

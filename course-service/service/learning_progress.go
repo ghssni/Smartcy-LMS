@@ -19,12 +19,13 @@ func (s *LearningProgressService) MarkLessonAsCompleted(ctx context.Context, in 
 	// Get data from request
 	enrollmentID := in.GetEnrollmentId()
 	lessonID := in.GetLessonId()
+	userID := in.GetUserId()
 
 	// lastAccessed and completedAt
 	lastAccessed, completedAt := time.Now(), time.Now()
 
 	// Insert data to database
-	err := repo.LearningProgress.MarkLessonAsCompleted(ctx, enrollmentID, lessonID, lastAccessed, completedAt)
+	err := repo.LearningProgress.MarkLessonAsCompleted(ctx, userID, enrollmentID, lessonID, lastAccessed, completedAt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to mark lesson as completed: %v", err))
 	}
@@ -41,9 +42,10 @@ func (s *LearningProgressService) ResetLessonMark(ctx context.Context, in *pb.Re
 	// Get data from request
 	enrollmentID := in.GetEnrollmentId()
 	lessonID := in.GetLessonId()
+	userID := in.GetUserId()
 
 	// Insert data to database
-	err := repo.LearningProgress.ResetLessonMark(ctx, enrollmentID, lessonID)
+	err := repo.LearningProgress.ResetLessonMark(ctx, userID, enrollmentID, lessonID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to reset lesson mark: %v", err))
 	}
@@ -54,9 +56,10 @@ func (s *LearningProgressService) ResetLessonMark(ctx context.Context, in *pb.Re
 func (s *LearningProgressService) ResetAllLessonMarks(ctx context.Context, in *pb.ResetAllLessonMarksRequest) (*emptypb.Empty, error) {
 	// Get data from request
 	enrollmentID := in.GetEnrollmentId()
+	userID := in.GetUserId()
 
 	// Update last accessed
-	err := repo.LearningProgress.ResetAllLessonMarks(ctx, enrollmentID)
+	err := repo.LearningProgress.ResetAllLessonMarks(ctx, userID, enrollmentID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to reset all lesson marks: %v", err))
 	}
@@ -68,9 +71,10 @@ func (s *LearningProgressService) ResetAllLessonMarks(ctx context.Context, in *p
 func (s *LearningProgressService) GetTotalCompletedLessons(ctx context.Context, in *pb.GetTotalCompletedLessonsRequest) (*pb.CompletedProgress, error) {
 	// Get data from request
 	enrollmentID := in.GetEnrollmentId()
+	userID := in.GetUserId()
 
 	// Get total completed lessons
-	totalCompleted, err := repo.LearningProgress.GetTotalCompletedLessons(ctx, enrollmentID)
+	totalCompleted, err := repo.LearningProgress.GetTotalCompletedLessons(ctx, userID, enrollmentID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to get total completed lessons: %v", err))
 	}
@@ -85,8 +89,10 @@ func (s *LearningProgressService) GetTotalCompletedLessons(ctx context.Context, 
 }
 
 func (s *LearningProgressService) GetTotalCompletedProgress(ctx context.Context, in *pb.GetTotalCompletedProgressRequest) (*pb.GetTotalCompletedProgressResponse, error) {
+	userID := in.GetUserId()
+
 	// Get total completed lessons
-	totalCompleted, err := repo.LearningProgress.GetTotalCompletedProgress(ctx)
+	totalCompleted, err := repo.LearningProgress.GetTotalCompletedProgress(ctx, userID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to get total completed lessons: %v", err))
 	}
@@ -109,9 +115,10 @@ func (s *LearningProgressService) GetTotalCompletedProgress(ctx context.Context,
 func (s *LearningProgressService) ListLearningProgress(ctx context.Context, in *pb.ListLearningProgressRequest) (*pb.ListLearningProgressResponse, error) {
 	// Get data from request
 	enrollmentID := in.GetEnrollmentId()
+	userID := in.GetUserId()
 
 	// Get learning progress from database
-	learningProgress, err := repo.LearningProgress.ListLearningProgress(ctx, enrollmentID)
+	learningProgress, err := repo.LearningProgress.ListLearningProgress(ctx, userID, enrollmentID)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to list learning progress: %v", err))
 	}
@@ -126,8 +133,18 @@ func (s *LearningProgressService) ListLearningProgress(ctx context.Context, in *
 			EnrollmentId: v.EnrollmentID,
 			LessonId:     v.LessonID,
 			Status:       v.Status,
-			LastAccessed: timestamppb.New(*v.LastAccessed),
-			CompletedAt:  timestamppb.New(*v.CompletedAt),
+			LastAccessed: func() *timestamppb.Timestamp {
+				if v.LastAccessed != nil {
+					return timestamppb.New(*v.LastAccessed)
+				}
+				return nil
+			}(),
+			CompletedAt: func() *timestamppb.Timestamp {
+				if v.CompletedAt != nil {
+					return timestamppb.New(*v.CompletedAt)
+				}
+				return nil
+			}(),
 		}
 	}
 
@@ -138,12 +155,13 @@ func (s *LearningProgressService) UpdateLastAccessed(ctx context.Context, in *pb
 	// Get data from request
 	enrollmentID := in.GetEnrollmentId()
 	lessonID := in.GetLessonId()
+	userID := in.GetUserId()
 
 	// lastAccessed
 	lastAccessed := time.Now()
 
 	// Update last accessed
-	err := repo.LearningProgress.UpdateLastAccessed(ctx, enrollmentID, lessonID, lastAccessed)
+	err := repo.LearningProgress.UpdateLastAccessed(ctx, userID, enrollmentID, lessonID, lastAccessed)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to update last accessed: %v", err))
 	}

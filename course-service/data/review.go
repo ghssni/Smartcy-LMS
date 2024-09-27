@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 )
@@ -28,9 +29,9 @@ func (r *Review) CreateReview(ctx context.Context, review *Review, createdAt, up
 	// Check if the student is enrolled in the course
 	var enrolled bool
 	enrollmentCheckQuery := `
-		SELECT EXISTS(
-			SELECT 1 FROM enrollments WHERE course_id = $1 AND student_id = $2 AND payment_status = 'paid'
-		)`
+        SELECT EXISTS(
+            SELECT 1 FROM enrollments WHERE course_id = $1 AND student_id = $2 AND payment_status = 'paid'
+        )`
 	err = tx.QueryRowContext(ctx, enrollmentCheckQuery, review.CourseID, review.StudentID).Scan(&enrolled)
 	if err != nil {
 		return 0, err
@@ -49,9 +50,9 @@ func (r *Review) CreateReview(ctx context.Context, review *Review, createdAt, up
 	}
 
 	completedLessonQuery := `
-		SELECT COUNT(*) FROM learning_progress.proto lp
-		INNER JOIN enrollments e ON lp.enrollment_id = e.id
-		WHERE e.course_id = $1 AND e.student_id = $2 AND lp.status = true`
+        SELECT COUNT(*) FROM learning_progress lp
+        INNER JOIN enrollments e ON lp.enrollment_id = e.id
+        WHERE e.course_id = $1 AND e.student_id = $2 AND lp.status = true`
 	err = tx.QueryRowContext(ctx, completedLessonQuery, review.CourseID, review.StudentID).Scan(&completedLessons)
 	if err != nil {
 		return 0, err
@@ -61,13 +62,34 @@ func (r *Review) CreateReview(ctx context.Context, review *Review, createdAt, up
 		return 0, errors.New("student has not completed 50% of the course")
 	}
 
-	// Insert the review
-	insertReviewQuery := `
-		INSERT INTO reviews (course_id, student_id, rating, review_text, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
-	err = tx.QueryRowContext(ctx, insertReviewQuery, review.CourseID, review.StudentID, review.Rating, review.ReviewText, createdAt, updatedAt).Scan(&review.ID)
-	if err != nil {
+	// Check if a review already exists and is deleted
+	var existingReviewID uint32
+	reviewCheckQuery := `
+        SELECT id FROM reviews WHERE course_id = $1 AND student_id = $2 AND deleted_at IS NOT NULL`
+	err = tx.QueryRowContext(ctx, reviewCheckQuery, review.CourseID, review.StudentID).Scan(&existingReviewID)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return 0, err
+	}
+
+	if existingReviewID != 0 {
+		// Update the existing review if it was deleted
+		updateReviewQuery := `
+            UPDATE reviews SET rating = $1, review_text = $2, created_at = $3, updated_at = $4, deleted_at = NULL
+            WHERE id = $5`
+		_, err = tx.ExecContext(ctx, updateReviewQuery, review.Rating, review.ReviewText, createdAt, updatedAt, existingReviewID)
+		if err != nil {
+			return 0, err
+		}
+		review.ID = existingReviewID
+	} else {
+		// Insert the review
+		insertReviewQuery := `
+            INSERT INTO reviews (course_id, student_id, rating, review_text, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
+		err = tx.QueryRowContext(ctx, insertReviewQuery, review.CourseID, review.StudentID, review.Rating, review.ReviewText, createdAt, updatedAt).Scan(&review.ID)
+		if err != nil {
+			return 0, err
+		}
 	}
 
 	// Commit the transaction

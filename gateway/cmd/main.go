@@ -14,6 +14,7 @@ import (
 func main() {
 	config.InitViper()
 	config.InitValidator()
+
 	courseServiceAddress := config.Viper.GetString("COURSE_SERVICE_ADDRESS")
 	userServiceAddress := config.Viper.GetString("USER_SERVICE_ADDRESS")
 	emailServiceAddress := config.Viper.GetString("EMAIL_SERVICE_ADDRESS")
@@ -42,7 +43,8 @@ func main() {
 	// Initialize the client
 	userServiceClient := pb.NewUserServiceClient(userServiceDial)
 	courseServiceClient := pb.NewCourseServiceClient(courseServiceDial)
-	//reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
+	reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
+	learningProgressServiceClient := pb.NewLearningProgressServiceClient(courseServiceDial)
 	lessonServiceClient := pb.NewLessonServiceClient(courseServiceDial)
 	emailServiceClient := pb.NewEmailServiceClient(emailServiceDial)
 	enrollmentServiceClient := pb.NewEnrollmentServiceClient(enrollmentServiceDial)
@@ -51,7 +53,9 @@ func main() {
 	// Initialize the handler
 	userHandler := handler.NewUserHandler(userServiceClient, emailServiceClient)
 	courseHandler := handler.NewCourseHandler(courseServiceClient, lessonServiceClient)
+	reviewHandler := handler.NewReviewHandler(reviewServiceClient)
 	lessonHandler := handler.NewLessonHandler(lessonServiceClient)
+	learningProgressHandler := handler.NewLearningProgressHandler(learningProgressServiceClient)
 
 	// Initialize the handler enrollment
 	enrollmentHandler := handler.NewEnrollmentHandler(enrollmentServiceClient, userServiceClient, courseServiceClient)
@@ -59,7 +63,8 @@ func main() {
 
 	e := echo.New()
 
-	handlers := server.NewHandlers(userHandler, courseHandler, lessonHandler, paymentsHandler, enrollmentHandler)
+	handlers := server.NewHandlers(userHandler, courseHandler, reviewHandler, lessonHandler,  learningProgressHandler, paymentsHandler, enrollmentHandler)
+
 	server.Routes(e, handlers)
 
 	//env := config.Viper.GetString("APP_ENV")

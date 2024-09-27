@@ -39,11 +39,11 @@ type ReviewInterfaces interface {
 	DeleteReview(ctx context.Context, reviewID uint32, deletedAt time.Time) error
 }
 type LearningProgressInterfaces interface {
-	MarkLessonAsCompleted(ctx context.Context, enrollmentID, lessonID uint32, lastAccessed, completedAt time.Time) error
-	ResetLessonMark(ctx context.Context, enrollmentID, lessonID uint32) error
-	ResetAllLessonMarks(ctx context.Context, enrollmentID uint32) error
-	GetTotalCompletedLessons(ctx context.Context, enrollmentID uint32) (*CompletedProgress, error)
-	GetTotalCompletedProgress(ctx context.Context) ([]CompletedProgress, error)
-	ListLearningProgress(ctx context.Context, enrollmentID uint32) ([]LearningProgress, error)
-	UpdateLastAccessed(ctx context.Context, enrollmentID, lessonID uint32, lastAccessed time.Time) error
+	MarkLessonAsCompleted(ctx context.Context, userID string, enrollmentID, lessonID uint32, lastAccessed, completedAt time.Time) error
+	ResetLessonMark(ctx context.Context, userID string, enrollmentID, lessonID uint32) error
+	ResetAllLessonMarks(ctx context.Context, userID string, enrollmentID uint32) error
+	GetTotalCompletedLessons(ctx context.Context, userID string, enrollmentID uint32) (*CompletedProgress, error)
+	GetTotalCompletedProgress(ctx context.Context, userID string) ([]CompletedProgress, error)
+	ListLearningProgress(ctx context.Context, userID string, enrollmentID uint32) ([]LearningProgress, error)
+	UpdateLastAccessed(ctx context.Context, userID string, enrollmentID, lessonID uint32, lastAccessed time.Time) error
 }

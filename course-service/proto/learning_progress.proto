@@ -71,6 +71,7 @@ message LearningProgress {
 message MarkLessonAsCompletedRequest {
   uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
   uint32 lesson_id = 2; // The ID of the lesson to mark as completed
+  string user_id = 3; // The ID of the user
 }
 
 // Response message for marking a lesson as completed.
@@ -81,6 +82,7 @@ message MarkLessonAsCompletedResponse {
 // Request message to get the total number of completed lessons for an enrollment.
 message GetTotalCompletedLessonsRequest {
   uint32 enrollment_id = 1; // The ID of the enrollment for which to count completed lessons
+  string user_id = 2; // The ID of the user
 }
 
 // Response message containing the total number of completed lessons for an enrollment.
@@ -90,7 +92,9 @@ message CompletedProgress {
 }
 
 // Request message for retrieving total completed learning progress across multiple enrollments.
-message GetTotalCompletedProgressRequest {}
+message GetTotalCompletedProgressRequest {
+  string user_id = 1; // The ID of the user
+}
 
 // Response message containing the total completed progress across multiple enrollments.
 message GetTotalCompletedProgressResponse {
@@ -101,22 +105,26 @@ message GetTotalCompletedProgressResponse {
 message ResetLessonMarkRequest {
   uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
   uint32 lesson_id = 2; // The ID of the lesson to reset
+  string user_id = 3; // The ID of the user
 }
 
 // Request message to reset all lesson marks for a specific enrollment ID.
 message ResetAllLessonMarksRequest {
   uint32 enrollment_id = 1; // Enrollment ID for which to reset all lesson marks
+  string user_id = 2; // The ID of the user
 }
 
 // Request message to update the last accessed timestamp for a completed lesson.
 message UpdateLastAccessedRequest {
   uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
   uint32 lesson_id = 2; // The ID of the lesson being accessed
+  string user_id = 3; // The ID of the user
 }
 
 // Request message for listing all learning progress records for an enrollment.
 message ListLearningProgressRequest {
   uint32 enrollment_id = 1; // The ID of the enrollment (user-course relation)
+  string user_id = 2; // The ID of the user
 }
 
 // Response message for listing all learning progress records for an enrollment.

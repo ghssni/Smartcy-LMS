@@ -12,24 +12,30 @@ import (
 )
 
 type Handlers struct {
-	user        *handler.UserHandler
-	course      *handler.CourseHandler
-	lesson      *handler.LessonHandler
-	payments    *handler.PaymentsHandler
+
+	user   *handler.UserHandler
+	course *handler.CourseHandler
+	review *handler.ReviewHandler
+	lesson *handler.LessonHandler
+	lp     *handler.LearningProgressHandler
+  payments    *handler.PaymentsHandler
 	enrollments *handler.EnrollmentHandler
-}
 
 func NewHandlers(
 	userHandler *handler.UserHandler,
 	courseHandler *handler.CourseHandler,
+	reviewHandler *handler.ReviewHandler,
 	lessonHandler *handler.LessonHandler,
-	paymentsHandler *handler.PaymentsHandler,
+  lpHandler *handler.LearningProgressHandler,
+  paymentsHandler *handler.PaymentsHandler,
 	enrollmentHandler *handler.EnrollmentHandler,
 ) *Handlers {
 	return &Handlers{
 		user:        userHandler,
 		course:      courseHandler,
+    review: reviewHandler,
 		lesson:      lessonHandler,
+    lp:     lpHandler,
 		payments:    paymentsHandler,
 		enrollments: enrollmentHandler,
 	}
@@ -78,6 +84,22 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	e.GET("/lesson/id/:id", handlers.lesson.GetLesson)
 	e.PUT("/lesson/id/:id", handlers.lesson.UpdateLesson, echoJWT.WithConfig(jwtConfig))
 	e.DELETE("/lesson/id/:id", handlers.lesson.DeleteLesson, echoJWT.WithConfig(jwtConfig))
+
+
+	// learning progress routes
+	e.POST("/learning-progress/mark-completed", handlers.lp.MarkLessonAsCompleted, echoJWT.WithConfig(jwtConfig))
+	e.POST("/learning-progress/reset-mark", handlers.lp.ResetLessonMark, echoJWT.WithConfig(jwtConfig))
+	e.POST("/learning-progress/reset-all-marks", handlers.lp.ResetAllLessonMarks, echoJWT.WithConfig(jwtConfig))
+	e.GET("/learning-progress/total-completed-lessons/:enrollment_id", handlers.lp.GetTotalCompletedLessons, echoJWT.WithConfig(jwtConfig))
+	e.GET("/learning-progress/total-completed-progress/:enrollment_id", handlers.lp.GetTotalCompletedProgress, echoJWT.WithConfig(jwtConfig))
+	e.GET("/learning-progress/list/:enrollment_id", handlers.lp.ListLearningProgress, echoJWT.WithConfig(jwtConfig))
+	e.POST("/learning-progress/update-last-accessed", handlers.lp.UpdateLastAccessed, echoJWT.WithConfig(jwtConfig))
+
+	// Review routes
+	e.POST("/review", handlers.review.CreateReview, echoJWT.WithConfig(jwtConfig))
+	e.GET("/reviews/c/:course_id", handlers.review.ListReviews)
+	e.PUT("/review", handlers.review.UpdateReviewRequest, echoJWT.WithConfig(jwtConfig))
+	e.DELETE("/review/:review_id", handlers.review.DeleteReview, echoJWT.WithConfig(jwtConfig))
 
 	// enrollment routes
 	e.POST("/enrollment", handlers.enrollments.CreateEnrollment, echoJWT.WithConfig(jwtConfig))
