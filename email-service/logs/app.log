@@ -97,3 +97,4 @@ time="2024-09-27 02:38:12" level=info msg="Skipping AutoMigrate and AutoDrop." E
 time="2024-09-27 02:39:14" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-27 02:40:18" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
 time="2024-09-27 02:40:30" level=info msg="Email log inserted successfully for: oksasatyaa@gmail.com" Environment=Production
+time="2024-09-27 13:29:44" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Production
