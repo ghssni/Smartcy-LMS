@@ -12,30 +12,30 @@ import (
 )
 
 type Handlers struct {
-
-	user   *handler.UserHandler
-	course *handler.CourseHandler
-	review *handler.ReviewHandler
-	lesson *handler.LessonHandler
-	lp     *handler.LearningProgressHandler
-  payments    *handler.PaymentsHandler
+	user        *handler.UserHandler
+	course      *handler.CourseHandler
+	review      *handler.ReviewHandler
+	lesson      *handler.LessonHandler
+	lp          *handler.LearningProgressHandler
+	payments    *handler.PaymentsHandler
 	enrollments *handler.EnrollmentHandler
+}
 
 func NewHandlers(
 	userHandler *handler.UserHandler,
 	courseHandler *handler.CourseHandler,
 	reviewHandler *handler.ReviewHandler,
 	lessonHandler *handler.LessonHandler,
-  lpHandler *handler.LearningProgressHandler,
-  paymentsHandler *handler.PaymentsHandler,
+	lpHandler *handler.LearningProgressHandler,
+	paymentsHandler *handler.PaymentsHandler,
 	enrollmentHandler *handler.EnrollmentHandler,
 ) *Handlers {
 	return &Handlers{
 		user:        userHandler,
 		course:      courseHandler,
-    review: reviewHandler,
+		review:      reviewHandler,
 		lesson:      lessonHandler,
-    lp:     lpHandler,
+		lp:          lpHandler,
 		payments:    paymentsHandler,
 		enrollments: enrollmentHandler,
 	}
@@ -85,7 +85,6 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	e.PUT("/lesson/id/:id", handlers.lesson.UpdateLesson, echoJWT.WithConfig(jwtConfig))
 	e.DELETE("/lesson/id/:id", handlers.lesson.DeleteLesson, echoJWT.WithConfig(jwtConfig))
 
-
 	// learning progress routes
 	e.POST("/learning-progress/mark-completed", handlers.lp.MarkLessonAsCompleted, echoJWT.WithConfig(jwtConfig))
 	e.POST("/learning-progress/reset-mark", handlers.lp.ResetLessonMark, echoJWT.WithConfig(jwtConfig))
@@ -110,5 +109,5 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	// payment routes
 
 	e.GET("/payments/:id", handlers.payments.GetPaymentByEnrollmentId, echoJWT.WithConfig(jwtConfig))
-	
+
 }
