@@ -1,2 +1,4 @@
 time="2024-09-27 06:29:27" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
 time="2024-09-27 06:29:27" level=info msg="gRPC server is running on port 50051" Environment=Development
+time="2024-09-27 13:29:51" level=info msg="Skipping AutoMigrate and AutoDrop." Environment=Development
+time="2024-09-27 13:29:51" level=info msg="gRPC server is running on port 50051" Environment=Development
