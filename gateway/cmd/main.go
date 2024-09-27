@@ -32,19 +32,26 @@ func main() {
 	// Initialize the client
 	userServiceClient := pb.NewUserServiceClient(userServiceDial)
 	courseServiceClient := pb.NewCourseServiceClient(courseServiceDial)
-	//reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
+	reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
 	learningProgressServiceClient := pb.NewLearningProgressServiceClient(courseServiceDial)
 	lessonServiceClient := pb.NewLessonServiceClient(courseServiceDial)
 
 	// Initialize the handler
 	userHandler := handler.NewUserHandler(userServiceClient)
 	courseHandler := handler.NewCourseHandler(courseServiceClient, lessonServiceClient)
+	reviewHandler := handler.NewReviewHandler(reviewServiceClient)
 	lessonHandler := handler.NewLessonHandler(lessonServiceClient)
 	learningProgressHandler := handler.NewLearningProgressHandler(learningProgressServiceClient)
 
 	e := echo.New()
 
-	handlers := server.NewHandlers(userHandler, courseHandler, lessonHandler, learningProgressHandler)
+	handlers := server.NewHandlers(
+		userHandler,
+		courseHandler,
+		reviewHandler,
+		lessonHandler,
+		learningProgressHandler,
+	)
 	server.Routes(e, handlers)
 
 	//env := config.Viper.GetString("APP_ENV")

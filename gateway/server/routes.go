@@ -13,6 +13,7 @@ import (
 type Handlers struct {
 	user   *handler.UserHandler
 	course *handler.CourseHandler
+	review *handler.ReviewHandler
 	lesson *handler.LessonHandler
 	lp     *handler.LearningProgressHandler
 }
@@ -20,12 +21,14 @@ type Handlers struct {
 func NewHandlers(
 	userHandler *handler.UserHandler,
 	courseHandler *handler.CourseHandler,
+	reviewHandler *handler.ReviewHandler,
 	lessonHandler *handler.LessonHandler,
 	lpHandler *handler.LearningProgressHandler,
 ) *Handlers {
 	return &Handlers{
 		user:   userHandler,
 		course: courseHandler,
+		review: reviewHandler,
 		lesson: lessonHandler,
 		lp:     lpHandler,
 	}
@@ -74,4 +77,10 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	e.GET("/learning-progress/total-completed-progress/:enrollment_id", handlers.lp.GetTotalCompletedProgress, echoJWT.WithConfig(jwtConfig))
 	e.GET("/learning-progress/list/:enrollment_id", handlers.lp.ListLearningProgress, echoJWT.WithConfig(jwtConfig))
 	e.POST("/learning-progress/update-last-accessed", handlers.lp.UpdateLastAccessed, echoJWT.WithConfig(jwtConfig))
+
+	// Review routes
+	e.POST("/review", handlers.review.CreateReview, echoJWT.WithConfig(jwtConfig))
+	e.GET("/reviews/c/:course_id", handlers.review.ListReviews)
+	e.PUT("/review", handlers.review.UpdateReviewRequest, echoJWT.WithConfig(jwtConfig))
+	e.DELETE("/review/:review_id", handlers.review.DeleteReview, echoJWT.WithConfig(jwtConfig))
 }

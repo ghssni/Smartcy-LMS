@@ -128,8 +128,6 @@ func (s *LearningProgressService) ListLearningProgress(ctx context.Context, in *
 		LearningProgress: make([]*pb.LearningProgress, len(learningProgress)),
 	}
 
-	fmt.Printf("Learning Progress: %v", learningProgress)
-
 	for i, v := range learningProgress {
 		res.LearningProgress[i] = &pb.LearningProgress{
 			EnrollmentId: v.EnrollmentID,

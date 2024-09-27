@@ -40,4 +40,7 @@ SELECT * FROM learning_progress WHERE enrollment_id = 1;
 
 INSERT INTO learning_progress (enrollment_id, lesson_id, status, last_accessed, completed_at) VALUES (1,1,true,NOW(),NOW()) WHERE (SELECT TRUE FROM enrollments WHERE id = $1 AND student_id = $6)
 
-SELECT id, enrollment_id, lesson_id, status, last_accessed, completed_at FROM learning_progress WHERE enrollment_id = 1
+SELECT id, enrollment_id, lesson_id, status, last_accessed, completed_at FROM learning_progress WHERE enrollment_id = 1;
+
+-- Get review by course_id and student_id
+SELECT * FROM reviews WHERE course_id = 1 AND student_id = '66f5752ef5bb513d8c8de1cb';
