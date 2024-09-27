@@ -15,6 +15,7 @@ import (
 func main() {
 	config.InitViper()
 	config.InitValidator()
+
 	courseServiceAddress := config.Viper.GetString("COURSE_SERVICE_ADDRESS")
 	userServiceAddress := config.Viper.GetString("USER_SERVICE_ADDRESS")
 
@@ -32,16 +33,18 @@ func main() {
 	userServiceClient := pb.NewUserServiceClient(userServiceDial)
 	courseServiceClient := pb.NewCourseServiceClient(courseServiceDial)
 	//reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
+	learningProgressServiceClient := pb.NewLearningProgressServiceClient(courseServiceDial)
 	lessonServiceClient := pb.NewLessonServiceClient(courseServiceDial)
 
 	// Initialize the handler
 	userHandler := handler.NewUserHandler(userServiceClient)
 	courseHandler := handler.NewCourseHandler(courseServiceClient, lessonServiceClient)
 	lessonHandler := handler.NewLessonHandler(lessonServiceClient)
+	learningProgressHandler := handler.NewLearningProgressHandler(learningProgressServiceClient)
 
 	e := echo.New()
 
-	handlers := server.NewHandlers(userHandler, courseHandler, lessonHandler)
+	handlers := server.NewHandlers(userHandler, courseHandler, lessonHandler, learningProgressHandler)
 	server.Routes(e, handlers)
 
 	//env := config.Viper.GetString("APP_ENV")

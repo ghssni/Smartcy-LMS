@@ -36,8 +36,11 @@ func HandlePostgresError(err error) error {
 
 	switch sqlState {
 	//Not Found
-	case "02000":
+	case "42000":
 		return status.Errorf(codes.NotFound, "Record not found: %v", err)
+	// No rows affected
+	case "02000":
+		return status.Errorf(codes.InvalidArgument, "No rows affected: %v", err)
 	case "23505": // Unique violation
 		return status.Errorf(codes.AlreadyExists, "Record already exists: %v", err)
 	case "23503": // Foreign key violation

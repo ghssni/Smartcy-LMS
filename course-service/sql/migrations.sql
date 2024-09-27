@@ -196,6 +196,8 @@ VALUES (1, 1, TRUE, NOW(), NOW()),
        (1, 2, FALSE, NOW(), NULL),
        (3, 1, TRUE, NOW(), NOW()),
        (5, 1, TRUE, NOW(), NOW()),
+       (5, 2, FALSE, NOW(), NULL),
+       (5, 4, TRUE, NOW(), NOW()),
        (5, 2, FALSE, NOW(), NULL);
 
 -- Seeding data for assessments
