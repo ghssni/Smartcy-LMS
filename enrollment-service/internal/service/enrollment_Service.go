@@ -1,24 +1,16 @@
 package service
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
-	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/middleware"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
-
-	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
-	pb "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/enrollment"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
-	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -32,12 +24,8 @@ type enrollmentService struct {
 	payment repository.PaymentRepository
 }
 
-func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollment.CreateEnrollmentRequest) (*enrollment.CreateEnrollmentResponse, error) {
-	studentId, err := middleware.GetUserIDFromToken(ctx)
-	email, err := middleware.GetEmailFromToken(ctx)
-	if err != nil {
-		return nil, err
-	}
+func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *pb.CreateEnrollmentRequest) (*pb.CreateEnrollmentResponse, error) {
+	studentId := req.StudentId
 
 	enrollmentInput := &models.EnrollmentInput{
 		CourseID:      req.CourseId,
@@ -49,15 +37,18 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 	}
 
 	tx := s.er.BeginTransaction()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
-	// check if student is already enrolled example courseID = 1
-	_, err = s.er.ExistingEnrollment(studentId, req.CourseId)
+	_, err := s.er.ExistingEnrollment(studentId, enrollmentInput.CourseID)
 	if err != nil {
 		tx.Rollback()
 		return nil, status.Errorf(codes.AlreadyExists, "student is already enrolled in this course")
 	}
 
-	// check if student is already enrolled example courseID = 1
 	newEnrollment := &models.Enrollments{
 		StudentID:     enrollmentInput.StudentID,
 		CourseID:      enrollmentInput.CourseID,
@@ -67,53 +58,35 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 		UpdatedAt:     enrollmentInput.UpdatedAt,
 	}
 
-	// create enrollment
 	if err := s.er.CreateEnrollment(newEnrollment); err != nil {
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "failed to create enrollment: %v", err)
 	}
 
-	invoiceUrl, invoiceId, price, err := CreateInvoiceAndSendEmailPayment(req.StudentId, email, "example course", 100000)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to create invoice and send email: %v", err)
-	}
-	description := fmt.Sprintf("Payment for %s with amount: IDR %.2f", "example course", price)
-	payment := &models.Payments{
+	// Create payment
+	paymentInput := &models.Payments{
 		EnrollmentID: newEnrollment.ID,
-		ExternalID:   invoiceId,
-		UserID:       req.StudentId,
-		IsHigh:       false,
-		Status:       "PENDING",
-		Amount:       price,
-		PaidAmount:   0,
-		PayerEmail:   email,
-		Description:  description,
+		Status:       "Pending",
+		Created:      time.Now(),
 		Updated:      time.Now(),
-		InvoiceUrl:   invoiceUrl,
 	}
 
-	// create payment
-	if err := s.payment.CreatePayment(ctx, payment); err != nil {
+	if err := s.payment.CreatePayment(ctx, paymentInput); err != nil {
 		tx.Rollback()
 		return nil, status.Errorf(codes.Internal, "failed to create payment: %v", err)
 	}
-	// Commit transaction
+
 	if err := tx.Commit().Error; err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to commit transaction: %v", err)
 	}
-	// log user activity
-	err = s.logUserActivity(ctx, studentId, "enrollment Course "+"example course")
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to log user activity")
-	}
 
-	response := &enrollment.CreateEnrollmentResponse{
+	response := &pb.CreateEnrollmentResponse{
 		Meta: &pb.MetaEnrollment{
 			Message: "enrollment created successfully",
 			Code:    uint32(http.StatusCreated),
 			Status:  http.StatusText(http.StatusCreated),
 		},
-		Data: &enrollment.Enrollment{
+		Data: &pb.Enrollment{
 			Id:            newEnrollment.ID,
 			StudentId:     newEnrollment.StudentID,
 			CourseId:      newEnrollment.CourseID,
@@ -127,11 +100,8 @@ func (s *enrollmentService) CreateEnrollment(ctx context.Context, req *enrollmen
 	return response, nil
 }
 
-func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *pb.GetEnrollmentsByStudentIdRequest) (*enrollment.GetEnrollmentsByStudentIdResponse, error) {
-	studentId, err := middleware.GetUserIDFromToken(ctx)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get user id from token: %v", err)
-	}
+func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *pb.GetEnrollmentsByStudentIdRequest) (*pb.GetEnrollmentsByStudentIdResponse, error) {
+	studentId := req.StudentId
 
 	enrollments, err := s.er.GetEnrollmentsByStudentId(studentId)
 	if err != nil {
@@ -141,15 +111,10 @@ func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *
 		return nil, status.Errorf(codes.Internal, "failed to get enrollments: %v", err)
 	}
 
-	err = s.logUserActivity(ctx, studentId, "get enrollments")
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to log user activity")
-	}
-
-	enrollmentsResponse := make([]*enrollment.Enrollment, 0, len(enrollments))
+	enrollmentsResponse := make([]*pb.Enrollment, 0, len(enrollments))
 
 	for _, enrollmentRequest := range enrollments {
-		enrollmentsResponse = append(enrollmentsResponse, &enrollment.Enrollment{
+		enrollmentsResponse = append(enrollmentsResponse, &pb.Enrollment{
 			Id:            enrollmentRequest.ID,
 			StudentId:     enrollmentRequest.StudentID,
 			CourseId:      enrollmentRequest.CourseID,
@@ -160,7 +125,7 @@ func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *
 		})
 	}
 
-	response := &enrollment.GetEnrollmentsByStudentIdResponse{
+	response := &pb.GetEnrollmentsByStudentIdResponse{
 		Meta: &pb.MetaEnrollment{
 			Message: "enrollments retrieved successfully",
 			Code:    uint32(codes.OK),
@@ -172,87 +137,28 @@ func (s *enrollmentService) GetEnrollmentsByStudentId(ctx context.Context, req *
 	return response, nil
 }
 
-func (s *enrollmentService) DeleteEnrollmentById(ctx context.Context, req *enrollment.DeleteEnrollmentByIdRequest) (*enrollment.DeleteEnrollmentByIdResponse, error) {
-	studentId, err := middleware.GetUserIDFromToken(ctx)
+func (s *enrollmentService) DeleteEnrollmentById(ctx context.Context, req *pb.DeleteEnrollmentByIdRequest) (*pb.DeleteEnrollmentByIdResponse, error) {
+	enrollment, err := s.er.GetEnrollmentsById(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get user id from token: %v", err)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, status.Error(codes.NotFound, "Enrollment not found")
+		}
+		return nil, status.Errorf(codes.Internal, "Failed to get enrollment: %v", err)
 	}
 
-	enrollmentRequest, err := s.er.ExistingEnrollment(studentId, req.Id)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get enrollment: %v", err)
+	if err := s.er.DeleteEnrollmentById(enrollment); err != nil {
+		return nil, status.Errorf(codes.Internal, "Failed to delete enrollment: %v", err)
 	}
 
-	if enrollmentRequest == nil {
-		return nil, status.Error(codes.NotFound, "enrollment not found")
-	}
-
-	if err := s.er.DeleteEnrollmentById(enrollmentRequest); err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to delete enrollment: %v", err)
-	}
-
-	err = s.logUserActivity(ctx, studentId, "delete enrollment ID : "+fmt.Sprint(req.Id))
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to log user activity")
-	}
-
-	response := &enrollment.DeleteEnrollmentByIdResponse{
+	response := &pb.DeleteEnrollmentByIdResponse{
 		Meta: &pb.MetaEnrollment{
-			Message: "enrollment deleted successfully",
+			Message: "Enrollment deleted successfully",
 			Code:    uint32(http.StatusOK),
 			Status:  http.StatusText(http.StatusOK),
 		},
 	}
 
 	return response, nil
-}
-
-func (s *enrollmentService) logUserActivity(ctx context.Context, studentId string, activityType string) error {
-	logRequest := map[string]interface{}{
-		"user_id":       studentId,
-		"course_id":     "",
-		"activity_type": activityType,
-	}
-
-	// Log user activity
-	jsonData, err := json.Marshal(logRequest)
-	if err != nil {
-		return err
-	}
-
-	// URL user-service
-	url := os.Getenv("API_USER_SERVICE_URL")
-	if url == "" {
-		return fmt.Errorf("API_USER_SERVICE_URL is not set")
-	}
-
-	// Get JWT token from context or metadata
-	token, err := middleware.GetTokenFromContext(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to get JWT token from context: %v", err)
-	}
-
-	// HTTP POST request to log user activity
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token)
-
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		ioutil.ReadAll(resp.Body)
-		return fmt.Errorf("failed to log user activity: %s", resp.Status)
-	}
-	return nil
-
 }
 
 func NewEnrollmentService(er repository.EnrollmentRepository, payment repository.PaymentRepository) EnrollmentService {

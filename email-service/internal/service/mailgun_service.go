@@ -88,7 +88,6 @@ func SendEmailForgotPassword(email, resetURL, resetToken string) error {
 	apiKey := os.Getenv("MAILGUN_API_KEY")
 
 	mg := mailgun.NewMailgun(domain, apiKey)
-	fullResetURL := fmt.Sprintf("%s?token=%s", resetURL, resetToken)
 
 	sender := fmt.Sprintf("Smartcy LMS <postmaster@%s>", domain)
 	subject := "Reset Password Request"
@@ -103,11 +102,10 @@ func SendEmailForgotPassword(email, resetURL, resetToken string) error {
 				<p>If you did not request this, please ignore this email.</p>
 				<p>Thank you!</p>
 			</body>
-		</html>`, fullResetURL)
+		</html>`, resetURL)
 	recipient := email
 
 	message := mg.NewMessage(sender, subject, "", recipient)
-
 	message.SetHtml(htmlBody)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)

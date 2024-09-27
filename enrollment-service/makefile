@@ -2,18 +2,18 @@
 PROTOC_GEN_GO := protoc \
 	--proto_path=./proto \
 	--proto_path=./googleapis \
-	--go_out=./proto \
+	--go_out=./pb \
 	--go_opt=paths=source_relative \
-	--go-grpc_out=./proto \
+	--go-grpc_out=./pb \
 	--go-grpc_opt=paths=source_relative \
-	--grpc-gateway_out=./proto \
+	--grpc-gateway_out=./pb \
 	--grpc-gateway_opt=paths=source_relative
 
 # List of .proto files to generate code for
-PROTOS := proto/assessments/assessments.proto \
-          proto/certificate/certificate.proto \
-          proto/enrollment/enrollment.proto \
-          proto/payments/payments.proto
+PROTOS := proto/assessments.proto \
+          proto/certificate.proto \
+          proto/enrollment.proto \
+          proto/payments.proto
 
 # Default task
 all: generate

@@ -5,32 +5,39 @@ import (
 	"gateway-service/server/middlewares"
 	"github.com/golang-jwt/jwt/v5"
 	echoJWT "github.com/labstack/echo-jwt/v4"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 type Handlers struct {
+
 	user   *handler.UserHandler
 	course *handler.CourseHandler
 	review *handler.ReviewHandler
 	lesson *handler.LessonHandler
 	lp     *handler.LearningProgressHandler
-}
+  payments    *handler.PaymentsHandler
+	enrollments *handler.EnrollmentHandler
 
 func NewHandlers(
 	userHandler *handler.UserHandler,
 	courseHandler *handler.CourseHandler,
 	reviewHandler *handler.ReviewHandler,
 	lessonHandler *handler.LessonHandler,
-	lpHandler *handler.LearningProgressHandler,
+  lpHandler *handler.LearningProgressHandler,
+  paymentsHandler *handler.PaymentsHandler,
+	enrollmentHandler *handler.EnrollmentHandler,
 ) *Handlers {
 	return &Handlers{
-		user:   userHandler,
-		course: courseHandler,
-		review: reviewHandler,
-		lesson: lessonHandler,
-		lp:     lpHandler,
+		user:        userHandler,
+		course:      courseHandler,
+    review: reviewHandler,
+		lesson:      lessonHandler,
+    lp:     lpHandler,
+		payments:    paymentsHandler,
+		enrollments: enrollmentHandler,
 	}
 }
 
@@ -44,15 +51,24 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	//
 	e.POST("/user/register", handlers.user.Register)
 	e.POST("/user/login", handlers.user.Login)
+	e.POST("/user/reset-password", handlers.user.NewPassword)
+	e.POST("/user/forgot-password", handlers.user.ForgotPassword)
 	//
+
+	//webhook
+	e.POST("/webhook", handlers.payments.HandleWebhook)
 
 	// Get Secret Key
 	jwtConfig := echoJWT.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(middlewares.JWTCustomClaims)
 		},
-		SigningKey: []byte("secret"),
+		SigningKey: []byte(os.Getenv("JWT_SECRET")),
 	}
+
+	// user routes
+	e.GET("/user/profile/:id", handlers.user.GetUserProfile, echoJWT.WithConfig(jwtConfig))
+	e.PUT("/user/profile/:id", handlers.user.UpdateUserProfile, echoJWT.WithConfig(jwtConfig))
 
 	// course routes
 	e.POST("/course", handlers.course.CreateCourse, echoJWT.WithConfig(jwtConfig))
@@ -69,6 +85,7 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	e.PUT("/lesson/id/:id", handlers.lesson.UpdateLesson, echoJWT.WithConfig(jwtConfig))
 	e.DELETE("/lesson/id/:id", handlers.lesson.DeleteLesson, echoJWT.WithConfig(jwtConfig))
 
+
 	// learning progress routes
 	e.POST("/learning-progress/mark-completed", handlers.lp.MarkLessonAsCompleted, echoJWT.WithConfig(jwtConfig))
 	e.POST("/learning-progress/reset-mark", handlers.lp.ResetLessonMark, echoJWT.WithConfig(jwtConfig))
@@ -83,4 +100,15 @@ func Routes(e *echo.Echo, handlers *Handlers) {
 	e.GET("/reviews/c/:course_id", handlers.review.ListReviews)
 	e.PUT("/review", handlers.review.UpdateReviewRequest, echoJWT.WithConfig(jwtConfig))
 	e.DELETE("/review/:review_id", handlers.review.DeleteReview, echoJWT.WithConfig(jwtConfig))
+
+	// enrollment routes
+	e.POST("/enrollment", handlers.enrollments.CreateEnrollment, echoJWT.WithConfig(jwtConfig))
+	e.GET("/enrollment/:id", handlers.enrollments.GetEnrollmentsByStudentId, echoJWT.WithConfig(jwtConfig))
+	e.DELETE("/enrollment/:id", handlers.enrollments.DeleteEnrollmentById, echoJWT.WithConfig(jwtConfig))
+	e.GET("/enrollment/student/:student_id", handlers.enrollments.GetEnrollmentsByStudentId, echoJWT.WithConfig(jwtConfig))
+
+	// payment routes
+
+	e.GET("/payments/:id", handlers.payments.GetPaymentByEnrollmentId, echoJWT.WithConfig(jwtConfig))
+	
 }

@@ -1,0 +1,75 @@
+syntax = "proto3";
+package enrollment;
+
+import "google/protobuf/timestamp.proto";
+
+
+
+option go_package = "github.com/ghssni/Smartcy-LMS/Enrollment-Service/pb;pb";
+
+message MetaEnrollment {
+    uint32 code = 1;
+    string message = 2;
+    string status = 3;
+}
+
+message Enrollment {
+    uint32 id = 1;
+    string student_id = 2;
+    uint32 course_id = 3;
+    string payment_status = 4;
+    google.protobuf.Timestamp enrolled_at = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+
+
+// create enrollment
+message CreateEnrollmentRequest {
+    string student_id = 1;
+    uint32 course_id = 2;
+    string payment_status = 3;
+    google.protobuf.Timestamp enrolled_at = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateEnrollmentResponse {
+    MetaEnrollment meta = 1;
+    Enrollment data = 2;
+}
+
+// delete enrollment
+message DeleteEnrollmentByIdRequest {
+    uint32 id = 1;
+}
+
+message DeleteEnrollmentByIdResponse {
+    MetaEnrollment meta = 1;
+}
+
+
+// get enrollments by student id
+message GetEnrollmentsByStudentIdRequest {
+    string student_id = 1;
+}
+
+message GetEnrollmentsByStudentIdResponse {
+    MetaEnrollment meta = 1;
+    repeated Enrollment data = 2;
+}
+
+
+//endpoints
+service EnrollmentService {
+    // Create an enrollment
+    rpc CreateEnrollment(CreateEnrollmentRequest) returns (CreateEnrollmentResponse);
+
+    // Delete an enrollment by ID
+    rpc DeleteEnrollmentById(DeleteEnrollmentByIdRequest) returns (DeleteEnrollmentByIdResponse);
+
+    // Get all enrollments by student ID
+    rpc GetEnrollmentsByStudentId(GetEnrollmentsByStudentIdRequest) returns (GetEnrollmentsByStudentIdResponse) ;
+
+}

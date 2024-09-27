@@ -7,7 +7,6 @@ import (
 	pb "github.com/ghssni/Smartcy-LMS/Email-Service/pb/proto"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"net/http"
 	"time"
 )
@@ -32,51 +31,15 @@ func (s *EmailService) SendPaymentDueEmail(ctx context.Context, req *pb.SendPaym
 		Email:     req.Email,
 	}
 
-	_, err := s.emailRepo.InsertEmail(email)
-	if err != nil {
-		return &pb.SendPaymentDueEmailResponse{
-			Meta: &pb.MetaEmail{
-				Code:    int32(codes.Internal),
-				Message: "Failed to insert email",
-				Status:  http.StatusText(http.StatusInternalServerError),
-			},
-			Success: false,
-		}, status.Errorf(codes.Internal, "failed to insert email: %v", err)
-	}
-
-	// send email
-	err = SendEmailPayment(req.Email, req.CourseName, req.PaymentLink)
-	statusStr := "sent"
-	errorMsg := ""
-	if err != nil {
-		logrus.Println("Error sending email:", err)
-		statusStr = "failed"
-		errorMsg = err.Error()
-		return &pb.SendPaymentDueEmailResponse{
-			Meta: &pb.MetaEmail{
-				Code:    int32(codes.Internal),
-				Message: "Failed to send email",
-				Status:  http.StatusText(http.StatusInternalServerError),
-			},
-			Success: false,
-		}, status.Errorf(codes.Internal, "Error sending email: %v", err)
-	}
-
-	// log email
 	emailLog := &models.EmailLogs{
-		UserID:       req.UserId,
-		Email:        req.Email,
-		Status:       statusStr,
-		SentAt:       time.Now(),
-		ErrorMessage: errorMsg,
+		UserID: req.UserId,
+		Email:  req.Email,
 	}
 
-	_, err = s.emailLogRepo.InsertEmailLog(emailLog)
-	if err != nil {
-		logrus.Println("Error inserting email log:", err)
-	} else {
-		logrus.Println("Email log inserted successfully for:", req.Email)
-	}
+	// Refactored to use the helper function
+	statusStr, _ := s.sendAndLogEmail(email, emailLog, func() error {
+		return SendEmailPayment(req.Email, req.CourseName, req.PaymentLink)
+	})
 
 	response := &pb.SendPaymentDueEmailResponse{
 		Meta: &pb.MetaEmail{
@@ -86,7 +49,6 @@ func (s *EmailService) SendPaymentDueEmail(ctx context.Context, req *pb.SendPaym
 		},
 		Success: statusStr == "sent",
 	}
-	logrus.Println("Response Success:", response.Success)
 	return response, nil
 }
 
@@ -97,31 +59,14 @@ func (s *EmailService) SendForgotPasswordEmail(ctx context.Context, req *pb.Send
 		Email:     req.Email,
 	}
 
-	_, err := s.emailRepo.InsertEmail(email)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to insert email: %v", err)
-	}
-
-	// send email
-	err = SendEmailForgotPassword(req.Email, req.ResetLink, req.ResetToken)
-	statusStr := "sent"
-	errorMsg := ""
-	if err != nil {
-		logrus.Println("Error sending email:", err)
-		statusStr = "failed"
-		errorMsg = err.Error()
-	}
-
-	// log email
 	emailLog := &models.EmailLogs{
-		UserID:       req.UserId,
-		Email:        req.Email,
-		Status:       statusStr,
-		SentAt:       time.Now(),
-		ErrorMessage: errorMsg,
+		UserID: req.UserId,
+		Email:  req.Email,
 	}
 
-	_, err = s.emailLogRepo.InsertEmailLog(emailLog)
+	statusStr, _ := s.sendAndLogEmail(email, emailLog, func() error {
+		return SendEmailForgotPassword(req.Email, req.ResetLink, req.ResetToken)
+	})
 
 	response := &pb.SendForgotPasswordEmailResponse{
 		Meta: &pb.MetaEmail{
@@ -131,7 +76,6 @@ func (s *EmailService) SendForgotPasswordEmail(ctx context.Context, req *pb.Send
 		},
 		Success: statusStr == "sent",
 	}
-
 	return response, nil
 }
 
@@ -140,34 +84,17 @@ func (s *EmailService) SendPaymentSuccessEmail(ctx context.Context, req *pb.Send
 		UserID:    req.UserId,
 		EmailType: "payment_success",
 		Email:     req.Email,
-		CreatedAt: time.Now(),
 	}
 
-	_, err := s.emailRepo.InsertEmail(email)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to insert email: %v", err)
-	}
-
-	// send email
-	err = SendEmailSuccess(req.Email, req.CourseName)
-	statusStr := "sent"
-	errorMsg := ""
-	if err != nil {
-		logrus.Println("Error sending email:", err)
-		statusStr = "failed"
-		errorMsg = err.Error()
-	}
-
-	// log email
 	emailLog := &models.EmailLogs{
-		UserID:       req.UserId,
-		Email:        req.Email,
-		Status:       statusStr,
-		SentAt:       time.Now(),
-		ErrorMessage: errorMsg,
+		UserID: req.UserId,
+		Email:  req.Email,
 	}
 
-	_, err = s.emailLogRepo.InsertEmailLog(emailLog)
+	// Refactored to use the helper function
+	statusStr, _ := s.sendAndLogEmail(email, emailLog, func() error {
+		return SendEmailSuccess(req.Email, req.CourseName)
+	})
 
 	response := &pb.SendPaymentSuccessEmailResponse{
 		Meta: &pb.MetaEmail{
@@ -177,6 +104,41 @@ func (s *EmailService) SendPaymentSuccessEmail(ctx context.Context, req *pb.Send
 		},
 		Success: statusStr == "sent",
 	}
-
 	return response, nil
+}
+
+func (s *EmailService) logEmail(emailLog *models.EmailLogs) {
+	_, err := s.emailLogRepo.InsertEmailLog(emailLog)
+	if err != nil {
+		logrus.Println("Error inserting email log:", err)
+	} else {
+		logrus.Println("Email log inserted successfully for:", emailLog.Email)
+	}
+}
+
+func (s *EmailService) sendAndLogEmail(email *models.Email, emailLog *models.EmailLogs, sendEmailFunc func() error) (string, string) {
+	// Insert email record
+	_, err := s.emailRepo.InsertEmail(email)
+	if err != nil {
+		logrus.Println("Failed to insert email:", err)
+		return "failed", err.Error()
+	}
+
+	// Send email
+	err = sendEmailFunc()
+	statusStr := "sent"
+	errorMsg := ""
+	if err != nil {
+		logrus.Println("Error sending email:", err)
+		statusStr = "failed"
+		errorMsg = err.Error()
+	}
+
+	// Log the email result
+	emailLog.Status = statusStr
+	emailLog.ErrorMessage = errorMsg
+	emailLog.SentAt = time.Now()
+	s.logEmail(emailLog)
+
+	return statusStr, errorMsg
 }

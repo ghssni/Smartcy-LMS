@@ -1,31 +1,21 @@
 package service
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/config"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
-	pb "github.com/ghssni/Smartcy-LMS/Enrollment-Service/proto/payments"
-	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
-	"github.com/xendit/xendit-go/v6/invoice"
+	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"io"
-	"io/ioutil"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 )
 
 type PaymentService interface {
 	pb.PaymentsServiceServer
-	HandleWebhookHTTP(c echo.Context) error
 }
 
 type paymentService struct {
@@ -70,6 +60,7 @@ func (s *paymentService) GetPaymentByEnrollmentId(ctx context.Context, req *pb.G
 }
 
 func (s *paymentService) HandleWebhook(ctx context.Context, req *pb.HandleWebhookRequest) (*pb.HandleWebhookResponse, error) {
+
 	updatedPayment := models.Payments{
 		ExternalID:             req.ExternalId,
 		IsHigh:                 false,
@@ -95,14 +86,6 @@ func (s *paymentService) HandleWebhook(ctx context.Context, req *pb.HandleWebhoo
 	newInvoice, err := s.repo.UpdatePaymentStatusByWebhook(ctx, req.ExternalId, updatedPayment)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to update payment status: %v", err)
-	}
-
-	//Send email to student if payment is successful
-	if req.Status == "PAID" {
-		err := config.SendPaymentSuccessEmail(req.Email, req.Description, newInvoice.UserID, newInvoice.ExternalID, float32(newInvoice.Amount))
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return &pb.HandleWebhookResponse{
@@ -135,105 +118,6 @@ func (s *paymentService) HandleWebhook(ctx context.Context, req *pb.HandleWebhoo
 	}, nil
 }
 
-func (s *paymentService) HandleWebhookHTTP(c echo.Context) error {
-	if err := verifyXenditWebhook(c); err != nil {
-		logrus.Errorf("Webhook verification failed: %v", err)
-		return c.JSON(http.StatusUnauthorized, map[string]string{
-			"error": "Unauthorized webhook: " + err.Error(),
-		})
-	}
-
-	bodyBytes, err := ioutil.ReadAll(c.Request().Body)
-	if err != nil {
-		logrus.Errorf("Failed to read request body: %v", err)
-		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Failed to read request body",
-		})
-	}
-
-	c.Request().Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
-
-	webhookRequest := new(pb.HandleWebhookRequest)
-	if err := c.Bind(webhookRequest); err != nil {
-		logrus.Errorf("Failed to bind webhook request: %v", err)
-		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid request payload",
-		})
-	}
-
-	// Ignore webhook for expired transaction
-	if webhookRequest.Status == "EXPIRED" {
-		logrus.Infof("Ignoring webhook for expired transaction: %s", webhookRequest.ExternalId)
-		return c.JSON(http.StatusOK, map[string]string{
-			"message": "Webhook for expired transaction ignored",
-		})
-	}
-
-	ctx := context.Background()
-	webhookResponse, err := s.HandleWebhook(ctx, webhookRequest)
-	if err != nil {
-		logrus.Errorf("Error processing webhook: %v, WebhookRequest: %+v", err, webhookRequest)
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": fmt.Sprintf("Error processing webhook: %v", err),
-		})
-	}
-
-	return c.JSON(http.StatusOK, webhookResponse)
-}
-
-func CreateInvoice(externalID, email, courseName string, price float64) (string, error) {
-	xenditClient := config.XenditClient
-	description := "Payment for " + courseName
-	ctx := context.Background()
-	// Create invoice
-	resp, httpResponse, err := xenditClient.InvoiceApi.CreateInvoice(ctx).
-		CreateInvoiceRequest(invoice.CreateInvoiceRequest{
-			ExternalId:  externalID,
-			PayerEmail:  &email,
-			Description: &description,
-			Amount:      price,
-		}).
-		Execute()
-
-	if err != nil {
-		return "", fmt.Errorf("error creating invoice: %v", err)
-	}
-
-	if httpResponse.StatusCode != 200 {
-		return "", fmt.Errorf("error creating invoice: %v", httpResponse.Body)
-	}
-
-	return resp.InvoiceUrl, nil
-
-}
-
-// CreateInvoiceAndSendEmailPayment creates an invoice and sends an email to the student with the payment link
-func CreateInvoiceAndSendEmailPayment(studentId, email, courseName string, price float64) (string, string, float64, error) {
-	externalId := fmt.Sprintf("invoice_%s_%d", studentId, time.Now().Unix())
-	invoiceURL, err := CreateInvoice(externalId, email, courseName, price)
-	if err != nil {
-		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
-	}
-
-	err = config.SendPaymentDueEmail(email, courseName, invoiceURL)
-	if err != nil {
-		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
-	}
-
-	return invoiceURL, externalId, price, nil
-}
-
-// verifyXenditWebhook verifies the Xendit webhook signature
-func verifyXenditWebhook(c echo.Context) error {
-	callbackToken := c.Request().Header.Get("X-CALLBACK-TOKEN")
-	expectedToken := os.Getenv("XENDIT_CALLBACK_TOKEN")
-
-	if callbackToken != expectedToken {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid callback token")
-	}
-	return nil
-}
-
 // UpdateExpiredPaymentStatus updates the status of expired pb
 func (s *paymentService) UpdateExpiredPaymentStatus(ctx context.Context, req *pb.UpdateExpiredPaymentStatusRequest) (*pb.UpdateExpiredPaymentStatusResponse, error) {
 	if err := s.repo.UpdateExpiredPaymentStatus(); err != nil {
@@ -247,12 +131,4 @@ func (s *paymentService) UpdateExpiredPaymentStatus(ctx context.Context, req *pb
 			Status:  codes.OK.String(),
 		},
 	}, nil
-}
-
-func (s *paymentService) GetUserEmailFromUserService(email string) (string, error) {
-	userClient, err := config.GetUserFromEmail(email)
-	if err != nil {
-		return "", fmt.Errorf("failed to get user from user service: %v", err)
-	}
-	return userClient, nil
 }

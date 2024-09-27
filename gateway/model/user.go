@@ -26,6 +26,14 @@ type UserRequest struct {
 	CreatedAt string `json:"created_at,omitempty"`
 	UpdatedAt string `json:"updated_at,omitempty"`
 }
+type UserProfileRequest struct {
+	Name      string `json:"name" validate:"required"`
+	Email     string `json:"email" validate:"required,email"`
+	Address   string `json:"address"`
+	Phone     string `json:"phone"`
+	Age       int    `json:"age" validate:"gte=0"`
+	UpdatedAt string `json:"updated_at,omitempty"`
+}
 
 type JWTResponse struct {
 	Token   string `json:"token"`
