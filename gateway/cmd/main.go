@@ -7,6 +7,7 @@ import (
 	"gateway-service/server"
 	"gateway-service/server/handler"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"google.golang.org/grpc"
 	"log"
 )
@@ -14,6 +15,7 @@ import (
 func main() {
 	config.InitViper()
 	config.InitValidator()
+	config.InitXendit()
 
 	courseServiceAddress := config.Viper.GetString("COURSE_SERVICE_ADDRESS")
 	userServiceAddress := config.Viper.GetString("USER_SERVICE_ADDRESS")
@@ -58,12 +60,12 @@ func main() {
 	learningProgressHandler := handler.NewLearningProgressHandler(learningProgressServiceClient)
 
 	// Initialize the handler enrollment
-	enrollmentHandler := handler.NewEnrollmentHandler(enrollmentServiceClient, userServiceClient, courseServiceClient)
+
 	paymentsHandler := handler.NewPaymentsHandler(paymentsServiceClient, userServiceClient, emailServiceClient)
-
+	enrollmentHandler := handler.NewEnrollmentHandler(enrollmentServiceClient, userServiceClient, courseServiceClient, paymentsHandler)
 	e := echo.New()
-
-	handlers := server.NewHandlers(userHandler, courseHandler, reviewHandler, lessonHandler,  learningProgressHandler, paymentsHandler, enrollmentHandler)
+	e.Use(middleware.Recover())
+	handlers := server.NewHandlers(userHandler, courseHandler, reviewHandler, lessonHandler, learningProgressHandler, paymentsHandler, enrollmentHandler)
 
 	server.Routes(e, handlers)
 

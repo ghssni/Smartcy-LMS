@@ -2,12 +2,11 @@ package config
 
 import (
 	"github.com/xendit/xendit-go/v6"
-	"os"
 )
 
 var XenditClient *xendit.APIClient
 
 func InitXendit() {
-	apiKey := os.Getenv("SECRET_API_KEY")
+	apiKey := "xnd_development_FTtBOUKRrARxajVxRPQJIQMzw2WcHIN5FcmT9SoTVbdC3R5aFaMwruoXr5btBJu3"
 	XenditClient = xendit.NewClient(apiKey)
 }

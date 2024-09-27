@@ -57,7 +57,7 @@ func (h *LearningProgressHandler) MarkLessonAsCompleted(c echo.Context) error {
 	})
 
 	if err != nil {
-		return utils.HandleError(c, constans.ErrInternalServerError, "Failed to mark lesson as completed")
+		return utils.HandleError(c, constans.ErrInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, model.JsonResponse{

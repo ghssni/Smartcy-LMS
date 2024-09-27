@@ -10,42 +10,38 @@ import (
 var Viper *viper.Viper
 
 func InitViper() {
+	// Directly read the environment variable using os.Getenv
+	//env := os.Getenv("APPENV")
+	//if env == "dev" {
+	//	log.Println("APP_ENV not set, defaulting to 'development'")
+	//	env = "development"
+	//} else if env == "example" {
+	//	log.Println("APP_ENV not set, defaulting to 'example'")
+	//	env = "example"
+	//}
+
+	env := "development"
 
 	// Initialize Viper
 	v := viper.New()
-	Viper = v
-	LoadConfig()
-
-}
-
-func LoadConfig() {
-
-	// Directly read the environment variable using os.Getenv
-	// Directly read the environment variable using os.Getenv
-	env := os.Getenv("APP_ENV")
-	if env == "dev" {
-		log.Println("APP_ENV not set, defaulting to 'development'")
-		env = "development"
-	} else if env == "example" {
-		log.Println("APP_ENV not set, defaulting to 'example'")
-		env = "example"
-	}
 
 	if err := checkFileExists(env); err != nil {
 		log.Println(err)
 		log.Printf("Loaded From Enivronment Variables. APP_ENV: %s \n", env)
-		Viper.AutomaticEnv()
+		v.AutomaticEnv()
 	} else {
 		log.Printf("File .env.%s exists\n", env)
 		log.Printf("Loaded .env.%s file\n", env)
 
 		// Set the configuration file based on the environment
-		Viper.SetConfigFile(fmt.Sprintf(".env.%s", env))
-		Viper.SetConfigType("dotenv")
-		Viper.AddConfigPath("./")
+		v.SetConfigFile(fmt.Sprintf(".env.%s", env))
+		v.SetConfigType("dotenv")
+		v.AddConfigPath("./")
 
-		_ = Viper.ReadInConfig()
+		_ = v.ReadInConfig()
 	}
+
+	Viper = v
 }
 
 func checkFileExists(env string) error {

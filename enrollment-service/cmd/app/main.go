@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/config"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/database"
-	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/middleware"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/repository"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/internal/service"
 	"github.com/ghssni/Smartcy-LMS/Enrollment-Service/pb"
@@ -57,12 +56,13 @@ func runGrpcServer() {
 		logrus.Fatalf("Failed to listen on port 50052: %v", err)
 	}
 
-	accessKey := os.Getenv("CRON_ACCESS_KEY")
+	//accessKey := os.Getenv("CRON_ACCESS_KEY")
 
 	grpcServer := grpc.NewServer(
-		grpc.ChainUnaryInterceptor(
-			middleware.AccessKeyInterceptor(accessKey),
-		),
+		//grpc.ChainUnaryInterceptor(
+		//	middleware.AccessKeyInterceptor(accessKey),
+		//),
+		grpc.UnaryInterceptor(service.Unary()),
 	)
 
 	enrollmentRepo := repository.NewEnrollmentRepository(db)

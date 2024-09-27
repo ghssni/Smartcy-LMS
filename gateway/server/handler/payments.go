@@ -14,7 +14,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 )
@@ -76,51 +75,53 @@ func (h *PaymentsHandler) GetPaymentByEnrollmentId(c echo.Context) error {
 	})
 }
 
+// CreateInvoice creates an invoice with Xendit API
 func CreateInvoice(externalID, email, courseName string, price float64) (string, error) {
 	xenditClient := config.XenditClient
 	description := "Payment for " + courseName
 	ctx := context.Background()
+
 	// Create invoice
-	resp, httpResponse, err := xenditClient.InvoiceApi.CreateInvoice(ctx).
+	resp, _, err := xenditClient.InvoiceApi.CreateInvoice(ctx).
 		CreateInvoiceRequest(invoice.CreateInvoiceRequest{
 			ExternalId:  externalID,
 			PayerEmail:  &email,
 			Description: &description,
 			Amount:      price,
-		}).
-		Execute()
+		}).Execute()
 
 	if err != nil {
 		return "", fmt.Errorf("error creating invoice: %v", err)
 	}
 
-	if httpResponse.StatusCode != 200 {
-		return "", fmt.Errorf("error creating invoice: %v", httpResponse.Body)
-	}
-
 	return resp.InvoiceUrl, nil
-
 }
 
 // CreateInvoiceAndSendEmailPayment creates an invoice and sends an email to the student with the payment link
 func (h *PaymentsHandler) CreateInvoiceAndSendEmailPayment(studentId, email, courseName string, price float64) (string, string, float64, error) {
 	externalId := fmt.Sprintf("invoice_%s_%d", studentId, time.Now().Unix())
+
+	// Create Invoice
 	invoiceURL, err := CreateInvoice(externalId, email, courseName, price)
 	if err != nil {
 		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
 	}
 
+	// Prepare email request
 	emailReq := &pb.SendPaymentDueEmailRequest{
 		Email:       email,
 		UserId:      studentId,
 		CourseName:  courseName,
 		PaymentLink: invoiceURL,
 	}
+
+	// Send email
 	emailResp, err := h.emailService.SendPaymentDueEmail(context.Background(), emailReq)
 	if err != nil {
-		return "", "", 0, fmt.Errorf("error creating invoice: %v", err)
+		return "", "", 0, fmt.Errorf("error sending payment email: %v", err)
 	}
 
+	// Check if email sending was successful
 	if !emailResp.Success {
 		return "", "", 0, fmt.Errorf("failed to send payment email: %v", emailResp.Meta.Message)
 	}
@@ -131,7 +132,7 @@ func (h *PaymentsHandler) CreateInvoiceAndSendEmailPayment(studentId, email, cou
 // verifyXenditWebhook verifies the Xendit webhook signature
 func verifyXenditWebhook(c echo.Context) error {
 	callbackToken := c.Request().Header.Get("X-CALLBACK-TOKEN")
-	expectedToken := os.Getenv("XENDIT_CALLBACK_TOKEN")
+	expectedToken := "4ya7xNWlhClmYznAwYBUeQxQviieT9gzhKacK00zZZxGM4yP"
 
 	if callbackToken != expectedToken {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid callback token")

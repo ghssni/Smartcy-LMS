@@ -23,17 +23,22 @@ type EnrollmentHandler struct {
 	userService       pb.UserServiceClient
 	courseService     pb.CourseServiceClient
 	userLog           pb.UserActivityLogServiceClient
-	PaymentsHandler   PaymentsHandler
+	paymentsHandler   *PaymentsHandler
 }
 
-func NewEnrollmentHandler(enrollmentService pb.EnrollmentServiceClient, userService pb.UserServiceClient, courseService pb.CourseServiceClient) *EnrollmentHandler {
+func NewEnrollmentHandler(
+	enrollmentService pb.EnrollmentServiceClient,
+	userService pb.UserServiceClient,
+	courseService pb.CourseServiceClient,
+	PaymentsHandler *PaymentsHandler,
+) *EnrollmentHandler {
 	return &EnrollmentHandler{
 		enrollmentService: enrollmentService,
 		userService:       userService,
 		courseService:     courseService,
+		paymentsHandler:   PaymentsHandler,
 	}
 }
-
 func (h *EnrollmentHandler) CreateEnrollment(c echo.Context) error {
 	// Memulai handler
 	log.Println("[DEBUG] Starting CreateEnrollment handler")
@@ -124,25 +129,30 @@ func (h *EnrollmentHandler) CreateEnrollment(c echo.Context) error {
 
 	// Generate invoice dan kirim email pembayaran
 	log.Println("[DEBUG] Generating invoice and sending payment email")
-	invoiceURL, externalId, price, err := h.PaymentsHandler.CreateInvoiceAndSendEmailPayment(studentId, email, courseName, coursePrice)
+	//invoiceURL, externalId, price, err := h.PaymentsHandler.CreateInvoiceAndSendEmailPayment(studentId, email, courseName, coursePrice)
+	invoiceURL, externalId, price, err := h.paymentsHandler.CreateInvoiceAndSendEmailPayment(studentId, email, courseName, coursePrice)
 	if err != nil {
 		log.Printf("[ERROR] Failed to create invoice and send payment email: %v\n", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	if invoiceURL == "" || externalId == "" || price == 0 {
+		log.Println("[ERROR] Invoice details are empty")
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to generate invoice"})
 	}
 	log.Printf("[DEBUG] Invoice created - URL: %s, ExternalID: %s, AmountDue: %.2f\n", invoiceURL, externalId, price)
 
 	// Log aktivitas user untuk enrollment
 	log.Println("[DEBUG] Logging user activity")
-	_, err = h.userLog.CreateUserActivityLog(ctx, &pb.CreateUserActivityLogRequest{
-		UserId:            studentId,
-		CourseId:          createEnrollmentRequest.CourseID,
-		ActivityType:      "Enrollment in course " + courseName,
-		ActivityTimestamp: timestamppb.New(time.Now()),
-	})
-	if err != nil {
-		log.Printf("[ERROR] Failed to log user activity: %v\n", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to log user activity"})
-	}
+	//_, err = h.userLog.CreateUserActivityLog(ctx, &pb.CreateUserActivityLogRequest{
+	//	UserId:            studentId,
+	//	CourseId:          createEnrollmentRequest.CourseID,
+	//	ActivityType:      "Enrollment in course " + courseName,
+	//	ActivityTimestamp: timestamppb.New(time.Now()),
+	//})
+	//if err != nil {
+	//	log.Printf("[ERROR] Failed to log user activity: %v\n", err)
+	//	return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to log user activity"})
+	//}
 	log.Println("[DEBUG] User activity logged successfully")
 
 	// Membuat respon sukses

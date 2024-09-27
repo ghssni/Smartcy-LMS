@@ -30,7 +30,7 @@ func (r *Review) CreateReview(ctx context.Context, review *Review, createdAt, up
 	var enrolled bool
 	enrollmentCheckQuery := `
         SELECT EXISTS(
-            SELECT 1 FROM enrollments WHERE course_id = $1 AND student_id = $2 AND payment_status = 'paid'
+            SELECT 1 FROM enrollments WHERE course_id = $1 AND student_id = $2 AND payment_status = 'PAID'
         )`
 	err = tx.QueryRowContext(ctx, enrollmentCheckQuery, review.CourseID, review.StudentID).Scan(&enrolled)
 	if err != nil {
@@ -58,9 +58,9 @@ func (r *Review) CreateReview(ctx context.Context, review *Review, createdAt, up
 		return 0, err
 	}
 
-	if completedLessons < (totalLessons / 2) {
-		return 0, errors.New("student has not completed 50% of the course")
-	}
+	//if completedLessons < (totalLessons / 2) {
+	//	return 0, errors.New("student has not completed 50% of the course")
+	//}
 
 	// Check if a review already exists and is deleted
 	var existingReviewID uint32
