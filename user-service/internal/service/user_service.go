@@ -3,20 +3,16 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
-	"github.com/ghssni/Smartcy-LMS/User-Service/config"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/models"
 	"github.com/ghssni/Smartcy-LMS/User-Service/internal/repository"
 	"github.com/ghssni/Smartcy-LMS/User-Service/pb/proto"
 	"github.com/ghssni/Smartcy-LMS/User-Service/pkg"
-	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -179,29 +175,19 @@ func (s *UserService) GetUserByEmail(ctx context.Context, req *pb.GetUserByEmail
 }
 
 func (s *UserService) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordRequest) (*pb.ForgotPasswordResponse, error) {
-	user, err := s.userRepo.FindUserByEmail(ctx, req.Email)
+	_, err := s.userRepo.FindUserByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
 	}
 
-	resetToken, err := s.GenerateResetToken(ctx, &pb.GenerateResetTokenRequest{
-		Email: req.Email,
-	})
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Failed to generate reset token: %v", err)
-	}
-
-	emailClient := config.SendEmailForgotPassword(user.Email, resetToken.ResetUrl, resetToken.ResetToken)
-	if emailClient != nil {
-		return nil, status.Errorf(codes.Internal, "Failed to send email: %v", err)
-	}
-
+	// Return response indicating success, let gateway handle sending the reset email
 	response := &pb.ForgotPasswordResponse{
 		Meta: &pb.MetaUser{
 			Code:    uint32(codes.OK),
 			Status:  http.StatusText(http.StatusOK),
-			Message: "Password reset link sent to email",
+			Message: "User found, proceed to send reset link in gateway",
 		},
+		Email: req.Email,
 	}
 	return response, nil
 }
@@ -225,9 +211,10 @@ func (s *UserService) NewPassword(ctx context.Context, req *pb.NewPasswordReques
 		return nil, status.Errorf(codes.Internal, "Failed to update password: %v", err)
 	}
 
+	userId, _ := primitive.ObjectIDFromHex(req.UserId)
 	// log activity
 	log := &models.UserActivityLog{
-		UserID:            primitive.NewObjectID(),
+		UserID:            userId,
 		ActivityType:      "password_reset",
 		ActivityTimestamp: primitive.NewDateTimeFromTime(time.Now()),
 	}
@@ -254,6 +241,7 @@ func (s *UserService) UpdateUserProfile(ctx context.Context, req *pb.UpdateUserP
 		Address:   req.Address,
 		Phone:     req.Phone,
 		Age:       req.Age,
+		Role:      req.Role,
 		UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
 	}
 
@@ -280,69 +268,4 @@ func (s *UserService) UpdateUserProfile(ctx context.Context, req *pb.UpdateUserP
 		},
 	}
 	return response, nil
-}
-
-// GenerateResetToken generates a reset token for the user
-func (s *UserService) GenerateResetToken(ctx context.Context, req *pb.GenerateResetTokenRequest) (*pb.GenerateResetTokenResponse, error) {
-	user, err := s.userRepo.FindUserByEmail(ctx, req.Email)
-	if err != nil {
-		return nil, status.Errorf(codes.NotFound, "User not found: %v", err)
-	}
-
-	token := os.Getenv("jwt_secret")
-	if token == "" {
-		return nil, status.Errorf(codes.Internal, "JWT secret is not set")
-	}
-
-	resetToken, err := pkg.GenerateToken(user.ID.Hex(), token)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Error generating reset token: %v", err)
-	}
-
-	resetURL := fmt.Sprintf("http://localhost:8080/reset-password?token=%s", resetToken)
-
-	return &pb.GenerateResetTokenResponse{
-		Meta: &pb.MetaUser{
-			Code:    uint32(codes.OK),
-			Status:  http.StatusText(http.StatusOK),
-			Message: "Reset token generated successfully",
-		},
-		ResetToken: resetToken,
-		ResetUrl:   resetURL,
-	}, nil
-}
-
-// NewPasswordHTTP resets the user's password using HTTP via Echo
-func (s *UserService) NewPasswordHTTP(c echo.Context) error {
-	// Bind the incoming request to the NewPasswordRequest struct
-	req := new(pb.NewPasswordRequest)
-	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
-	}
-
-	// Create a new context for the gRPC call
-	ctx := context.Background()
-
-	// Call the NewPassword gRPC function
-	res, err := s.NewPassword(ctx, req)
-	if err != nil {
-		// Return appropriate HTTP error based on gRPC error codes
-		grpcErr, ok := status.FromError(err)
-		if ok {
-			switch grpcErr.Code() {
-			case codes.InvalidArgument:
-				return c.JSON(http.StatusBadRequest, map[string]string{"error": grpcErr.Message()})
-			case codes.NotFound:
-				return c.JSON(http.StatusNotFound, map[string]string{"error": grpcErr.Message()})
-			case codes.Internal:
-				return c.JSON(http.StatusInternalServerError, map[string]string{"error": grpcErr.Message()})
-			default:
-				return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Unexpected error"})
-			}
-		}
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to reset password"})
-	}
-
-	// Return the response as JSON
-	return c.JSON(http.StatusOK, res)
 }

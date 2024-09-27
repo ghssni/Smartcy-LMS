@@ -7,7 +7,6 @@ import (
 	"gateway-service/server"
 	"gateway-service/server/handler"
 	"github.com/labstack/echo/v4"
-
 	"google.golang.org/grpc"
 	"log"
 )
@@ -17,6 +16,8 @@ func main() {
 	config.InitValidator()
 	courseServiceAddress := config.Viper.GetString("COURSE_SERVICE_ADDRESS")
 	userServiceAddress := config.Viper.GetString("USER_SERVICE_ADDRESS")
+	emailServiceAddress := config.Viper.GetString("EMAIL_SERVICE_ADDRESS")
+	enrollmentServiceAddress := config.Viper.GetString("ENROLLMENT_SERVICE_ADDRESS")
 
 	courseServiceDial, err := grpc.Dial(courseServiceAddress, grpc.WithInsecure())
 	if err != nil {
@@ -28,20 +29,37 @@ func main() {
 		log.Printf("Failed to dial user service: %v", err)
 	}
 
+	emailServiceDial, err := grpc.Dial(emailServiceAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Printf("Failed to dial email service: %v", err)
+	}
+
+	enrollmentServiceDial, err := grpc.Dial(enrollmentServiceAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Printf("Failed to dial enrollment service: %v", err)
+	}
+
 	// Initialize the client
 	userServiceClient := pb.NewUserServiceClient(userServiceDial)
 	courseServiceClient := pb.NewCourseServiceClient(courseServiceDial)
 	//reviewServiceClient := pb.NewReviewServiceClient(courseServiceDial)
 	lessonServiceClient := pb.NewLessonServiceClient(courseServiceDial)
+	emailServiceClient := pb.NewEmailServiceClient(emailServiceDial)
+	enrollmentServiceClient := pb.NewEnrollmentServiceClient(enrollmentServiceDial)
+	paymentsServiceClient := pb.NewPaymentsServiceClient(enrollmentServiceDial)
 
 	// Initialize the handler
-	userHandler := handler.NewUserHandler(userServiceClient)
+	userHandler := handler.NewUserHandler(userServiceClient, emailServiceClient)
 	courseHandler := handler.NewCourseHandler(courseServiceClient, lessonServiceClient)
 	lessonHandler := handler.NewLessonHandler(lessonServiceClient)
 
+	// Initialize the handler enrollment
+	enrollmentHandler := handler.NewEnrollmentHandler(enrollmentServiceClient, userServiceClient, courseServiceClient)
+	paymentsHandler := handler.NewPaymentsHandler(paymentsServiceClient, userServiceClient, emailServiceClient)
+
 	e := echo.New()
 
-	handlers := server.NewHandlers(userHandler, courseHandler, lessonHandler)
+	handlers := server.NewHandlers(userHandler, courseHandler, lessonHandler, paymentsHandler, enrollmentHandler)
 	server.Routes(e, handlers)
 
 	//env := config.Viper.GetString("APP_ENV")

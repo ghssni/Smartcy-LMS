@@ -61,6 +61,8 @@ message UpdateUserProfileRequest {
   string address = 4;
   string phone = 5;
   uint32 age = 6;
+  string role = 7;
+  google.protobuf.Timestamp updated_at = 8;
 }
 
 // Get Profile Request & Response
@@ -129,15 +131,7 @@ message NewPasswordRequest {
 message NewPasswordResponse {
   MetaUser meta = 1;
 }
-message GenerateResetTokenRequest {
-  string email = 1;
-}
 
-message GenerateResetTokenResponse {
-  MetaUser meta = 1;
-  string reset_token = 2;
-  string reset_url = 3;
-}
 
 // User Service Definition
 service UserService {
@@ -147,5 +141,5 @@ service UserService {
   rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
   rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
   rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
-  rpc GenerateResetToken(GenerateResetTokenRequest) returns (GenerateResetTokenResponse);
+  rpc NewPassword(NewPasswordRequest) returns (NewPasswordResponse);
 }

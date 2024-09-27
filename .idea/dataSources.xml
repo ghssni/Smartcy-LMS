@@ -13,7 +13,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@smartcylms.ciirr.mongodb.net" uuid="a580a20f-3ad7-4ad1-a27f-a9d89f61c280">
+    <data-source source="LOCAL" name="Development@localhost" uuid="49dc3bb6-db0e-4085-b69c-e9132cd3ddfd">
       <driver-ref>mongo</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>

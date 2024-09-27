@@ -106,3 +106,34 @@ CREATE TABLE certificates
     issued_at       TIMESTAMP DEFAULT NOW(),
     certificate_url VARCHAR NOT NULL
 );
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Frontend Web Development', 'Learn how to build responsive websites using HTML, CSS, and JavaScript.', 49.99, 'http://example.com/thumb1.jpg', 'mongodb_instructor_1', 'frontend', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Backend Development with Node.js', 'Master backend development using Node.js and Express.', 59.99, 'http://example.com/thumb2.jpg', 'mongodb_instructor_2', 'backend', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Fullstack Web Development', 'Become a fullstack web developer by learning both frontend and backend skills.', 79.99, 'http://example.com/thumb3.jpg', 'mongodb_instructor_3', 'fullstack', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('DevOps Fundamentals', 'Learn the basics of DevOps and how to automate your infrastructure.', 69.99, 'http://example.com/thumb4.jpg', 'mongodb_instructor_4', 'devops', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Advanced Frontend Techniques', 'Master advanced frontend techniques such as React and modern CSS.', 89.99, 'http://example.com/thumb5.jpg', 'mongodb_instructor_5', 'frontend', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Backend API Development with Go', 'Build robust backend APIs using Go.', 99.99, 'http://example.com/thumb6.jpg', 'mongodb_instructor_6', 'backend', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Fullstack JavaScript Developer', 'Become a fullstack JavaScript developer using MERN stack.', 79.99, 'http://example.com/thumb7.jpg', 'mongodb_instructor_7', 'fullstack', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('DevOps with Docker and Kubernetes', 'Learn how to use Docker and Kubernetes for DevOps workflows.', 89.99, 'http://example.com/thumb8.jpg', 'mongodb_instructor_8', 'devops', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('Introduction to Frontend Development', 'Get started with frontend web development using HTML, CSS, and JavaScript.', 39.99, 'http://example.com/thumb9.jpg', 'mongodb_instructor_9', 'frontend', NOW(), NOW());
+
+INSERT INTO courses (title, description, price, thumbnail_url, instructor_id, category, created_at, updated_at)
+VALUES ('DevOps Engineering with AWS', 'Learn DevOps practices using AWS cloud platform.', 109.99, 'http://example.com/thumb10.jpg', 'mongodb_instructor_10', 'devops', NOW(), NOW());
+

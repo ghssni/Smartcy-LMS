@@ -9,6 +9,7 @@ import (
 type EnrollmentRepository interface {
 	CreateEnrollment(enrollment *models.Enrollments) error
 	ExistingEnrollment(studentId string, courseId uint32) (*models.Enrollments, error)
+	GetEnrollmentsById(enrollmentId uint32) (*models.Enrollments, error)
 	GetEnrollmentsByStudentId(studentId string) ([]models.Enrollments, error)
 	DeleteEnrollmentById(enrollment *models.Enrollments) error
 	BeginTransaction() *gorm.DB
@@ -32,6 +33,16 @@ func (r *enrollmentRepository) ExistingEnrollment(studentId string, courseId uin
 
 func (r *enrollmentRepository) CreateEnrollment(enrollment *models.Enrollments) error {
 	return r.db.Create(enrollment).Error
+}
+
+// GetEnrollmentsById returns an enrollment by its ID
+func (r *enrollmentRepository) GetEnrollmentsById(enrollmentId uint32) (*models.Enrollments, error) {
+	var enrollment models.Enrollments
+	err := r.db.Where("id = ?", enrollmentId).First(&enrollment).Error
+	if err != nil {
+		return nil, err
+	}
+	return &enrollment, nil
 }
 
 func (r *enrollmentRepository) GetEnrollmentsByStudentId(studentId string) ([]models.Enrollments, error) {
